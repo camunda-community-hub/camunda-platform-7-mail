@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="0.7.0-nightly">
+  <bpmn:process id="printProcess" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_00e1hfh</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_00e1hfh" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_08x5h8o" />
+    <bpmn:userTask id="UserTask_02i93i0" name="print it">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="file" label="File to print" type="string" defaultValue="${mail.getAttachments().get(0).getPath()}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0f6osmg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0t49q29</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0t49q29" sourceRef="UserTask_02i93i0" targetRef="ServiceTask_1ry54cw" />
+    <bpmn:serviceTask id="ServiceTask_1ry54cw" name="send invoice" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="to">${mail.getFrom()}</camunda:inputParameter>
+            <camunda:inputParameter name="subject">invoice</camunda:inputParameter>
+            <camunda:inputParameter name="fileNames">
+              <camunda:list>
+                <camunda:value>${invoice}</camunda:value>
+              </camunda:list>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0t49q29</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_047hvua</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_12vmfq1">
+      <bpmn:incoming>SequenceFlow_047hvua</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_047hvua" sourceRef="ServiceTask_1ry54cw" targetRef="EndEvent_12vmfq1" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_08x5h8o" name="has attachment?" default="SequenceFlow_0f6osmg">
+      <bpmn:incoming>SequenceFlow_00e1hfh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0f6osmg</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_05l47xd</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0f6osmg" name="yes" sourceRef="ExclusiveGateway_08x5h8o" targetRef="UserTask_02i93i0" />
+    <bpmn:sequenceFlow id="SequenceFlow_05l47xd" name="no" sourceRef="ExclusiveGateway_08x5h8o" targetRef="ServiceTask_1dvrwrv">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${mail.getAttachments().isEmpty()}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="ServiceTask_1dvrwrv" name="inform the customer" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="to">${mail.getFrom()}</camunda:inputParameter>
+            <camunda:inputParameter name="subject"><![CDATA[${'RE: '.concat(mail.getSubject())}]]></camunda:inputParameter>
+            <camunda:inputParameter name="text">You forgot to attach the file to print. Please send a new mail with attachment.</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_05l47xd</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0nsa7ac</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1dtvmob">
+      <bpmn:incoming>SequenceFlow_0nsa7ac</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0nsa7ac" sourceRef="ServiceTask_1dvrwrv" targetRef="EndEvent_1dtvmob" />
+    <bpmn:textAnnotation id="TextAnnotation_108qpjm">    <bpmn:text>send mail with attchment</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_07i4zlv" sourceRef="ServiceTask_1ry54cw" targetRef="TextAnnotation_108qpjm" />
+    <bpmn:textAnnotation id="TextAnnotation_0v0w0hp">    <bpmn:text>invoked when receiving a mail</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_06ypo2l" sourceRef="StartEvent_1" targetRef="TextAnnotation_0v0w0hp" />
+    <bpmn:textAnnotation id="TextAnnotation_01qc3z8">    <bpmn:text>send text mail</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_0456uzr" sourceRef="ServiceTask_1dvrwrv" targetRef="TextAnnotation_01qc3z8" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="printProcess">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="146" y="138" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_00e1hfh_di" bpmnElement="SequenceFlow_00e1hfh">
+        <di:waypoint xsi:type="dc:Point" x="209" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="295" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="196.5" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_02i93i0_di" bpmnElement="UserTask_02i93i0">
+        <dc:Bounds x="472" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0t49q29_di" bpmnElement="SequenceFlow_0t49q29">
+        <di:waypoint xsi:type="dc:Point" x="572" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="651" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="567" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1ry54cw_di" bpmnElement="ServiceTask_1ry54cw">
+        <dc:Bounds x="651" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_12vmfq1_di" bpmnElement="EndEvent_12vmfq1">
+        <dc:Bounds x="828" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="801" y="138" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_047hvua_di" bpmnElement="SequenceFlow_047hvua">
+        <di:waypoint xsi:type="dc:Point" x="751" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="828" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="745" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_108qpjm_di" bpmnElement="TextAnnotation_108qpjm">
+        <dc:Bounds x="651" y="-14" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_07i4zlv_di" bpmnElement="Association_07i4zlv">
+        <di:waypoint xsi:type="dc:Point" x="701" y="80" />
+        <di:waypoint xsi:type="dc:Point" x="701" y="16" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0v0w0hp_di" bpmnElement="TextAnnotation_0v0w0hp">
+        <dc:Bounds x="96" y="3" width="189" height="32" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_06ypo2l_di" bpmnElement="Association_06ypo2l">
+        <di:waypoint xsi:type="dc:Point" x="191" y="102" />
+        <di:waypoint xsi:type="dc:Point" x="191" y="35" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_08x5h8o_di" bpmnElement="ExclusiveGateway_08x5h8o" isMarkerVisible="true">
+        <dc:Bounds x="295" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="275" y="73" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0f6osmg_di" bpmnElement="SequenceFlow_0f6osmg">
+        <di:waypoint xsi:type="dc:Point" x="345" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="472" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="354" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_05l47xd_di" bpmnElement="SequenceFlow_05l47xd">
+        <di:waypoint xsi:type="dc:Point" x="320" y="145" />
+        <di:waypoint xsi:type="dc:Point" x="320" y="208" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="290" y="166.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1dvrwrv_di" bpmnElement="ServiceTask_1dvrwrv">
+        <dc:Bounds x="270" y="208" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1dtvmob_di" bpmnElement="EndEvent_1dtvmob">
+        <dc:Bounds x="302" y="341" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="275" y="377" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0nsa7ac_di" bpmnElement="SequenceFlow_0nsa7ac">
+        <di:waypoint xsi:type="dc:Point" x="320" y="288" />
+        <di:waypoint xsi:type="dc:Point" x="320" y="341" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="290" y="304.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_01qc3z8_di" bpmnElement="TextAnnotation_01qc3z8">
+        <dc:Bounds x="440" y="233" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0456uzr_di" bpmnElement="Association_0456uzr">
+        <di:waypoint xsi:type="dc:Point" x="370" y="248" />
+        <di:waypoint xsi:type="dc:Point" x="440" y="248" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

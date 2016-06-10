@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Attention: to properly separate dependencies of extension and examples, do not define any dependencies/management here! -->
+  
+  <parent>
+    <groupId>org.camunda</groupId>
+    <artifactId>camunda-release-parent</artifactId>
+    <version>2.5</version>
+    <relativePath />
+  </parent>
+
+  <groupId>org.camunda.bpm.extension</groupId>
+  <artifactId>camunda-bpm-mail-root</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>camunda BPM - connect - root</name>
+  
+  <properties>
+    <version.java>1.8</version.java>
+    <encoding>UTF-8</encoding>
+    <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+    <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
+    <!-- versions -->
+    <version.camunda>7.5.0</version.camunda>
+    <!-- tests -->
+    <version.junit>4.12</version.junit>
+    <version.assertj>3.4.1</version.assertj>
+    <version.logback>1.1.7</version.logback>
+    <version.h2>1.4.187</version.h2>
+    <version.mockito>1.10.19</version.mockito>
+    <version.greenmail>1.5.0</version.greenmail>
+  </properties>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git@github.com:camunda/camunda-bpm-mail.git</connection>
+    <url>scm:git:git@github.com:camunda/camunda-bpm-mail.git</url>
+    <developerConnection>scm:git:git@github.com:camunda/camunda-bpm-mail.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <!-- repositories used for distribution of releases and snapshots, DO NOT CHANGE -->
+  <distributionManagement>
+    <repository>
+      <id>camunda-nexus</id>
+      <name>camunda bpm community extensions</name>
+      <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-community-extensions</url>
+    </repository>
+    <snapshotRepository>
+      <id>camunda-nexus</id>
+      <name>camunda bpm community extensions snapshots</name>
+      <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-community-extensions-snapshots</url>
+      <!-- for maven 2 compatibility -->
+      <uniqueVersion>true</uniqueVersion>
+    </snapshotRepository>
+  </distributionManagement>
+  
+  <modules>
+    <module>extension</module>
+    <module>examples</module>
+  </modules>
+  
+  <dependencyManagement>
+    <dependencies>
+     <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bom</artifactId>
+        <version>${version.camunda}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <!-- modules -->
+      <dependency>
+        <groupId>org.camunda.bpm.extension</groupId>
+        <artifactId>camunda-bpm-mail-core</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- test -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.junit}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${version.assertj}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${version.logback}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${version.h2}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${version.mockito}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.icegreen</groupId>
+        <artifactId>greenmail</artifactId>
+        <version>${version.greenmail}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
+</project>
