@@ -34,8 +34,8 @@ public interface MailConfiguration {
   /**
    * @return configuration of the mail protocols (e.g. smtp, imaps)
    *
-   * @see https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html
-   * @see https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
+   * @see <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">Package com.sun.mail.imap</a>
+   * @see <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html">Package com.sun.mail.smtp</a>
    */
   Properties getProperties();
 
