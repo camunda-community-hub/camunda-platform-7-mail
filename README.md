@@ -207,6 +207,10 @@ See also
 
 It can be that Google blocks the requests because it estimates your application as unsafe. You may also received an email from Google. To fix this go to https://www.google.com/settings/security/lesssecureapps and enable less secure apps.
 
+### Notification service throws exceptions (IDLE-Mode)
+
+Make sure that you don't have an older version (< 1.5.5) of `javamail` in your project. By default, the camunda process engine / distribution includes an old version (1.4.1) of `javamail` (i.e. transitively from `commons-email`).
+
 ## License
 
 [Apache License, Version 2.0](./LICENSE)
