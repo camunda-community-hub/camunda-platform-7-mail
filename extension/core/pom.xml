@@ -32,7 +32,6 @@
     <dependency>
       <groupId>org.camunda.connect</groupId>
       <artifactId>camunda-connect-core</artifactId>
-      <scope>provided</scope>
     </dependency>
   
     <dependency>
