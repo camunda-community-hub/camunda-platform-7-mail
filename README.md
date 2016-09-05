@@ -39,6 +39,8 @@ Also make sure that you included the following dependencies:
 * [JavaMail](http://mvnrepository.com/artifact/com.sun.mail/javax.mail/1.5.5) >= 1.5.5
 * [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api/1.7.21) >= 1.7.21
 
+If you use Wildfly, follow the [special instructions](docs/shared-process-engine-wildfly.md).
+
 ## How to use it?
 
 The extension is build on top of the [Connectors API](http://docs.camunda.org/manual/latest/reference/connect/) and provide some connectors for interacting with emails. The connectors can be used inside a process as implementation of a service task and are referenced by id. Use the Camunda Modeler to configure it.
