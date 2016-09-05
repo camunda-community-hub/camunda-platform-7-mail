@@ -25,8 +25,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.camunda.bpm.engine.ProcessEngineException;
 import org.camunda.bpm.extension.mail.EmptyResponse;
+import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.MailContentType;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
@@ -62,7 +62,7 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
       invocation.proceed();
 
     } catch (Exception e) {
-      throw new ProcessEngineException("failed to send mail", e);
+      throw new MailConnectorException("failed to send mail", e);
     }
 
     return new EmptyResponse();

@@ -17,7 +17,7 @@ import java.util.List;
 import javax.mail.Folder;
 import javax.mail.Message;
 
-import org.camunda.bpm.engine.ProcessEngineException;
+import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.service.MailService;
@@ -62,7 +62,7 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
       return new PollMailResponse(messages, mailService, request.downloadAttachments());
 
     } catch (Exception e) {
-      throw new ProcessEngineException("failed to poll mails", e);
+      throw new MailConnectorException("failed to poll mails", e);
     }
   }
 

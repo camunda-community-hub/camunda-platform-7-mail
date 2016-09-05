@@ -23,8 +23,8 @@ import javax.mail.MessagingException;
 import javax.mail.search.MessageIDTerm;
 import javax.mail.search.OrTerm;
 
-import org.camunda.bpm.engine.ProcessEngineException;
 import org.camunda.bpm.extension.mail.EmptyResponse;
+import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
@@ -68,7 +68,7 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
       return new EmptyResponse();
 
     } catch (Exception e) {
-      throw new ProcessEngineException("failed to delete mails", e);
+      throw new MailConnectorException("failed to delete mails", e);
     }
   }
 
