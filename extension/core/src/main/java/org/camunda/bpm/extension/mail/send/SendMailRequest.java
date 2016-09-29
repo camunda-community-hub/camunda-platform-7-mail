@@ -26,8 +26,10 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SendMailRequest.class);
 
-  protected static final String PARAM_TO = "to";
   protected static final String PARAM_FROM = "from";
+  protected static final String PARAM_FROM_ALIAS = "fromAlias";
+
+  protected static final String PARAM_TO = "to";
   protected static final String PARAM_CC = "cc";
   protected static final String PARAM_BCC = "bcc";
 
@@ -62,6 +64,24 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
     return from;
   }
 
+  public SendMailRequest from(String from) {
+      setRequestParameter(PARAM_FROM, from);
+      return this;
+  }
+
+  public String getFromAlias() {
+      String alias = getRequestParameter(PARAM_FROM_ALIAS);
+      if (alias == null) {
+          alias = configuration.getSenderAlias();
+      }
+      return alias;
+  }
+
+  public SendMailRequest fromAlias(String alias) {
+      setRequestParameter(PARAM_FROM_ALIAS, alias);
+      return this;
+  }
+
   public String getCc() {
     return getRequestParameter(PARAM_CC);
   }
@@ -77,11 +97,6 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
   public SendMailRequest bcc(String bcc) {
     setRequestParameter(PARAM_BCC, bcc);
-    return this;
-  }
-
-  public SendMailRequest from(String from) {
-    setRequestParameter(PARAM_FROM, from);
     return this;
   }
 
@@ -139,7 +154,7 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
   @Override
   public String toString() {
-    return "SendMailRequest [from=" + getFrom() + ", to=" + getTo() + ", cc=" + getCc() + ", bcc=" + getBcc() + ", subject="
+    return "SendMailRequest [from=" + getFrom() + ", from-alias=" + getFromAlias() +  ", to=" + getTo() + ", cc=" + getCc() + ", bcc=" + getBcc() + ", subject="
         + getSubject() + ", text=" + getText() + ", html=" + getHtml() + "]";
   }
 

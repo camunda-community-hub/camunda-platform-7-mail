@@ -13,6 +13,7 @@
 package org.camunda.bpm.extension.mail.send;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
@@ -46,6 +47,7 @@ public class SendMailConnectorTest {
     MailConnectors.sendMail()
       .createRequest()
         .from("test")
+        .fromAlias("me")
         .to("test@camunda.com")
         .subject("subject")
       .execute();
@@ -57,7 +59,7 @@ public class SendMailConnectorTest {
 
     assertThat(mail.getFrom())
       .hasSize(1)
-      .extracting("address").contains("test");
+      .extracting("address", "personal").contains(tuple("test", "me"));
 
     assertThat(mail.getRecipients(RecipientType.TO))
       .hasSize(1)
@@ -187,7 +189,7 @@ public class SendMailConnectorTest {
 
     assertThat(mail.getFrom())
       .hasSize(1)
-      .extracting("address").contains("from@camunda.com");
+      .extracting("address", "personal").contains(tuple("from@camunda.com", "test"));
   }
 
   @Test

@@ -50,6 +50,11 @@ public interface MailConfiguration {
   String getSender();
 
   /**
+   * @return default sender alias (i.e. from alias) for sending mails, can be <code>null</code>
+   */
+  String getSenderAlias();
+
+  /**
    * @return <code>true</code> if attachments of mails should always be stored locally
    */
   boolean downloadAttachments();

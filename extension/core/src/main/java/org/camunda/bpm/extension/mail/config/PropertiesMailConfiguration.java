@@ -39,6 +39,7 @@ public class PropertiesMailConfiguration implements MailConfiguration {
 
   public static final String PROPERTY_POLL_FOLDER = "mail.poll.folder";
   public static final String PROPERTY_SENDER = "mail.sender";
+  public static final String PROPERTY_SENDER_ALIAS = "mail.sender-alias";
 
   public static final String PROPERTY_ATTACHMENT_DOWNLOAD = "mail.attachment.download";
   public static final String PROPERTY_ATTACHMENT_PATH = "mail.attachment.path";
@@ -75,6 +76,11 @@ public class PropertiesMailConfiguration implements MailConfiguration {
   @Override
   public String getSender() {
     return getProperties().getProperty(PROPERTY_SENDER);
+  }
+
+  @Override
+  public String getSenderAlias() {
+    return getProperties().getProperty(PROPERTY_SENDER_ALIAS);
   }
 
   @Override

@@ -71,7 +71,7 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
   protected Message createMessage(SendMailRequest request, Session session) throws Exception {
 
     Message message = new MimeMessage(session);
-    message.setFrom(new InternetAddress(request.getFrom()));
+    message.setFrom(new InternetAddress(request.getFrom(), request.getFromAlias()));
     message.setRecipients(RecipientType.TO, InternetAddress.parse(request.getTo()));
 
     if (request.getCc() != null) {

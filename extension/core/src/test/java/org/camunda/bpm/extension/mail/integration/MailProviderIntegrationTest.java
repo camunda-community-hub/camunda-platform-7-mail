@@ -47,7 +47,7 @@ public class MailProviderIntegrationTest {
 	public void textMessage() throws MessagingException {
 
 		// send a new mail
-		MailConnectors.sendMail().createRequest().from(MAIL_ADDRESS).to(MAIL_ADDRESS).subject("camunda-bpm-mail")
+		MailConnectors.sendMail().createRequest().from(MAIL_ADDRESS).fromAlias("testing").to(MAIL_ADDRESS).subject("camunda-bpm-mail")
 				.text("integration test").execute();
 
 		// poll the mail
