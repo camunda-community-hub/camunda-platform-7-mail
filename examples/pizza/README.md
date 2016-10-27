@@ -13,8 +13,8 @@ This example demonstrate how to
 1. Build the WAR using Maven `mvn install`
 2. Download a [Camunda Distribution](https://camunda.org/download/)
 3. Copy the WAR `camunda-bpm-mail.example.pizza-1.0.0.war` into the webapps / deployments folder
-4. Copy the JAR `camunda-bpm-mail-core-1.0.0.jar` into the application server lib folder (and make sure that the required dependencies are available - like JavaMail 1.5.5)
-5. Copy the mail configuration `src/main/resources/mail-configuration.properties` to application server config folder and adjust it
+4. Copy the JAR `camunda-bpm-mail-core-1.0.0.jar` into the application server lib folder (and make sure that the required dependencies are available - like JavaMail 1.5.5) (e.g. tomcat folder: `server\apache-tomcat-8.0.24\lib`)
+5. Copy the mail configuration `src/main/resources/mail-configuration.properties` to application server config folder and adjust it (e.g. tomcat folder: `server\apache-tomcat-8.0.24\conf`)
 6. Set the environment variable `MAIL_CONFIG` to the path where you copied the mail configuration
 7. Start the application server 
 8. Send a mail which contains the pizza order as text body (i.e. pizza funghi)
