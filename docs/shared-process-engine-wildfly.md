@@ -7,14 +7,13 @@
   ```
   <module xmlns="urn:jboss:module:1.0" name="org.camunda.bpm.extension.camunda-bpm-mail-core">
     <resources>
-      <resource-root path="camunda-bpm-mail-core-1.0.0.jar" />
+      <resource-root path="camunda-bpm-mail-core-${VERSION}.jar" />
     </resources>
   
     <dependencies>
       <module name="javax.mail.api" />
       <module name="org.slf4j.api" />
       
-      <module name="org.camunda.bpm.camunda-engine" />
       <module name="org.camunda.connect.camunda-connect-core" />
     </dependencies>
   </module>
