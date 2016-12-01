@@ -25,13 +25,13 @@ Add `camunda-bpm-mail-core` as dependency to your application. Using Maven, you 
 <dependency>
   <groupId>org.camunda.bpm.extension</groupId>
   <artifactId>camunda-bpm-mail-core</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
 ### For Shared Process Engine
 
-Add `camunda-bpm-mail-core-1.0.0.jar` to your application server (e.g. `apache-tomcat-8.0.24\lib`).
+Add `camunda-bpm-mail-core-1.1.0.jar` to your application server (e.g. `apache-tomcat-8.0.24\lib`).
 
 Also make sure that you included the following dependencies:
 
@@ -67,6 +67,7 @@ Connector-Id: mail-send
 Input parameter | Type | Required?
 ----------------|------|----------
 from | String |no (read from config)
+fromAlias | String | no (read from config)
 to | String | yes
 cc | String | no
 bcc | String | no
@@ -159,6 +160,7 @@ mail.imaps.timeout=10000
 # additional config
 mail.poll.folder=INBOX
 mail.sender=USER@google.com
+mail.sender.alias=User Inc
 
 mail.attachment.download=true
 mail.attachment.path=attachments
