@@ -14,8 +14,8 @@ package org.camunda.bpm.extension.mail;
 
 public enum MailContentType {
 
-  TEXT_PLAIN("text/plain"),
-  TEXT_HTML("text/html"),
+  TEXT_PLAIN("text/plain; charset=utf-8"),
+  TEXT_HTML("text/html; charset=utf-8"),
   MULTIPART("multipart");
 
   private final String type;

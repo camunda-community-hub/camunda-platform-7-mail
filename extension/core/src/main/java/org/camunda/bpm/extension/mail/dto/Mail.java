@@ -145,7 +145,7 @@ public class Mail implements Serializable {
   }
 
   protected static boolean isMultipartMessage(Message message) throws MessagingException, IOException {
-    return MailContentType.MULTIPART.match(message.getContentType())
+    return message.isMimeType("multipart")
         || message.getContent() instanceof Multipart;
   }
 
@@ -158,10 +158,10 @@ public class Mail implements Serializable {
 
     } else {
 
-      if (MailContentType.TEXT_PLAIN.match(part.getContentType())) {
+      if (part.isMimeType("text/plain")) {
         mail.text = (String) part.getContent();
 
-      } else if (MailContentType.TEXT_HTML.match(part.getContentType())) {
+      } else if (part.isMimeType("text/html")) {
         mail.html = (String) part.getContent();
       }
     }
