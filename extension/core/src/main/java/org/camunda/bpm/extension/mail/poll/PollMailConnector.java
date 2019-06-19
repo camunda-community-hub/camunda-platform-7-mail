@@ -59,7 +59,7 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
 
       LOGGER.debug("poll {} mails from folder '{}'", messages.size(), folder.getName());
 
-      return new PollMailResponse(messages, mailService, request.downloadAttachments());
+      return new PollMailResponse(messages, mailService, request.downloadAttachments(), getConfiguration().getAttachmentPath());
 
     } catch (Exception e) {
       throw new MailConnectorException("failed to poll mails", e);
