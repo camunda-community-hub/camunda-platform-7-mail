@@ -112,7 +112,7 @@ public class MailNotificationService {
 
 	public void registerMailHandler(Consumer<Mail> consumer) {
 		MessageTransformationHandler handler = new MessageTransformationHandler(consumer,
-				configuration.downloadAttachments());
+				configuration.downloadAttachments(), configuration.getAttachmentPath());
 		registerMessageHandler(handler);
 	}
 

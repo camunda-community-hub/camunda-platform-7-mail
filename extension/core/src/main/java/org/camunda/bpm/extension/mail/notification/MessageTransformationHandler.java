@@ -29,14 +29,16 @@ public class MessageTransformationHandler implements MessageHandler {
 	protected final Consumer<Mail> consumer;
 
 	protected final boolean downloadAttachments;
+	protected final String attachementPath;
 
 	public MessageTransformationHandler(Consumer<Mail> consumer) {
-		this(consumer, false);
+		this(consumer, false, null);
 	}
 
-	public MessageTransformationHandler(Consumer<Mail> consumer, boolean downloadAttachments) {
+	public MessageTransformationHandler(Consumer<Mail> consumer, boolean downloadAttachments, String attachementPath) {
 		this.consumer = consumer;
 		this.downloadAttachments = downloadAttachments;
+		this.attachementPath = attachementPath;
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class MessageTransformationHandler implements MessageHandler {
 			try {
 				Mail mail = Mail.from(message);
 				if (downloadAttachments) {
-					mail.downloadAttachments();
+					mail.downloadAttachments(attachementPath);
 				}
 
 				mails.add(mail);

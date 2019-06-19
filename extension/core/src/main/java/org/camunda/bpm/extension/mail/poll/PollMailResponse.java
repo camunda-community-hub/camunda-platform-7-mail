@@ -33,11 +33,13 @@ public class PollMailResponse extends AbstractConnectorResponse {
   protected final List<Message> messages;
   protected final MailService mailService;
   protected final boolean downloadAttachments;
+  protected final String attachmentPath;
 
-  public PollMailResponse(List<Message> messages, MailService mailService, boolean downloadAttachments) {
+  public PollMailResponse(List<Message> messages, MailService mailService, boolean downloadAttachments, final String attachmentPath) {
     this.messages = messages;
     this.mailService = mailService;
     this.downloadAttachments = downloadAttachments;
+    this.attachmentPath = attachmentPath;
   }
 
   @Override
@@ -49,7 +51,7 @@ public class PollMailResponse extends AbstractConnectorResponse {
       try {
         Mail mail = Mail.from(message);
         if (downloadAttachments) {
-          mail.downloadAttachments();
+          mail.downloadAttachments(attachmentPath);
         }
 
         mails.add(mail);

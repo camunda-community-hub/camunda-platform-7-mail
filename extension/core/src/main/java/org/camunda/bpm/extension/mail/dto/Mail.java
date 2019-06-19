@@ -31,7 +31,6 @@ import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.camunda.bpm.extension.mail.MailContentType;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.slf4j.Logger;
@@ -167,7 +166,7 @@ public class Mail implements Serializable {
     }
   }
 
-  public void downloadAttachments() throws IOException, MessagingException {
+  public void downloadAttachments(final String attachmentPath) throws IOException, MessagingException {
     if (!attachments.isEmpty()) {
 
       LOGGER.debug("download attachments of mail: {}", this);
@@ -175,8 +174,7 @@ public class Mail implements Serializable {
       // use an unique folder for each mail
       String uuid = UUID.randomUUID().toString();
 
-      MailConfiguration configuration = MailConfigurationFactory.getConfiguration();
-      Path downloadPath = Paths.get(configuration.getAttachmentPath(), uuid);
+      Path downloadPath = Paths.get(attachmentPath, uuid);
       Files.createDirectories(downloadPath);
 
       for (Attachment attachment : attachments) {
