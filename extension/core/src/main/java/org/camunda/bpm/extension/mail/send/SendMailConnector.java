@@ -62,7 +62,7 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
       invocation.proceed();
 
     } catch (Exception e) {
-      throw new MailConnectorException("failed to send mail", e);
+      throw new MailConnectorException("Failed to send mail: " + e.getMessage(), e);
     }
 
     return new EmptyResponse();
