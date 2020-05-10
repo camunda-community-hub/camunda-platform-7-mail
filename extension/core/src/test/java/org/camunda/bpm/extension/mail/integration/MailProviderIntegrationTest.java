@@ -27,8 +27,10 @@ import org.camunda.bpm.extension.mail.config.PropertiesMailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.notification.MailNotificationService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("needs manual configuration adjustments")
 public class MailProviderIntegrationTest {
 
 	// replace by the configuration you want to test

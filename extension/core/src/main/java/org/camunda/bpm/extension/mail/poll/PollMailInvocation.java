@@ -14,13 +14,11 @@ package org.camunda.bpm.extension.mail.poll;
 
 import java.util.Arrays;
 import java.util.List;
-
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.search.FlagTerm;
-
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.connect.impl.AbstractRequestInvocation;
 import org.camunda.connect.spi.ConnectorRequestInterceptor;
@@ -29,7 +27,8 @@ public class PollMailInvocation extends AbstractRequestInvocation<Folder> {
 
   protected final MailService mailService;
 
-  public PollMailInvocation(Folder folder, PollMailRequest request, List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
+  public PollMailInvocation(Folder folder, PollMailRequest request,
+      List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
     super(folder, request, requestInterceptors);
 
     this.mailService = mailService;

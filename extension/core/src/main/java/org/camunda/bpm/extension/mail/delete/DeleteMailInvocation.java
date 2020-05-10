@@ -13,10 +13,8 @@
 package org.camunda.bpm.extension.mail.delete;
 
 import java.util.List;
-
 import javax.mail.Flags.Flag;
 import javax.mail.Message;
-
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.connect.impl.AbstractRequestInvocation;
 import org.camunda.connect.spi.ConnectorRequestInterceptor;
@@ -25,7 +23,8 @@ public class DeleteMailInvocation extends AbstractRequestInvocation<List<Message
 
   protected final MailService mailService;
 
-  public DeleteMailInvocation(List<Message> messages, DeleteMailRequest request, List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
+  public DeleteMailInvocation(List<Message> messages, DeleteMailRequest request,
+      List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
     super(messages, request, requestInterceptors);
     this.mailService = mailService;
   }

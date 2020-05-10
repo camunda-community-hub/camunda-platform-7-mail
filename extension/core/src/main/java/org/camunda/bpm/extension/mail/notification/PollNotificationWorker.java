@@ -13,9 +13,7 @@
 package org.camunda.bpm.extension.mail.notification;
 
 import java.time.Duration;
-
 import javax.mail.Folder;
-
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +52,7 @@ public class PollNotificationWorker implements NotificationWorker {
       folder.getMessageCount();
 
     } catch (Exception e) {
-      LOGGER.warn("exception while triggering mail server", e);
+      LOGGER.debug("exception while triggering mail server", e);
     }
   }
 
@@ -70,14 +68,15 @@ public class PollNotificationWorker implements NotificationWorker {
   public void stop() {
     running = false;
 
-    synchronized(this) {
+    synchronized (this) {
       this.notifyAll();
     }
   }
 
   @Override
   public String toString() {
-    return "PollNotificationWorker [folder=" + folder.getName() + ", lookupTime=" + lookupTime + ", running=" + running + "]";
+    return "PollNotificationWorker [folder=" + folder.getName() + ", lookupTime=" + lookupTime
+        + ", running=" + running + "]";
   }
 
 }
