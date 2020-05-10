@@ -95,6 +95,8 @@ mails | List of [Mail](extension/core/src/main/java/org/camunda/bpm/extension/ma
 
 If `download-attachements` is set to `true` then it stores the attachments of the mails in the folder which is provided by the configuration. The path of the stored attachments can be get from the [Attachment](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Attachment.java)s of the [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
 
+By default, the polled mails are marked as read. If the property `mail.imaps.peek` is set to `true` then the mails are just polled and not marked as read. 
+
 ### Delete Mails
 
 ![icon](docs/mail-delete-icon.png)
@@ -156,6 +158,9 @@ mail.store.protocol=imaps
 mail.imaps.host=imap.gmail.com
 mail.imaps.port=993
 mail.imaps.timeout=10000
+
+# if peek = false then the polled mails are marked as read
+mail.imaps.peek=false
 
 # additional config
 mail.poll.folder=INBOX
