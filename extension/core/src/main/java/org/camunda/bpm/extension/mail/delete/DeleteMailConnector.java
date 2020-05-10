@@ -68,7 +68,7 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
       return new EmptyResponse();
 
     } catch (Exception e) {
-      throw new MailConnectorException("failed to delete mails", e);
+      throw new MailConnectorException("Failed to delete mails: " + e.getMessage(), e);
     }
   }
 
