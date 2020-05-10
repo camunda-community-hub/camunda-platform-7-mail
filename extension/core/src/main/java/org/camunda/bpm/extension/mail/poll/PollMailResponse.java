@@ -62,6 +62,8 @@ public class PollMailResponse extends AbstractConnectorResponse {
     }
 
     responseParameters.put(PARAM_MAILS, mails);
+
+    mailService.flush();
   }
 
   public List<Mail> getMails() {

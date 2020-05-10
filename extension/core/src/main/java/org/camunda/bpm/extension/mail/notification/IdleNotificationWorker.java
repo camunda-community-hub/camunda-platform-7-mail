@@ -53,7 +53,7 @@ public class IdleNotificationWorker implements NotificationWorker {
       folder.idle();
 
     } catch (Exception e) {
-      LOGGER.warn("exception while waiting for mails", e);
+      LOGGER.debug("exception while waiting for mails", e);
     }
   }
 

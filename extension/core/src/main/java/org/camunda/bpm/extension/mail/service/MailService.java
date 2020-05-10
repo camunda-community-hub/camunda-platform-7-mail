@@ -14,13 +14,11 @@ package org.camunda.bpm.extension.mail.service;
 
 import java.io.IOException;
 import java.util.Properties;
-
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
-
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +26,13 @@ import org.slf4j.LoggerFactory;
 public class MailService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
-
+  private static Session session = null;
+  private static Store store = null;
   private final MailConfiguration configuration;
 
   public MailService(MailConfiguration configuration) {
     this.configuration = configuration;
   }
-
-  private static Session session = null;
-  private static Store store = null;
 
   public Session getSession() {
     if (session == null) {
@@ -103,6 +99,17 @@ public class MailService {
 
       store.close();
       store = null;
+    }
+  }
+
+  public void flush() {
+    if (store != null) {
+      LOGGER.debug("flush by closing the store");
+      try {
+        store.close();
+      } catch (MessagingException e) {
+        LOGGER.warn("Failure while closing store", e);
+      }
     }
   }
 

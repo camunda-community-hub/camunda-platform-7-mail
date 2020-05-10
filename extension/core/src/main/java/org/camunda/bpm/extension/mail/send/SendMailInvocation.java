@@ -13,10 +13,8 @@
 package org.camunda.bpm.extension.mail.send;
 
 import java.util.List;
-
 import javax.mail.Message;
 import javax.mail.Transport;
-
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.connect.impl.AbstractRequestInvocation;
@@ -30,7 +28,8 @@ public class SendMailInvocation extends AbstractRequestInvocation<Message> {
 
   protected final MailService mailService;
 
-  public SendMailInvocation(Message message, SendMailRequest request, List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
+  public SendMailInvocation(Message message, SendMailRequest request,
+      List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
     super(message, request, requestInterceptors);
 
     this.mailService = mailService;
@@ -44,6 +43,7 @@ public class SendMailInvocation extends AbstractRequestInvocation<Message> {
 
     Transport transport = mailService.getTransport();
     transport.sendMessage(message, message.getAllRecipients());
+    mailService.flush();
 
     return null;
   }
