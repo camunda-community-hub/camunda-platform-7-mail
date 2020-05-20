@@ -1,5 +1,7 @@
 # camunda-bpm-mail
 
+![Build project with Maven](https://github.com/camunda/camunda-bpm-mail/workflows/Build%20project%20with%20Maven/badge.svg)
+
 A community extension for Camunda BPM to integrate emails in a process and interact with them.
 
 ![Sample process](docs/sample-process.png)
