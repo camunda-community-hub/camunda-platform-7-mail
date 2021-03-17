@@ -1,6 +1,11 @@
 # camunda-bpm-mail
 
-![Build project with Maven](https://github.com/camunda/camunda-bpm-mail/workflows/Build%20project%20with%20Maven/badge.svg)
+[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
+
+[![](https://img.shields.io/badge/Lifecycle-Abandoned-lightgrey)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
+[![](https://img.shields.io/badge/Lifecycle-Needs%20Maintainer%20-ff69b4)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![Build project with Maven](https://github.com/camunda-community-hub/camunda-bpm-mail/workflows/Build%20project%20with%20Maven/badge.svg)
 
 A community extension for Camunda BPM to integrate emails in a process and interact with them.
 
