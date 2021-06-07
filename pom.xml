@@ -27,7 +27,7 @@
     <!-- tests -->
     <version.junit>4.13.1</version.junit>
     <version.assertj>3.4.1</version.assertj>
-    <version.logback>1.1.7</version.logback>
+    <version.logback>1.2.0</version.logback>
     <version.h2>1.4.187</version.h2>
     <version.mockito>1.10.19</version.mockito>
     <version.greenmail>1.5.0</version.greenmail>
