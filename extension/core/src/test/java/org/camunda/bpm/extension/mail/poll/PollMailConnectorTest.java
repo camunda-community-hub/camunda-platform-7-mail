@@ -165,7 +165,7 @@ public class PollMailConnectorTest {
     assertThat(mails).hasSize(1);
 
     Mail mail = mails.get(0);
-    assertThat(mail.getHtml()).isEqualTo("html");
+    assertThat(mail.getHtml()).isEqualTo("<b>html</b>");
     assertThat(mail.getText()).isEqualTo("text");
   }
 
