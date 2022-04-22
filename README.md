@@ -1,13 +1,14 @@
-# camunda-bpm-mail
+# camunda-platform-7-mail
 
-[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
+[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community) 
+[![](https://img.shields.io/badge/Compatible%20with-Camunda%20Platform%207-26d07c)](https://github.com/camunda-community-hub/community/blob/main/extension-lifecycle.md#compatiblilty)
 
 [![](https://img.shields.io/badge/Lifecycle-Abandoned-lightgrey)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
 [![](https://img.shields.io/badge/Lifecycle-Needs%20Maintainer%20-ff69b4)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Build project with Maven](https://github.com/camunda-community-hub/camunda-bpm-mail/workflows/Build%20project%20with%20Maven/badge.svg)
 
-A community extension for Camunda BPM to integrate emails in a process and interact with them.
+A community extension for Camunda Platform 7 to integrate emails in a process and interact with them. It was previously known as `camunda-bpm-mail`.
 
 ![Sample process](docs/sample-process.png)
 
@@ -21,7 +22,7 @@ A community extension for Camunda BPM to integrate emails in a process and inter
 ## Install
 
 > Requirements:
-* Camunda BPM >= 7.5.0
+* Camunda Platform 7 >= 7.5.0
 * Java 8
 
 ### For Embedded Process Engine
@@ -206,11 +207,11 @@ Depends on the input of the community. Some ideas:
 
 ## Contribution
 
-Found a bug? Please report it using [Github Issues](https://github.com/camunda/camunda-bpm-mail/issues).
+Found a bug? Please report it using [Github Issues](https://github.com/camunda/camunda-platform-7-mail/issues).
 
-Want to extend, improve or fix a bug in the extension? [Pull Requests](https://github.com/camunda/camunda-bpm-mail/pulls) are very welcome.
+Want to extend, improve or fix a bug in the extension? [Pull Requests](https://github.com/camunda/camunda-platform-7-mail/pulls) are very welcome.
 
-Want to discuss something? The [Camunda Forum](https://forum.camunda.org/c/community-extensions) might be the best place for it.
+Want to discuss something? The [Camunda Forum](https://forum.camunda.io/c/community-extensions) might be the best place for it.
 
 ## FAQ
 
