@@ -30,9 +30,8 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,13 +155,36 @@ public class Mail implements Serializable {
       mail.attachments.add(attachment);
 
     } else {
-
       if (part.isMimeType("text/plain")) {
         mail.text = (String) part.getContent();
-
       } else if (part.isMimeType("text/html")) {
         mail.html = (String) part.getContent();
+      } else if (part.isMimeType("multipart/alternative")) {
+        MimeMultipart multiPart = (MimeMultipart) part.getContent();
+        for (int i = 0; i < multiPart.getCount(); i++) {
+          BodyPart bodyPart = multiPart.getBodyPart(i);
+          processMultipartAlternative(bodyPart, mail);
+        }
       }
+    }
+  }
+
+  private static void processMultipartAlternative(Part part, Mail mail) throws MessagingException, IOException {
+    String disposition = part.getDisposition();
+    String contentType = part.getContentType();
+    if (disposition == null) { // When just body
+      if ((contentType.length() >= 10)
+              && (contentType.toLowerCase().substring(
+              0, 10).equals("text/plain"))) {
+        mail.text = (String) part.getContent();
+      } else if ((contentType.length() >= 9)
+              && (contentType.toLowerCase().substring(
+              0, 9).equals("text/html"))) {
+        mail.html =  (String) part.getContent();
+      }
+    } else if (disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+      Attachment attachment = Attachment.from(part);
+      mail.attachments.add(attachment);
     }
   }
 
