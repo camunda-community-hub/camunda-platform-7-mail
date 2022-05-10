@@ -181,7 +181,35 @@ mail.attachment.path=attachments
 # credentials
 mail.user=USER@gmail.com
 mail.password=PASSWORD
+
 ```
+
+Variables name to set on configmap or host environment:
+```
+MAIL_TRANSPORT_PROTOCOL
+MAIL_SMTP_HOST
+MAIL_SMTP_HOST
+MAIL_SMTP_AUTH
+
+MAIL_USER
+MAIL_PASSWORD
+
+MAIL_SMTP_SSL_ENABLE
+MAIL_SMTP_SOCKETFACTORY_PORT
+
+MAIL_IMAPS_PORT
+MAIL_STORE_PROTOCOL
+MAIL_IMAPS_HOST
+MAIL_IMAPS_TIMEOUT
+MAIL_IMAPS_PEEK
+MAIL_POLL_FOLDER
+MAIL_SENDER
+MAIL_SENDER_ALIAS
+MAIL_ATTACHMENT_DOWNLOAD
+MAIL_ATTACHMENT_PATH
+```
+          
+
 
 You can find some sample configurations at [extension/core/configs](extension/core/configs). If you use a mail provider which has no configuration yet, feel free to add one. You can verify your configuration with the [integration tests](extension/core/src/test/java/org/camunda/bpm/extension/mail/integration/MailProviderIntegrationTest.java).
 
