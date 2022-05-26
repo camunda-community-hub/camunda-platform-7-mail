@@ -12,105 +12,102 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
-import java.io.IOException;
-import java.util.Properties;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.Transport;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.mail.*;
+import java.io.IOException;
+import java.util.Properties;
+
 public class MailService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
-  private static Session session = null;
-  private static Store store = null;
-  private final MailConfiguration configuration;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
+    private static Session session = null;
+    private static Store store = null;
+    private final MailConfiguration configuration;
 
-  public MailService(MailConfiguration configuration) {
-    this.configuration = configuration;
-  }
-
-  public Session getSession() {
-    if (session == null) {
-      LOGGER.debug("open session");
-
-      Properties props = configuration.getProperties();
-      session = Session.getInstance(props);
-    }
-    return session;
-  }
-
-  public Folder ensureOpenFolder(String folderName) throws MessagingException {
-    if (store == null) {
-      store = getSession().getStore();
+    public MailService(MailConfiguration configuration) {
+        this.configuration = configuration;
     }
 
-    ensureConnectedStore(store);
-    Folder folder = store.getFolder(folderName);
-    return ensureOpenFolder(folder);
-  }
+    public Session getSession() {
+        if (session == null) {
+            LOGGER.debug("open session");
 
-  public Folder ensureOpenFolder(Folder folder) throws MessagingException {
-    ensureConnectedStore(folder.getStore());
-
-    if (!folder.isOpen()) {
-      openFolder(folder);
+            Properties props = configuration.getProperties();
+            session = Session.getInstance(props);
+        }
+        return session;
     }
 
-    return folder;
-  }
+    public Folder ensureOpenFolder(String folderName) throws MessagingException {
+        if (store == null) {
+            store = getSession().getStore();
+        }
 
-  private void ensureConnectedStore(Store store) throws MessagingException {
-    if (!store.isConnected()) {
-      LOGGER.debug("connect to sore");
-
-      store.connect(configuration.getUserName(), configuration.getPassword());
+        ensureConnectedStore(store);
+        Folder folder = store.getFolder(folderName);
+        return ensureOpenFolder(folder);
     }
-  }
 
-  private void openFolder(Folder folder) throws MessagingException {
+    public Folder ensureOpenFolder(Folder folder) throws MessagingException {
+        ensureConnectedStore(folder.getStore());
 
-    LOGGER.debug("open folder '{}'", folder.getName());
+        if (!folder.isOpen()) {
+            openFolder(folder);
+        }
 
-    folder.open(Folder.READ_WRITE);
-
-    if (!folder.isOpen()) {
-      throw new IllegalStateException("folder is not open");
+        return folder;
     }
-  }
 
-  public Transport getTransport() throws IOException, MessagingException {
-    Transport transport = getSession().getTransport();
-    if (!transport.isConnected()) {
-      LOGGER.debug("connect transport");
-
-      transport.connect(configuration.getUserName(), configuration.getPassword());
+    private void ensureConnectedStore(Store store) throws MessagingException {
+        if (!store.isConnected()) {
+            LOGGER.debug("connect to store");
+            try {
+                store.connect(configuration.getUserName(), configuration.getPassword());
+            } catch (IllegalStateException e) {
+                LOGGER.debug("Store already connected. Message: " + e.getMessage());
+            }
+        }
     }
-    return transport;
-  }
 
-  public void close() throws Exception {
-    if (store != null) {
-      LOGGER.debug("close the store");
-
-      store.close();
-      store = null;
+    private void openFolder(Folder folder) throws MessagingException {
+        LOGGER.debug("open folder '{}'", folder.getName());
+        folder.open(Folder.READ_WRITE);
+        if (!folder.isOpen()) {
+            throw new IllegalStateException("folder is not open");
+        }
     }
-  }
 
-  public void flush() {
-    if (store != null) {
-      LOGGER.debug("flush by closing the store");
-      try {
-        store.close();
-      } catch (MessagingException e) {
-        LOGGER.warn("Failure while closing store", e);
-      }
+    public Transport getTransport() throws IOException, MessagingException {
+        Transport transport = getSession().getTransport();
+        if (!transport.isConnected()) {
+            LOGGER.debug("connect transport");
+
+            transport.connect(configuration.getUserName(), configuration.getPassword());
+        }
+        return transport;
     }
-  }
+
+    public void close() throws Exception {
+        if (store != null) {
+            LOGGER.debug("close the store");
+
+            store.close();
+            store = null;
+        }
+    }
+
+    public void flush() {
+        if (store != null) {
+            LOGGER.debug("flush by closing the store");
+            try {
+                store.close();
+            } catch (MessagingException e) {
+                LOGGER.warn("Failure while closing store", e);
+            }
+        }
+    }
 
 }
