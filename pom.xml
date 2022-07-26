@@ -23,7 +23,7 @@
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
     <!-- versions -->
-    <version.camunda>7.12.0</version.camunda>
+    <version.camunda>7.17.0</version.camunda>
     <!-- tests -->
     <version.junit>4.13.1</version.junit>
     <version.assertj>3.4.1</version.assertj>
