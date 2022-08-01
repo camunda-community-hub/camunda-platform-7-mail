@@ -9,14 +9,14 @@ import java.util.Properties;
 
 @Component
 @Configuration
-@ConfigurationProperties(prefix="plugin.mail")
+@ConfigurationProperties(prefix = "plugin.mail")
 public class MailConfigurationProvider extends PropertiesMailConfiguration {
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
+  public void setProperties(Properties properties) {
+    this.properties = properties;
+  }
 
-    @Override
-    public Properties getProperties() {
-        return this.properties;
-    }
+  @Override
+  public Properties getProperties() {
+    return this.properties;
+  }
 }
