@@ -68,6 +68,7 @@
   <modules>
     <module>extension</module>
     <module>examples</module>
+      <module>extension-run</module>
   </modules>
 
   <dependencyManagement>
