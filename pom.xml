@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Attention: to properly separate dependencies of extension and examples, do not define any dependencies/management here! -->
@@ -8,7 +9,7 @@
     <groupId>org.camunda</groupId>
     <artifactId>camunda-release-parent</artifactId>
     <version>3.7</version>
-    <relativePath />
+    <relativePath/>
   </parent>
 
   <groupId>org.camunda.bpm.extension</groupId>
@@ -23,13 +24,15 @@
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
     <!-- versions -->
-    <version.camunda>7.12.0</version.camunda>
+    <version.camunda>7.17.0</version.camunda>
+    <version.javamail>1.5.5</version.javamail>
+    <version.springBoot>2.7.2</version.springBoot>
     <!-- tests -->
     <version.junit>4.13.1</version.junit>
     <version.assertj>3.4.1</version.assertj>
     <version.logback>1.2.0</version.logback>
     <version.h2>2.1.210</version.h2>
-    <version.mockito>1.10.19</version.mockito>
+    <version.mockito>4.6.1</version.mockito>
     <version.greenmail>1.5.0</version.greenmail>
   </properties>
 
@@ -68,7 +71,7 @@
   <modules>
     <module>extension</module>
     <module>examples</module>
-      <module>extension-run</module>
+    <module>extension-run</module>
   </modules>
 
   <dependencyManagement>
@@ -80,12 +83,18 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${version.springBoot}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <!-- modules -->
       <dependency>
         <groupId>org.camunda.bpm.extension</groupId>
         <artifactId>camunda-bpm-mail-core</artifactId>
         <version>${project.version}</version>
-        <scope>provided</scope>
       </dependency>
       <!-- test -->
       <dependency>
@@ -118,6 +127,11 @@
         <artifactId>greenmail</artifactId>
         <version>${version.greenmail}</version>
       </dependency>
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>${version.javamail}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <profiles>
@@ -130,24 +144,35 @@
             <artifactId>maven-gpg-plugin</artifactId>
             <version>1.6</version>
             <executions>
-                <execution>
-                    <id>sign-artifacts</id>
-                    <phase>verify</phase>
-                    <goals>
-                        <goal>sign</goal>
-                    </goals>
-                </execution>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
             </executions>
             <configuration>
-                <!-- Prevent gpg from using pinentry programs -->
-                <gpgArguments>
-                    <arg>--pinentry-mode</arg>
-                    <arg>loopback</arg>
-                </gpgArguments>
+              <!-- Prevent gpg from using pinentry programs -->
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
             </configuration>
           </plugin>
         </plugins>
       </build>
     </profile>
   </profiles>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.3.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

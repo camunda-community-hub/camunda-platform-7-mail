@@ -11,14 +11,7 @@ This plugin can be used with Camunda 7 Run.
 
 1. Add the `camunda-bpm-mail-extension-run-1.3.1.jar`to the `configuration/userlib`folder.
 
-2. Register the plugin via application's YAML (i.e., `default.yml`):
-
-```yml
-camunda.bpm.run.process-engine-plugins:
-  - plugin-class: org.camunda.bpm.extension.mail.run.MailConnectorPlugin
-```
-
-3. Configure the plugin.
+2. Configure the plugin.
 
 ## How to Use it?
 
@@ -28,12 +21,14 @@ see [the root project's readme](/README.md).
 ## How to Configure it?
 
 Configure the plugin via a YAML file (i.e., the `default.yml`).
-Preceed all properties with the prefix `camunda.bpm.plugin.mail.properties`.
+Preceed all properties with the prefix `camunda.bpm.plugin.mail`.
+
+The `mail.` prefix that comes with the old bootstrapping strategy will be appended to remain compatible.
 
 An Example configuration can look like this
 
 ```yml
-plugin.mail.properties.mail:
+camunda.bpm.plugin.mail:
   # send mails via SMTP
   transport.protocol: smtp
 
