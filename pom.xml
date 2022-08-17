@@ -26,7 +26,7 @@
     <!-- versions -->
     <version.camunda>7.17.0</version.camunda>
     <version.javamail>1.5.5</version.javamail>
-    <version.springBoot>2.7.2</version.springBoot>
+    <version.springBoot>2.6.4</version.springBoot>
     <!-- tests -->
     <version.junit>4.13.1</version.junit>
     <version.assertj>3.4.1</version.assertj>
