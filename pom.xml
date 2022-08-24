@@ -24,7 +24,6 @@
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
     <!-- versions -->
     <version.camunda>7.17.0</version.camunda>
-    <version.javamail>1.5.5</version.javamail>
     <version.springBoot>2.6.4</version.springBoot>
     <!-- tests -->
     <version.greenmail>1.6.10</version.greenmail>
@@ -95,11 +94,6 @@
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail-junit4</artifactId>
         <version>${version.greenmail}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.sun.mail</groupId>
-        <artifactId>javax.mail</artifactId>
-        <version>${version.javamail}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

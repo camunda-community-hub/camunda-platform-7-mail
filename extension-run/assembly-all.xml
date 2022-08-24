@@ -16,7 +16,7 @@
       <includes>
         <include>org.camunda.bpm.extension:camunda-bpm-mail-core</include>
         <include>org.camunda.bpm.extension:camunda-bpm-mail-extension-run</include>
-        <include>com.sun.mail:javax.mail</include>
+        <include>com.sun.mail:jakarta.mail</include>
       </includes>
     </dependencySet>
   </dependencySets>
