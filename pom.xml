@@ -27,7 +27,7 @@
     <version.javamail>1.5.5</version.javamail>
     <version.springBoot>2.6.4</version.springBoot>
     <!-- tests -->
-    <version.greenmail>1.5.0</version.greenmail>
+    <version.greenmail>1.6.10</version.greenmail>
   </properties>
 
   <licenses>
@@ -93,7 +93,7 @@
       <!-- test -->
       <dependency>
         <groupId>com.icegreen</groupId>
-        <artifactId>greenmail</artifactId>
+        <artifactId>greenmail-junit4</artifactId>
         <version>${version.greenmail}</version>
       </dependency>
       <dependency>

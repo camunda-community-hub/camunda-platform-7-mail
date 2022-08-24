@@ -20,13 +20,14 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
@@ -36,12 +37,16 @@ public class SendMailConnectorProcessTest {
   public ProcessEngineRule engineRule = new ProcessEngineRule();
 
   @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL).withConfiguration(GreenMailConfiguration
+      .aConfig()
+      .withDisabledAuthentication());
 
   @Test
   @Deployment(resources = "processes/mail-send-text.bpmn")
   public void sendMailWithTextBody() throws MessagingException {
-    engineRule.getRuntimeService().startProcessInstanceByKey("send-mail");
+    engineRule
+        .getRuntimeService()
+        .startProcessInstanceByKey("send-mail");
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
@@ -53,9 +58,15 @@ public class SendMailConnectorProcessTest {
 
   @Test
   @Deployment(resources = "processes/mail-send-template.bpmn")
-  public void sendMailWithTemplateTextBody() throws MessagingException {
-    engineRule.getRuntimeService().startProcessInstanceByKey("send-mail",
-        Variables.createVariables().putValue("user", "Test"));
+  public void sendMailWithTemplateTextBody() {
+    engineRule
+        .getRuntimeService()
+        .startProcessInstanceByKey(
+            "send-mail",
+            Variables
+                .createVariables()
+                .putValue("user", "Test")
+        );
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
@@ -67,11 +78,19 @@ public class SendMailConnectorProcessTest {
   @Test
   @Deployment(resources = "processes/mail-send-file.bpmn")
   public void sendMailWithFileName() throws Exception {
-    File attachment = new File(getClass().getResource("/attachment.txt").toURI());
+    File attachment = new File(getClass()
+        .getResource("/attachment.txt")
+        .toURI());
     assertThat(attachment.exists()).isTrue();
 
-    engineRule.getRuntimeService().startProcessInstanceByKey("send-mail",
-        Variables.createVariables().putValue("file", attachment.getPath()));
+    engineRule
+        .getRuntimeService()
+        .startProcessInstanceByKey(
+            "send-mail",
+            Variables
+                .createVariables()
+                .putValue("file", attachment.getPath())
+        );
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
