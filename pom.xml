@@ -13,7 +13,7 @@
 
   <groupId>org.camunda.bpm.extension</groupId>
   <artifactId>camunda-bpm-mail-root</artifactId>
-  <version>1.4.2-SNAPSHOT</version>
+  <version>1.4.2</version>
   <packaging>pom</packaging>
   <name>camunda BPM - Mail</name>
 
