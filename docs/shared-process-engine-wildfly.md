@@ -33,12 +33,19 @@ Tested with Camunda Version 7.17 running on WildFly Full 26.0.1.Final
   </module>
   ```
 
-3. Import the mail module in the connect-plugin:
+3. Import the mail module in the connect-plugin module:
 
   Change the `module.xml` in `\server\wildfly-26.0.1.Final\modules\org\camunda\bpm\camunda-engine-plugin-connect\main` and add the line
   
   ```
   <module name="org.camunda.bpm.extension.camunda-bpm-mail-core" services="import" />
   ```
+4. Import the mail module in the camunda-engine module:
 
+  Change the `module.xml` in `\server\wildfly-26.0.1.Final\modules\org\camunda\bpm\camunda-engine\main` and add the line
+  
+  ```
+  <module name="org.camunda.bpm.extension.camunda-bpm-mail-core" services="import" />
+  ```
+  
 4. An easy way to configure the connection is to copy the `mail-config.properties` into the `\server\wildfly26.0.1.Final\standalone\config` folder and add an environment variable `MAIL_CONFIG` that points to the file. Have a look at the configuration section for further details.
