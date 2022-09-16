@@ -32,4 +32,22 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Run Maven
-      run: mvn -B clean verify -PcheckFormat
+      run: mvn -B clean package
+  verify-format:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@e9512a931da86017e9d4d564a24616d8444d2193 # pin@v2
+    - name: Java setup
+      uses: actions/setup-java@v1
+      with:
+        java-version: 17
+    - name: Cache
+      uses: actions/cache@99d99cd262b87f5f8671407a1e5c1ddfa36ad5ba # pin@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - name: Run Maven
+      run: mvn -B verify -PcheckFormat
