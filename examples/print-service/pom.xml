@@ -12,7 +12,7 @@
   <packaging>war</packaging>
 
   <properties>
-    <version.servlet>3.0.1</version.servlet>
+    <version.servlet>4.0.1</version.servlet>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
 
