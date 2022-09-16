@@ -1,0 +1,58 @@
+name: Bug report
+labels: [ "bug","triage" ]
+description: Report a problem and help us fix it
+assignees: [ "jonathanlukas" ]
+title: Bug
+body:
+- type: textarea
+  id: describe-the-bug
+  attributes:
+    label: Describe the bug
+    description: A clear and concise description of what the bug is
+    placeholder: A clear and concise description of what the bug is
+  validations:
+    required: true
+- type: textarea
+  id: steps-to-reproduce
+  attributes:
+    label: Steps to reproduce
+    description: "1. do this 
+                  2. do that 
+                  3. now this happens"
+    placeholder: "1. do this 
+                  2. do that 
+                  3. now this happens"
+  validations:
+    required: true
+- type: textarea
+  id: expected-behaviour
+  attributes:
+    label: Expected Behaviour
+    description: A clear and concise description of what you expected to happen
+    placeholder: A clear and concise description of what you expected to happen
+  validations:
+    required: true
+- type: input
+  id: library-version
+  attributes:
+    label: Library version
+    description: Which version of the library do you use?
+    placeholder: e.g. 1.4.0
+  validations:
+    required: true
+- type: input
+  id: camunda-version
+  attributes:
+    label: Camunda version
+    description: Which version of Camunda do you use?
+    placeholder: e.g. 7.17.0
+  validations:
+    required: true
+- type: dropdown
+  id: camunda-distro
+  attributes:
+    label: Camunda Distribution
+    description: Which distribution of Camunda do you use?
+    options: ["Tomcat","Wildfly","Run","Spring Boot Starter","other"]
+  validations:
+    required: true
