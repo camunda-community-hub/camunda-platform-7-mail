@@ -12,14 +12,9 @@
  */
 package org.camunda.bpm.extension.mail.delete;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-
-import javax.mail.Flags.Flag;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import com.icegreen.greenmail.junit4.GreenMailRule;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
@@ -27,15 +22,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.icegreen.greenmail.junit4.GreenMailRule;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetupTest;
+import javax.mail.Flags.Flag;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class DeleteMailConnectorTest {
 
-  @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
-
+  @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
 
   @Before
   public void createMails() {
@@ -48,12 +46,7 @@ public class DeleteMailConnectorTest {
   @Test
   public void deleteMailByNumber() throws MessagingException {
 
-    MailConnectors
-        .deleteMails()
-        .createRequest()
-        .folder("INBOX")
-        .messageNumbers(1)
-        .execute();
+    MailConnectors.deleteMails().createRequest().folder("INBOX").messageNumbers(1).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
@@ -67,12 +60,7 @@ public class DeleteMailConnectorTest {
     MimeMessage[] mails = greenMail.getReceivedMessages();
     String messageId = mails[0].getMessageID();
 
-    MailConnectors
-        .deleteMails()
-        .createRequest()
-        .folder("INBOX")
-        .messageIds(messageId)
-        .execute();
+    MailConnectors.deleteMails().createRequest().folder("INBOX").messageIds(messageId).execute();
 
     mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
@@ -83,21 +71,16 @@ public class DeleteMailConnectorTest {
   @Test
   public void deleteMailByGivenMail() throws MessagingException {
 
-    Mail mail = MailConnectors
-        .pollMails()
-        .createRequest()
-        .folder("INBOX")
-        .downloadAttachments(false)
-        .execute()
-        .getMails()
-        .get(0);
+    Mail mail =
+        MailConnectors.pollMails()
+            .createRequest()
+            .folder("INBOX")
+            .downloadAttachments(false)
+            .execute()
+            .getMails()
+            .get(0);
 
-    MailConnectors
-        .deleteMails()
-        .createRequest()
-        .folder("INBOX")
-        .mails(mail)
-        .execute();
+    MailConnectors.deleteMails().createRequest().folder("INBOX").mails(mail).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
@@ -108,11 +91,7 @@ public class DeleteMailConnectorTest {
   @Test
   public void folderFromConfiguration() throws MessagingException {
 
-    MailConnectors
-        .deleteMails()
-        .createRequest()
-        .messageNumbers(1)
-        .execute();
+    MailConnectors.deleteMails().createRequest().messageNumbers(1).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
@@ -124,28 +103,18 @@ public class DeleteMailConnectorTest {
   public void missingFolder() {
     DeleteMailConnector connector = new DeleteMailConnector();
     connector.setConfiguration(mock(MailConfiguration.class));
-
-    RuntimeException exception = assertThrows(
-        RuntimeException.class,
-        () -> connector
-            .createRequest()
-            .messageNumbers(0)
-            .execute()
-    );
+    RuntimeException exception =
+        catchThrowableOfType(
+            () -> connector.createRequest().messageNumbers(0).execute(), RuntimeException.class);
     assertEquals("The request is invalid", exception.getMessage());
   }
 
   @Test
   public void missingMessageCriteria() {
-    RuntimeException exception = assertThrows(
-        RuntimeException.class,
-        () -> MailConnectors
-            .deleteMails()
-            .createRequest()
-            .folder("INBOX")
-            .execute()
-    );
+    RuntimeException exception =
+        catchThrowableOfType(
+            () -> MailConnectors.deleteMails().createRequest().folder("INBOX").execute(),
+            RuntimeException.class);
     assertEquals("The request is invalid", exception.getMessage());
   }
-
 }

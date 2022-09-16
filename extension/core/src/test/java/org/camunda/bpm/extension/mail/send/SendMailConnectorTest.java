@@ -35,15 +35,14 @@ import static org.mockito.Mockito.*;
 public class SendMailConnectorTest {
 
   @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL).withConfiguration(GreenMailConfiguration
-      .aConfig()
-      .withDisabledAuthentication());
+  public final GreenMailRule greenMail =
+      new GreenMailRule(ServerSetupTest.ALL)
+          .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
 
   @Test
   public void messageHeader() throws MessagingException {
 
-    MailConnectors
-        .sendMail()
+    MailConnectors.sendMail()
         .createRequest()
         .from("test")
         .fromAlias("me")
@@ -73,8 +72,7 @@ public class SendMailConnectorTest {
   @Test
   public void messageWithCc() throws MessagingException {
 
-    MailConnectors
-        .sendMail()
+    MailConnectors.sendMail()
         .createRequest()
         .from("test")
         .to("test@camunda.com")
@@ -94,8 +92,7 @@ public class SendMailConnectorTest {
   @Test
   public void messageWithBcc() throws MessagingException {
 
-    MailConnectors
-        .sendMail()
+    MailConnectors.sendMail()
         .createRequest()
         .from("test")
         .to("test@camunda.com")
@@ -117,8 +114,7 @@ public class SendMailConnectorTest {
   @Test
   public void textMessage() {
 
-    MailConnectors
-        .sendMail()
+    MailConnectors.sendMail()
         .createRequest()
         .from("test")
         .to("test@camunda.com")
@@ -135,8 +131,7 @@ public class SendMailConnectorTest {
   @Test
   public void htmlMessage() throws Exception {
 
-    MailConnectors
-        .sendMail()
+    MailConnectors.sendMail()
         .createRequest()
         .from("test")
         .to("test@camunda.com")
@@ -159,13 +154,10 @@ public class SendMailConnectorTest {
   @Test
   public void messageWithFileName() throws Exception {
 
-    File attachment = new File(getClass()
-        .getResource("/attachment.txt")
-        .toURI());
+    File attachment = new File(getClass().getResource("/attachment.txt").toURI());
     assertThat(attachment.exists()).isTrue();
 
-    MailConnectors
-        .sendMail()
+    MailConnectors.sendMail()
         .createRequest()
         .from("test")
         .to("test@camunda.com")
@@ -186,12 +178,7 @@ public class SendMailConnectorTest {
   @Test
   public void senderFromConfiguration() throws MessagingException {
 
-    MailConnectors
-        .sendMail()
-        .createRequest()
-        .to("test@camunda.com")
-        .subject("subject")
-        .execute();
+    MailConnectors.sendMail().createRequest().to("test@camunda.com").subject("subject").execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
@@ -208,33 +195,31 @@ public class SendMailConnectorTest {
   public void missingFrom() {
     SendMailConnector connector = new SendMailConnector();
     connector.setConfiguration(mock(MailConfiguration.class));
-
-    RuntimeException exception = assertThrows(
-        RuntimeException.class,
-        () -> connector
-            .createRequest()
-            .to("test@camunda.com")
-            .subject("subject")
-            .text("body")
-            .execute()
-    );
+    RuntimeException exception =
+        catchThrowableOfType(
+            () ->
+                connector
+                    .createRequest()
+                    .to("test@camunda.com")
+                    .subject("subject")
+                    .text("body")
+                    .execute(),
+            RuntimeException.class);
     assertEquals("The request is invalid", exception.getMessage());
   }
 
   @Test
   public void missingTo() {
-
-    RuntimeException exception = assertThrows(
-        RuntimeException.class,
-        () -> MailConnectors
-            .sendMail()
-            .createRequest()
-            .from("test")
-            .subject("subject")
-            .text("body")
-            .execute()
-    );
+    RuntimeException exception =
+        catchThrowableOfType(
+            () ->
+                MailConnectors.sendMail()
+                    .createRequest()
+                    .from("test")
+                    .subject("subject")
+                    .text("body")
+                    .execute(),
+            RuntimeException.class);
     assertEquals("The request is invalid", exception.getMessage());
   }
-
 }
