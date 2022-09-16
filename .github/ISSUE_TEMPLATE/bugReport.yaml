@@ -63,4 +63,4 @@ body:
     description: If you selected other, please describe your distribution briefly
     placeholder: e.g. Quarkus, Micronaut, embedded in custom framework
   validations:
-    required: true
+    required: false
