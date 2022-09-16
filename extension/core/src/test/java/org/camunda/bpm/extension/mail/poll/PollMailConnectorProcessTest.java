@@ -14,10 +14,11 @@ package org.camunda.bpm.extension.mail.poll;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import java.util.List;
-
 import javax.mail.MessagingException;
-
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -25,17 +26,11 @@ import org.camunda.bpm.extension.mail.dto.Mail;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetupTest;
-
 public class PollMailConnectorProcessTest {
 
-  @Rule
-  public ProcessEngineRule engineRule = new ProcessEngineRule();
+  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 
-  @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
 
   @Test
   @Deployment(resources = "processes/mail-poll.bpmn")
@@ -44,19 +39,18 @@ public class PollMailConnectorProcessTest {
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "subject", "text body");
 
-    ProcessInstance processInstance = engineRule.getRuntimeService().startProcessInstanceByKey("poll-mails");
+    ProcessInstance processInstance =
+        engineRule.getRuntimeService().startProcessInstanceByKey("poll-mails");
 
     @SuppressWarnings("unchecked")
-    List<Mail> mails = (List<Mail>) engineRule.getRuntimeService().getVariable(processInstance.getId(), "mails");
+    List<Mail> mails =
+        (List<Mail>) engineRule.getRuntimeService().getVariable(processInstance.getId(), "mails");
 
-    assertThat(mails)
-      .isNotNull()
-      .hasSize(1);
+    assertThat(mails).isNotNull().hasSize(1);
 
     Mail mail = mails.get(0);
     assertThat(mail.getFrom()).isEqualTo("from@camunda.com");
     assertThat(mail.getSubject()).isEqualTo("subject");
     assertThat(mail.getText()).isEqualTo("text body");
   }
-
 }

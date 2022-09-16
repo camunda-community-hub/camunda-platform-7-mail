@@ -32,4 +32,4 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Run Maven
-      run: mvn -B clean install com.mycila:license-maven-plugin:check
+      run: mvn -B clean verify -PcheckFormat

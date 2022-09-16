@@ -12,25 +12,24 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import org.camunda.bpm.extension.mail.MailConnectors;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.junit.Rule;
-import org.junit.Test;
-
+import java.io.File;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.File;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.camunda.bpm.extension.mail.MailConnectors;
+import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class SendMailConnectorTest {
 

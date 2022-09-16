@@ -26,5 +26,4 @@ public class SendMailProvider implements ConnectorProvider {
   public Connector<?> createConnectorInstance() {
     return new SendMailConnector();
   }
-
 }

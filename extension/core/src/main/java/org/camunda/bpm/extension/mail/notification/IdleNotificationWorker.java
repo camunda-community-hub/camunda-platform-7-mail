@@ -12,19 +12,17 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
+import com.sun.mail.iap.ProtocolException;
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.protocol.IMAPProtocol;
 import javax.mail.MessagingException;
-
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.mail.iap.ProtocolException;
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.protocol.IMAPProtocol;
-
 public class IdleNotificationWorker implements NotificationWorker {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(IdleNotificationWorker.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(IdleNotificationWorker.class);
 
   protected final MailService mailService;
   protected final IMAPFolder folder;
@@ -63,12 +61,13 @@ public class IdleNotificationWorker implements NotificationWorker {
 
     // perform a NOOP to interrupt IDLE
     try {
-      folder.doCommand(new IMAPFolder.ProtocolCommand() {
-        public Object doCommand(IMAPProtocol p) throws ProtocolException {
+      folder.doCommand(
+          new IMAPFolder.ProtocolCommand() {
+            public Object doCommand(IMAPProtocol p) throws ProtocolException {
               p.simpleCommand("NOOP", null);
               return null;
-          }
-      });
+            }
+          });
     } catch (MessagingException e) {
       // ignore
     }
@@ -78,5 +77,4 @@ public class IdleNotificationWorker implements NotificationWorker {
   public String toString() {
     return "IdleNotificationWorker [folder=" + folder.getName() + ", runnning=" + runnning + "]";
   }
-
 }

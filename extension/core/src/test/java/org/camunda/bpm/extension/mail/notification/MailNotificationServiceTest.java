@@ -14,16 +14,17 @@ package org.camunda.bpm.extension.mail.notification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-
 import org.camunda.bpm.extension.mail.MailTestUtil;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Attachment;
@@ -34,82 +35,78 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetupTest;
-
 public class MailNotificationServiceTest {
 
-	@Rule
-	public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
+  @Rule public final ExpectedException thrown = ExpectedException.none();
 
-	private MailNotificationService notificationService;
+  private MailNotificationService notificationService;
 
-	@Before
-	public void init() {
-		greenMail.setUser("test@camunda.com", "bpmn");
+  @Before
+  public void init() {
+    greenMail.setUser("test@camunda.com", "bpmn");
 
-		notificationService = new MailNotificationService(MailConfigurationFactory.getConfiguration());
-	}
+    notificationService = new MailNotificationService(MailConfigurationFactory.getConfiguration());
+  }
 
-	@After
-	public void cleanup() {
-		notificationService.stop();
-	}
+  @After
+  public void cleanup() {
+    notificationService.stop();
+  }
 
-	@Test
-	public void messageHandler() throws Exception {
-		GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "existing mail", "body");
+  @Test
+  public void messageHandler() throws Exception {
+    GreenMailUtil.sendTextEmailTest(
+        "test@camunda.com", "from@camunda.com", "existing mail", "body");
 
-		notificationService.start();
+    notificationService.start();
 
-		final List<Message> receivedMessages = new ArrayList<>();
-		final CountDownLatch countDownLatch = new CountDownLatch(1);
+    final List<Message> receivedMessages = new ArrayList<>();
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-		notificationService.registerMessageHandler(messages -> {
-			receivedMessages.addAll(messages);
-			countDownLatch.countDown();
-		});
+    notificationService.registerMessageHandler(
+        messages -> {
+          receivedMessages.addAll(messages);
+          countDownLatch.countDown();
+        });
 
-		GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "new mail", "body");
+    GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "new mail", "body");
 
-		countDownLatch.await(10, TimeUnit.SECONDS);
+    countDownLatch.await(10, TimeUnit.SECONDS);
 
-		assertThat(receivedMessages).hasSize(1);
-	}
+    assertThat(receivedMessages).hasSize(1);
+  }
 
-	@Test
-	public void mailHandler() throws Exception {
-		File attachment = new File(getClass().getResource("/attachment.txt").toURI());
-		assertThat(attachment.exists()).isTrue();
+  @Test
+  public void mailHandler() throws Exception {
+    File attachment = new File(getClass().getResource("/attachment.txt").toURI());
+    assertThat(attachment.exists()).isTrue();
 
-		notificationService.start();
+    notificationService.start();
 
-		final List<Mail> receivedMails = new ArrayList<>();
-		final CountDownLatch countDownLatch = new CountDownLatch(1);
+    final List<Mail> receivedMails = new ArrayList<>();
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-		notificationService.registerMailHandler(mail -> {
-			receivedMails.add(mail);
-			countDownLatch.countDown();
-		});
+    notificationService.registerMailHandler(
+        mail -> {
+          receivedMails.add(mail);
+          countDownLatch.countDown();
+        });
 
-		Session session = greenMail.getSmtp().createSession();
-		MimeMessage message = MailTestUtil.createMimeMessageWithAttachment(session, attachment);
-		GreenMailUtil.sendMimeMessage(message);
+    Session session = greenMail.getSmtp().createSession();
+    MimeMessage message = MailTestUtil.createMimeMessageWithAttachment(session, attachment);
+    GreenMailUtil.sendMimeMessage(message);
 
-		countDownLatch.await(10, TimeUnit.SECONDS);
+    countDownLatch.await(10, TimeUnit.SECONDS);
 
-		assertThat(receivedMails).hasSize(1);
+    assertThat(receivedMails).hasSize(1);
 
-		Mail mail = receivedMails.get(0);
-		assertThat(mail.getAttachments()).hasSize(1);
+    Mail mail = receivedMails.get(0);
+    assertThat(mail.getAttachments()).hasSize(1);
 
-		Attachment mailAttachment = mail.getAttachments().get(0);
-		assertThat(mailAttachment.getFileName()).isEqualTo("attachment.txt");
-		assertThat(mailAttachment.getPath()).isNotNull();
-	}
-
+    Attachment mailAttachment = mail.getAttachments().get(0);
+    assertThat(mailAttachment.getFileName()).isEqualTo("attachment.txt");
+    assertThat(mailAttachment.getPath()).isNotNull();
+  }
 }

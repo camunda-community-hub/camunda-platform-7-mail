@@ -15,5 +15,4 @@ package org.camunda.bpm.extension.mail.notification;
 public interface NotificationWorker extends Runnable {
 
   void stop();
-
 }

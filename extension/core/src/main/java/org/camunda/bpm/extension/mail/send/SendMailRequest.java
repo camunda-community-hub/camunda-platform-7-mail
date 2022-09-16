@@ -14,7 +14,6 @@ package org.camunda.bpm.extension.mail.send;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.connect.impl.AbstractConnectorRequest;
@@ -65,21 +64,21 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
   }
 
   public SendMailRequest from(String from) {
-      setRequestParameter(PARAM_FROM, from);
-      return this;
+    setRequestParameter(PARAM_FROM, from);
+    return this;
   }
 
   public String getFromAlias() {
-      String alias = getRequestParameter(PARAM_FROM_ALIAS);
-      if (alias == null) {
-          alias = configuration.getSenderAlias();
-      }
-      return alias;
+    String alias = getRequestParameter(PARAM_FROM_ALIAS);
+    if (alias == null) {
+      alias = configuration.getSenderAlias();
+    }
+    return alias;
   }
 
   public SendMailRequest fromAlias(String alias) {
-      setRequestParameter(PARAM_FROM_ALIAS, alias);
-      return this;
+    setRequestParameter(PARAM_FROM_ALIAS, alias);
+    return this;
   }
 
   public String getCc() {
@@ -139,12 +138,12 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
   @Override
   protected boolean isRequestValid() {
 
-    if(getTo() == null || getTo().isEmpty()) {
+    if (getTo() == null || getTo().isEmpty()) {
       LOGGER.warn("invalid request: missing parameter 'to' in {}", this);
       return false;
     }
 
-    if(getFrom() == null || getFrom().isEmpty()) {
+    if (getFrom() == null || getFrom().isEmpty()) {
       LOGGER.warn("invalid request: missing parameter 'from' in {}", this);
       return false;
     }
@@ -154,10 +153,22 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
   @Override
   public String toString() {
-    return "SendMailRequest [from=" + getFrom() + ", from-alias=" + getFromAlias() +  ", to=" + getTo() + ", cc=" + getCc() + ", bcc=" + getBcc() + ", subject="
-        + getSubject() + ", text=" + getText() + ", html=" + getHtml() + "]";
+    return "SendMailRequest [from="
+        + getFrom()
+        + ", from-alias="
+        + getFromAlias()
+        + ", to="
+        + getTo()
+        + ", cc="
+        + getCc()
+        + ", bcc="
+        + getBcc()
+        + ", subject="
+        + getSubject()
+        + ", text="
+        + getText()
+        + ", html="
+        + getHtml()
+        + "]";
   }
-
-
-
 }

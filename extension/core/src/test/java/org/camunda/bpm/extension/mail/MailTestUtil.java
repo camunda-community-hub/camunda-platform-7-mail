@@ -14,7 +14,6 @@ package org.camunda.bpm.extension.mail;
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -27,7 +26,8 @@ import javax.mail.internet.MimeMultipart;
 
 public class MailTestUtil {
 
-  public static MimeMessage createMimeMessage(Session session) throws MessagingException, AddressException {
+  public static MimeMessage createMimeMessage(Session session)
+      throws MessagingException, AddressException {
     MimeMessage message = new MimeMessage(session);
 
     message.setFrom(new InternetAddress("from@camunda.com"));
@@ -37,7 +37,8 @@ public class MailTestUtil {
     return message;
   }
 
-  public static MimeMessage createMimeMessageWithHtml(Session session) throws MessagingException, AddressException {
+  public static MimeMessage createMimeMessageWithHtml(Session session)
+      throws MessagingException, AddressException {
     MimeMessage message = createMimeMessage(session);
 
     Multipart multiPart = new MimeMultipart();
@@ -54,7 +55,8 @@ public class MailTestUtil {
     return message;
   }
 
-  public static MimeMessage createMimeMessageWithAttachment(Session session, File attachment) throws MessagingException, AddressException, IOException {
+  public static MimeMessage createMimeMessageWithAttachment(Session session, File attachment)
+      throws MessagingException, AddressException, IOException {
     MimeMessage message = createMimeMessage(session);
 
     Multipart multiPart = new MimeMultipart();
@@ -71,5 +73,4 @@ public class MailTestUtil {
 
     return message;
   }
-
 }

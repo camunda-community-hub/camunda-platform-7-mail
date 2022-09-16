@@ -1,6 +1,6 @@
 # camunda-bpm-mail - example - pizza order
 
-This example demonstrate how to 
+This example demonstrate how to
 
 * poll mails from server,
 * send a mail with generated text body,
@@ -16,7 +16,7 @@ This example demonstrate how to
 4. Copy the JAR `camunda-bpm-mail-core-${VERSION}.jar` into the application server lib folder (and make sure that the required dependencies are available - like JavaMail 1.5.5) (e.g. tomcat folder: `server\apache-tomcat-8.0.24\lib`)
 5. Copy the mail configuration `src/main/resources/mail-configuration.properties` to application server config folder and adjust it (e.g. tomcat folder: `server\apache-tomcat-8.0.24\conf`)
 6. Set the environment variable `MAIL_CONFIG` to the path where you copied the mail configuration
-7. Start the application server 
+7. Start the application server
 8. Send a mail which contains the pizza order as text body (i.e. pizza funghi)
 9. Open the Tasklist and start an instance of the process 'pizzaOrderProcess'
 10. Check that a user task is created - complete it
@@ -63,7 +63,7 @@ When the pizza is made (i.e. complete user task 'make the pizza'), the process s
           <camunda:script scriptFormat="freemarker"><![CDATA[Hello, your pizza is ready and will be delivered soon.
 
            Order:
-           ${mail.getText()} 
+           ${mail.getText()}
 
            Cheers!]]></camunda:script>
         </camunda:inputParameter>

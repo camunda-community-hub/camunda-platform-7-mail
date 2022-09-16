@@ -12,24 +12,23 @@
  */
 package org.camunda.bpm.extension.mail.delete;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import javax.mail.Flags.Flag;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import javax.mail.Flags.Flag;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class DeleteMailConnectorTest {
 

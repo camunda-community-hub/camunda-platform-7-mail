@@ -16,13 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.search.MessageIDTerm;
 import javax.mail.search.OrTerm;
-
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
@@ -37,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, EmptyResponse> {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(DeleteMailConnector.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeleteMailConnector.class);
 
   public static final String CONNECTOR_ID = "mail-delete";
 
@@ -61,7 +59,8 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
       Folder folder = mailService.ensureOpenFolder(request.getFolder());
       List<Message> messages = Arrays.asList(getMessages(folder, request));
 
-      DeleteMailInvocation invocation = new DeleteMailInvocation(messages, request, requestInterceptors, mailService);
+      DeleteMailInvocation invocation =
+          new DeleteMailInvocation(messages, request, requestInterceptors, mailService);
 
       invocation.proceed();
 
@@ -72,7 +71,8 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
     }
   }
 
-  protected Message[] getMessages(Folder folder, DeleteMailRequest request) throws MessagingException {
+  protected Message[] getMessages(Folder folder, DeleteMailRequest request)
+      throws MessagingException {
 
     if (request.getMails() != null) {
       LOGGER.debug("delete mails: {}", request.getMails());
@@ -101,11 +101,11 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
         .collect(Collectors.toList());
   }
 
-  protected Message[] getMessagesByIds(Folder folder, List<String> messageIds) throws MessagingException {
+  protected Message[] getMessagesByIds(Folder folder, List<String> messageIds)
+      throws MessagingException {
 
-    List<MessageIDTerm> idTerms = messageIds.stream()
-        .map(MessageIDTerm::new)
-        .collect(Collectors.toList());
+    List<MessageIDTerm> idTerms =
+        messageIds.stream().map(MessageIDTerm::new).collect(Collectors.toList());
 
     OrTerm searchTerm = new OrTerm(idTerms.toArray(new MessageIDTerm[idTerms.size()]));
 
@@ -122,5 +122,4 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
   public void setConfiguration(MailConfiguration configuration) {
     this.configuration = configuration;
   }
-
 }

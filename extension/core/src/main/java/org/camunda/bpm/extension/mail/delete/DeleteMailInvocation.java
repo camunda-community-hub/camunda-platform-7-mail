@@ -23,8 +23,11 @@ public class DeleteMailInvocation extends AbstractRequestInvocation<List<Message
 
   protected final MailService mailService;
 
-  public DeleteMailInvocation(List<Message> messages, DeleteMailRequest request,
-      List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
+  public DeleteMailInvocation(
+      List<Message> messages,
+      DeleteMailRequest request,
+      List<ConnectorRequestInterceptor> requestInterceptors,
+      MailService mailService) {
     super(messages, request, requestInterceptors);
     this.mailService = mailService;
   }
@@ -38,5 +41,4 @@ public class DeleteMailInvocation extends AbstractRequestInvocation<List<Message
 
     return null;
   }
-
 }

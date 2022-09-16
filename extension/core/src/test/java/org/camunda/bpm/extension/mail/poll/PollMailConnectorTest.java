@@ -15,16 +15,17 @@ package org.camunda.bpm.extension.mail.poll;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import java.io.File;
 import java.util.List;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.MailContentType;
 import org.camunda.bpm.extension.mail.MailTestUtil;
@@ -35,17 +36,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetupTest;
-
 public class PollMailConnectorTest {
 
-  @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
 
-  @Rule
-  public final ExpectedException thrown = ExpectedException.none();
+  @Rule public final ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void messageHeaders() throws Exception {
@@ -62,23 +57,21 @@ public class PollMailConnectorTest {
 
     GreenMailUtil.sendMimeMessage(message);
 
-    PollMailResponse response = MailConnectors.pollMails()
-        .createRequest()
-          .folder("INBOX")
-        .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
-      List<Mail> mails = response.getMails();
-      assertThat(mails).hasSize(1);
+    List<Mail> mails = response.getMails();
+    assertThat(mails).hasSize(1);
 
-      Mail mail = mails.get(0);
-      assertThat(mail.getFrom()).isEqualTo("from@camunda.com");
-      assertThat(mail.getTo()).isEqualTo("test@camunda.com");
-      assertThat(mail.getCc()).isEqualTo("cc@camunda.com");
-      assertThat(mail.getSubject()).isEqualTo("subject");
-      assertThat(mail.getSentDate()).isNotNull();
-      assertThat(mail.getReceivedDate()).isNotNull();
-      assertThat(mail.getMessageNumber()).isEqualTo(1);
-      assertThat(mail.getMessageId()).isNotNull();
+    Mail mail = mails.get(0);
+    assertThat(mail.getFrom()).isEqualTo("from@camunda.com");
+    assertThat(mail.getTo()).isEqualTo("test@camunda.com");
+    assertThat(mail.getCc()).isEqualTo("cc@camunda.com");
+    assertThat(mail.getSubject()).isEqualTo("subject");
+    assertThat(mail.getSentDate()).isNotNull();
+    assertThat(mail.getReceivedDate()).isNotNull();
+    assertThat(mail.getMessageNumber()).isEqualTo(1);
+    assertThat(mail.getMessageId()).isNotNull();
   }
 
   @Test
@@ -87,10 +80,8 @@ public class PollMailConnectorTest {
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "subject", "text body");
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
@@ -107,16 +98,11 @@ public class PollMailConnectorTest {
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-1", "body");
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-2", "body");
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
     List<Mail> mails = response.getMails();
-    assertThat(mails)
-      .hasSize(2)
-      .extracting("subject")
-      .contains("mail-1", "mail-2");
+    assertThat(mails).hasSize(2).extracting("subject").contains("mail-1", "mail-2");
   }
 
   @Test
@@ -125,9 +111,7 @@ public class PollMailConnectorTest {
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "subject", "text body");
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-      .execute();
+    PollMailResponse response = MailConnectors.pollMails().createRequest().execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
@@ -142,9 +126,7 @@ public class PollMailConnectorTest {
     thrown.expect(RuntimeException.class);
     thrown.expectMessage("The request is invalid");
 
-    connector
-      .createRequest()
-      .execute();
+    connector.createRequest().execute();
   }
 
   @Test
@@ -156,10 +138,8 @@ public class PollMailConnectorTest {
 
     GreenMailUtil.sendMimeMessage(message);
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
@@ -182,10 +162,8 @@ public class PollMailConnectorTest {
 
     GreenMailUtil.sendMimeMessage(message);
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
@@ -209,10 +187,8 @@ public class PollMailConnectorTest {
     MimeMessage message = MailTestUtil.createMimeMessageWithAttachment(session, attachment);
     GreenMailUtil.sendMimeMessage(message);
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
@@ -236,11 +212,12 @@ public class PollMailConnectorTest {
     MimeMessage message = MailTestUtil.createMimeMessageWithAttachment(session, attachment);
     GreenMailUtil.sendMimeMessage(message);
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-        .downloadAttachments(false)
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails()
+            .createRequest()
+            .folder("INBOX")
+            .downloadAttachments(false)
+            .execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
@@ -260,19 +237,12 @@ public class PollMailConnectorTest {
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-1", "body");
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-2", "body");
 
-    MailConnectors.deleteMails()
-      .createRequest()
-        .folder("INBOX")
-        .messageNumbers(1)
-      .execute();
+    MailConnectors.deleteMails().createRequest().folder("INBOX").messageNumbers(1).execute();
 
-    PollMailResponse response = MailConnectors.pollMails()
-      .createRequest()
-        .folder("INBOX")
-      .execute();
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
   }
-
 }

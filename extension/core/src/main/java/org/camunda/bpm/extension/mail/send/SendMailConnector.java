@@ -14,7 +14,6 @@ package org.camunda.bpm.extension.mail.send;
 
 import java.io.IOException;
 import java.util.Date;
-
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -24,7 +23,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.MailContentType;
@@ -57,7 +55,8 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
 
     try {
       Message message = createMessage(request, mailService.getSession());
-      SendMailInvocation invocation = new SendMailInvocation(message, request, requestInterceptors, mailService);
+      SendMailInvocation invocation =
+          new SendMailInvocation(message, request, requestInterceptors, mailService);
 
       invocation.proceed();
 
@@ -99,7 +98,8 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
         || request.getFileNames() != null && !request.getFileNames().isEmpty();
   }
 
-  protected void createMessageContent(Message message, SendMailRequest request) throws MessagingException, IOException {
+  protected void createMessageContent(Message message, SendMailRequest request)
+      throws MessagingException, IOException {
     if (isTextOnlyMessage(request)) {
       message.setText(request.getText());
 
@@ -131,8 +131,7 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
   }
 
   protected boolean isTextOnlyMessage(SendMailRequest request) {
-    return request.getHtml() == null
-        && request.getFileNames() == null;
+    return request.getHtml() == null && request.getFileNames() == null;
   }
 
   protected MailConfiguration getConfiguration() {
@@ -145,5 +144,4 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
   public void setConfiguration(MailConfiguration configuration) {
     this.configuration = configuration;
   }
-
 }

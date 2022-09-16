@@ -26,5 +26,4 @@ public class DeleteMailProvider implements ConnectorProvider {
   public Connector<?> createConnectorInstance() {
     return new DeleteMailConnector();
   }
-
 }

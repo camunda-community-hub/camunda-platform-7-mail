@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
 import javax.mail.Part;
@@ -64,5 +63,4 @@ public class Attachment implements Serializable {
 
     return attachment;
   }
-
 }

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class PollNotificationWorker implements NotificationWorker {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(PollNotificationWorker.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PollNotificationWorker.class);
 
   protected final MailService mailService;
   protected final Folder folder;
@@ -75,8 +75,12 @@ public class PollNotificationWorker implements NotificationWorker {
 
   @Override
   public String toString() {
-    return "PollNotificationWorker [folder=" + folder.getName() + ", lookupTime=" + lookupTime
-        + ", running=" + running + "]";
+    return "PollNotificationWorker [folder="
+        + folder.getName()
+        + ", lookupTime="
+        + lookupTime
+        + ", running="
+        + running
+        + "]";
   }
-
 }

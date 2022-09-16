@@ -12,20 +12,20 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPStore;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Store;
 import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
-
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailService;
@@ -33,87 +33,86 @@ import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPStore;
-
 public class MailNotificationService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MailNotificationService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MailNotificationService.class);
 
-	protected final MailService mailService;
-	protected final MailConfiguration configuration;
+  protected final MailService mailService;
+  protected final MailConfiguration configuration;
 
-	protected final List<MessageHandler> handlers = new LinkedList<>();
+  protected final List<MessageHandler> handlers = new LinkedList<>();
 
-	protected ExecutorService executorService = null;
+  protected ExecutorService executorService = null;
 
-	protected NotificationWorker notificationWorker;
+  protected NotificationWorker notificationWorker;
 
-	public MailNotificationService(MailConfiguration configuration) {
-		this.configuration = configuration;
-		this.mailService = MailServiceFactory.getService(configuration);
-	}
+  public MailNotificationService(MailConfiguration configuration) {
+    this.configuration = configuration;
+    this.mailService = MailServiceFactory.getService(configuration);
+  }
 
-	public void start() throws Exception {
-		start(configuration.getPollFolder());
-	}
+  public void start() throws Exception {
+    start(configuration.getPollFolder());
+  }
 
-	public void start(String folderName) throws Exception {
-		executorService = Executors.newSingleThreadExecutor();
+  public void start(String folderName) throws Exception {
+    executorService = Executors.newSingleThreadExecutor();
 
-		Folder folder = mailService.ensureOpenFolder(folderName);
+    Folder folder = mailService.ensureOpenFolder(folderName);
 
-		folder.addMessageCountListener(new MessageCountAdapter() {
-			@Override
-			public void messagesAdded(MessageCountEvent event) {
-				List<Message> messages = Arrays.asList(event.getMessages());
+    folder.addMessageCountListener(
+        new MessageCountAdapter() {
+          @Override
+          public void messagesAdded(MessageCountEvent event) {
+            List<Message> messages = Arrays.asList(event.getMessages());
 
-				handlers.forEach(handler -> handler.accept(messages));
-			}
-		});
+            handlers.forEach(handler -> handler.accept(messages));
+          }
+        });
 
-		if (supportsIdle(folder)) {
-			notificationWorker = new IdleNotificationWorker(mailService, (IMAPFolder) folder);
-		} else {
-			notificationWorker = new PollNotificationWorker(mailService, folder,
-					configuration.getNotificationLookupTime());
-		}
+    if (supportsIdle(folder)) {
+      notificationWorker = new IdleNotificationWorker(mailService, (IMAPFolder) folder);
+    } else {
+      notificationWorker =
+          new PollNotificationWorker(
+              mailService, folder, configuration.getNotificationLookupTime());
+    }
 
-		LOGGER.debug("start notification service: {}", notificationWorker);
+    LOGGER.debug("start notification service: {}", notificationWorker);
 
-		executorService.submit(notificationWorker);
-	}
+    executorService.submit(notificationWorker);
+  }
 
-	public void stop() {
-		if (notificationWorker != null) {
-			LOGGER.debug("stop notification service");
+  public void stop() {
+    if (notificationWorker != null) {
+      LOGGER.debug("stop notification service");
 
-			notificationWorker.stop();
+      notificationWorker.stop();
 
-			executorService.shutdown();
-			executorService = null;
-		}
-	}
+      executorService.shutdown();
+      executorService = null;
+    }
+  }
 
-	protected boolean supportsIdle(Folder folder) throws MessagingException {
-		Store store = folder.getStore();
+  protected boolean supportsIdle(Folder folder) throws MessagingException {
+    Store store = folder.getStore();
 
-		if (store instanceof IMAPStore) {
-			IMAPStore imapStore = (IMAPStore) store;
-			return imapStore.hasCapability("IDLE") && folder instanceof IMAPFolder;
-		} else {
-			return false;
-		}
-	}
+    if (store instanceof IMAPStore) {
+      IMAPStore imapStore = (IMAPStore) store;
+      return imapStore.hasCapability("IDLE") && folder instanceof IMAPFolder;
+    } else {
+      return false;
+    }
+  }
 
-	public void registerMessageHandler(MessageHandler handler) {
-		handlers.add(handler);
-	}
+  public void registerMessageHandler(MessageHandler handler) {
+    handlers.add(handler);
+  }
 
-	public void registerMailHandler(Consumer<Mail> consumer) {
-		MessageTransformationHandler handler = new MessageTransformationHandler(consumer,
-				configuration.downloadAttachments(), configuration.getAttachmentPath());
-		registerMessageHandler(handler);
-	}
-
+  public void registerMailHandler(Consumer<Mail> consumer) {
+    MessageTransformationHandler handler =
+        new MessageTransformationHandler(
+            consumer, configuration.downloadAttachments(), configuration.getAttachmentPath());
+    registerMessageHandler(handler);
+  }
 }

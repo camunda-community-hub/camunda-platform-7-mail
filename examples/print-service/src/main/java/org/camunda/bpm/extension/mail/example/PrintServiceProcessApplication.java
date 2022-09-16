@@ -15,7 +15,6 @@ package org.camunda.bpm.extension.mail.example;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 import org.camunda.bpm.application.PostDeploy;
 import org.camunda.bpm.application.PreUndeploy;
 import org.camunda.bpm.application.ProcessApplication;
@@ -29,7 +28,7 @@ import org.camunda.bpm.extension.mail.notification.MailNotificationService;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 
-@ProcessApplication(name="Print Service App")
+@ProcessApplication(name = "Print Service App")
 public class PrintServiceProcessApplication extends ServletProcessApplication {
 
   private MailConfiguration configuration;
@@ -42,12 +41,14 @@ public class PrintServiceProcessApplication extends ServletProcessApplication {
     configuration = MailConfigurationFactory.getConfiguration();
     notificationService = new MailNotificationService(configuration);
 
-    notificationService.registerMailHandler(mail -> {
-      runtimeService.startProcessInstanceByKey("printProcess",
-          Variables.createVariables()
-            .putValue("mail", mail)
-            .putValue("invoice", getInvoicePath()));
-    });
+    notificationService.registerMailHandler(
+        mail -> {
+          runtimeService.startProcessInstanceByKey(
+              "printProcess",
+              Variables.createVariables()
+                  .putValue("mail", mail)
+                  .putValue("invoice", getInvoicePath()));
+        });
 
     notificationService.start();
   }
@@ -76,5 +77,4 @@ public class PrintServiceProcessApplication extends ServletProcessApplication {
     MailService mailService = MailServiceFactory.getService(configuration);
     mailService.close();
   }
-
 }

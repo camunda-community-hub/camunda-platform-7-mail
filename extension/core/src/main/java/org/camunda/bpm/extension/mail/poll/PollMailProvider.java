@@ -26,5 +26,4 @@ public class PollMailProvider implements ConnectorProvider {
   public Connector<?> createConnectorInstance() {
     return new PollMailConnector();
   }
-
 }

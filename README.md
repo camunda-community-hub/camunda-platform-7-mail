@@ -1,6 +1,6 @@
 # camunda-platform-7-mail
 
-[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community) 
+[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
 [![](https://img.shields.io/badge/Compatible%20with-Camunda%20Platform%207-26d07c)](https://github.com/camunda-community-hub/community/blob/main/extension-lifecycle.md#compatiblilty)
 [![](https://img.shields.io/badge/Lifecycle-Incubating-blue)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#incubating-)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -70,17 +70,17 @@ See the [connectors user guide](http://docs.camunda.org/manual/latest/user-guide
 
 Connector-Id: mail-send
 
-Input parameter | Type | Required?
-----------------|------|----------
-from | String |no (read from config)
-fromAlias | String | no (read from config)
-to | String | yes
-cc | String | no
-bcc | String | no
-subject | String | yes
-text | String | no
-html | String | no
-fileNames | List of String (path to files) | yes
+| Input parameter | Type                           | Required?             |
+|-----------------|--------------------------------|-----------------------|
+| from            | String                         | no (read from config) |
+| fromAlias       | String                         | no (read from config) |
+| to              | String                         | yes                   |
+| cc              | String                         | no                    |
+| bcc             | String                         | no                    |
+| subject         | String                         | yes                   |
+| text            | String                         | no                    |
+| html            | String                         | no                    |
+| fileNames       | List of String (path to files) | yes                   |
 
 The text or html body can also generated from a template (e.g. using FreeMarkeer). See the [example](examples/pizza#send-a-mail).
 
@@ -90,18 +90,18 @@ The text or html body can also generated from a template (e.g. using FreeMarkeer
 
 Connector-Id: mail-poll
 
-Input parameter | Type | Required?
-----------------|------|----------
-folder | String (e.g. 'INBOX') | no (read from config)
-download-attachements | Boolean | no (read from config)
+| Input parameter       | Type                  | Required?             |
+|-----------------------|-----------------------|-----------------------|
+| folder                | String (e.g. 'INBOX') | no (read from config) |
+| download-attachements | Boolean               | no (read from config) |
 
-Output parameter | Type
------------------|----------
-mails | List of [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java)
+| Output parameter | Type                                                                                      |
+|------------------|-------------------------------------------------------------------------------------------|
+| mails            | List of [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java) |
 
 If `download-attachements` is set to `true` then it stores the attachments of the mails in the folder which is provided by the configuration. The path of the stored attachments can be get from the [Attachment](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Attachment.java)s of the [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
 
-By default, the polled mails are marked as read. If the property `mail.imaps.peek` is set to `true` then the mails are just polled and not marked as read. 
+By default, the polled mails are marked as read. If the property `mail.imaps.peek` is set to `true` then the mails are just polled and not marked as read.
 
 ### Delete Mails
 
@@ -109,12 +109,12 @@ By default, the polled mails are marked as read. If the property `mail.imaps.pee
 
 Connector-Id: mail-delete
 
-Input parameter | Type | Required?
-----------------|------|----------
-folder | String (e.g. 'INBOX') | no (read from config)
-mails  | List of Mail | no<sup>1</sup>
-messageIds | List of String | no<sup>1</sup>
-messageNumbers | List of Integer | no<sup>1</sup>
+| Input parameter | Type                  | Required?             |
+|-----------------|-----------------------|-----------------------|
+| folder          | String (e.g. 'INBOX') | no (read from config) |
+| mails           | List of Mail          | no<sup>1</sup>        |
+| messageIds      | List of String        | no<sup>1</sup>        |
+| messageNumbers  | List of Integer       | no<sup>1</sup>        |
 
 <sup>1</sup> Either `mails`, `messageIds` or `messageNumbers` have to be set.
 
@@ -213,10 +213,10 @@ Want to discuss something? The [Camunda Forum](https://forum.camunda.io/c/commun
 
 ## FAQ
 
-See also 
+See also
 
 * [JavaMail Project Documentation/FAQ](https://java.net/projects/javamail/pages/Home)
-* [Oracle JavaMail FAQ](http://www.oracle.com/technetwork/java/faq-135477.html) 
+* [Oracle JavaMail FAQ](http://www.oracle.com/technetwork/java/faq-135477.html)
 
 ### Can't send / receive mails from Gmail
 

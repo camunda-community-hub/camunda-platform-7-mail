@@ -15,54 +15,52 @@ package org.camunda.bpm.extension.mail.notification;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
 import javax.mail.Message;
-
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MessageTransformationHandler implements MessageHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MessageTransformationHandler.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageTransformationHandler.class);
 
-	protected final Consumer<Mail> consumer;
+  protected final Consumer<Mail> consumer;
 
-	protected final boolean downloadAttachments;
-	protected final String attachementPath;
+  protected final boolean downloadAttachments;
+  protected final String attachementPath;
 
-	public MessageTransformationHandler(Consumer<Mail> consumer) {
-		this(consumer, false, null);
-	}
+  public MessageTransformationHandler(Consumer<Mail> consumer) {
+    this(consumer, false, null);
+  }
 
-	public MessageTransformationHandler(Consumer<Mail> consumer, boolean downloadAttachments, String attachementPath) {
-		this.consumer = consumer;
-		this.downloadAttachments = downloadAttachments;
-		this.attachementPath = attachementPath;
-	}
+  public MessageTransformationHandler(
+      Consumer<Mail> consumer, boolean downloadAttachments, String attachementPath) {
+    this.consumer = consumer;
+    this.downloadAttachments = downloadAttachments;
+    this.attachementPath = attachementPath;
+  }
 
-	@Override
-	public void accept(List<Message> messages) {
-		List<Mail> mails = new ArrayList<>();
+  @Override
+  public void accept(List<Message> messages) {
+    List<Mail> mails = new ArrayList<>();
 
-		for (Message message : messages) {
+    for (Message message : messages) {
 
-			try {
-				Mail mail = Mail.from(message);
-				if (downloadAttachments) {
-					mail.downloadAttachments(attachementPath);
-				}
+      try {
+        Mail mail = Mail.from(message);
+        if (downloadAttachments) {
+          mail.downloadAttachments(attachementPath);
+        }
 
-				mails.add(mail);
+        mails.add(mail);
 
-			} catch (Exception e) {
-				LOGGER.warn("exception while transforming a message", e);
-			}
-		}
+      } catch (Exception e) {
+        LOGGER.warn("exception while transforming a message", e);
+      }
+    }
 
-		LOGGER.debug("received {} new mails: {}", mails.size(), mails);
+    LOGGER.debug("received {} new mails: {}", mails.size(), mails);
 
-		mails.forEach(consumer);
-	}
-
+    mails.forEach(consumer);
+  }
 }
