@@ -195,6 +195,36 @@ The following examples shows how to use the connectors and services.
   * using the MailNotificationService
   * send mail with attachment
 
+## Setting up configuration using HELM
+
+The mail connector cannot directly support Helm values files since it cannot assume the deployment environment is Kubernetes.
+
+This is why it is configured via the MAIL_CONFIG environment variable and a properties file.
+
+However, supporting Helm deployment is easily done by following:
+
+1) Accept the mail configuration in your Values.yaml, like this:
+
+~~~
+...
+mail:
+    smtp:
+        auth: true
+        port: 465
+...
+~~~
+
+2) Render the mail.properties file with a Helm template
+
+~~~
+mail.smtp.auth={{ .Values.mail.smtp.auth }}
+mail.smtp.port={{ .Values.mail.smtp.port }}
+~~~
+
+3) Put the mail.properties file in a ConfigMap and mount it in your deployment on /config/mail.properties (or anywhere else you prefer)
+
+4) Set the MAIL_CONFIG environment variable to "file:/config/mail.properties" in your deployment
+
 ## Next Steps
 
 Depends on the input of the community. Some ideas:
@@ -221,10 +251,6 @@ See also
 ### Can't send / receive mails from Gmail
 
 It can be that Google blocks the requests because it estimates your application as unsafe. You may also received an email from Google. To fix this go to https://www.google.com/settings/security/lesssecureapps and enable less secure apps.
-
-### Notification service throws exceptions (IDLE-Mode)
-
-Make sure that you don't have an older version (< 1.5.5) of `javamail` in your project. By default, the camunda process engine / distribution includes an old version (1.4.1) of `javamail` (i.e. transitively from `commons-email`).
 
 ## License
 
