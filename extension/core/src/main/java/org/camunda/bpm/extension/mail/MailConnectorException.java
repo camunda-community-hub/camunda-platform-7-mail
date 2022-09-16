@@ -27,5 +27,4 @@ public class MailConnectorException extends RuntimeException {
   public MailConnectorException(String message, Throwable cause) {
     super(message, cause);
   }
-
 }

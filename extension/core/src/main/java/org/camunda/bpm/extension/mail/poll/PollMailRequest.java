@@ -61,7 +61,7 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
   @Override
   protected boolean isRequestValid() {
 
-    if(getFolder() == null || getFolder().isEmpty()) {
+    if (getFolder() == null || getFolder().isEmpty()) {
       LOGGER.warn("invalid request: missing parameter 'folder' in {}", this);
       return false;
     }
@@ -71,7 +71,10 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
 
   @Override
   public String toString() {
-    return "PollMailRequest [folder=" + getFolder() + ", download-attachments=" + downloadAttachments() + "]";
+    return "PollMailRequest [folder="
+        + getFolder()
+        + ", download-attachments="
+        + downloadAttachments()
+        + "]";
   }
-
 }

@@ -14,10 +14,12 @@ package org.camunda.bpm.extension.mail.delete;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.icegreen.greenmail.junit4.GreenMailRule;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import javax.mail.Flags.Flag;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
@@ -25,17 +27,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetupTest;
-
 public class DeleteMailConnectorProcessTest {
 
-  @Rule
-  public ProcessEngineRule engineRule = new ProcessEngineRule();
+  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 
-  @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
 
   @Before
   public void createMails() {
@@ -52,13 +48,14 @@ public class DeleteMailConnectorProcessTest {
     MimeMessage[] mails = greenMail.getReceivedMessages();
     String messageId = mails[0].getMessageID();
 
-    engineRule.getRuntimeService().startProcessInstanceByKey("delete-mail",
-        Variables.createVariables().putValue("messageId", messageId));
+    engineRule
+        .getRuntimeService()
+        .startProcessInstanceByKey(
+            "delete-mail", Variables.createVariables().putValue("messageId", messageId));
 
     mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
     assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
     assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
   }
-
 }

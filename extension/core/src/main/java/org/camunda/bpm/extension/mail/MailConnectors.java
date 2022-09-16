@@ -30,5 +30,4 @@ public class MailConnectors {
   public static DeleteMailConnector deleteMails() {
     return Connectors.getConnector(DeleteMailConnector.CONNECTOR_ID);
   }
-
 }

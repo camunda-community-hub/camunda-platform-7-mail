@@ -14,7 +14,6 @@ package org.camunda.bpm.extension.mail.delete;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
@@ -89,7 +88,9 @@ public class DeleteMailRequest extends AbstractConnectorRequest<EmptyResponse> {
     }
 
     if (!hasMails() && !hasMessageIds() && !hasMessageNumbers()) {
-      LOGGER.warn("invalid request: either parameter 'mails', 'messageIds' or 'messageNumbers' must be set in {}", this);
+      LOGGER.warn(
+          "invalid request: either parameter 'mails', 'messageIds' or 'messageNumbers' must be set in {}",
+          this);
       return false;
     }
 
@@ -110,8 +111,14 @@ public class DeleteMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
   @Override
   public String toString() {
-    return "DeleteMailRequest [folder=" + getFolder() + ", mails=" + getMails() + ", message-ids=" + getMessageIds() + ", message-numbers="
-        + getMessageNumbers() + "]";
+    return "DeleteMailRequest [folder="
+        + getFolder()
+        + ", mails="
+        + getMails()
+        + ", message-ids="
+        + getMessageIds()
+        + ", message-numbers="
+        + getMessageNumbers()
+        + "]";
   }
-
 }

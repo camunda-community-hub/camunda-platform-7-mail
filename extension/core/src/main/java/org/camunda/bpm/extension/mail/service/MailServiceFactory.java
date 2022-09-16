@@ -19,10 +19,9 @@ public class MailServiceFactory {
   private static MailService INSTANCE = null;
 
   public static MailService getService(MailConfiguration configuration) {
-    if(INSTANCE == null) {
+    if (INSTANCE == null) {
       INSTANCE = new MailService(configuration);
     }
     return INSTANCE;
   }
-
 }

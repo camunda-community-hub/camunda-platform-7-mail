@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,8 @@ public class PropertiesMailConfiguration implements MailConfiguration {
 
   public static final String ENV_PROPERTIES_PATH = "MAIL_CONFIG";
   public static final String PROPERTIES_CLASSPATH_PREFIX = "classpath:";
-  public static final String DEFAULT_PROPERTIES_PATH = PROPERTIES_CLASSPATH_PREFIX + "/mail-config.properties";
+  public static final String DEFAULT_PROPERTIES_PATH =
+      PROPERTIES_CLASSPATH_PREFIX + "/mail-config.properties";
 
   public static final String PROPERTY_USER = "mail.user";
   public static final String PROPERTY_PASSWORD = "mail.password";
@@ -46,15 +46,12 @@ public class PropertiesMailConfiguration implements MailConfiguration {
   public static final String DEFAULT_ATTACHMENT_PATH = "attachments";
 
   public static final String PROPERTY_NOTIFICATION_LOOKUP_TIME = "mail.notification.lookup.time";
-  public static final String DEFAULT_NOTIFICATION_LOOKUP_TIME = Duration
-      .ofSeconds(60)
-      .toString();
+  public static final String DEFAULT_NOTIFICATION_LOOKUP_TIME = Duration.ofSeconds(60).toString();
 
   protected Properties properties = null;
   protected String path = null;
 
-  public PropertiesMailConfiguration() {
-  }
+  public PropertiesMailConfiguration() {}
 
   public PropertiesMailConfiguration(String path) {
     this.path = path;
@@ -102,10 +99,9 @@ public class PropertiesMailConfiguration implements MailConfiguration {
 
   @Override
   public Duration getNotificationLookupTime() {
-    String looukupTime = getProperties().getProperty(
-        PROPERTY_NOTIFICATION_LOOKUP_TIME,
-        DEFAULT_NOTIFICATION_LOOKUP_TIME
-    );
+    String looukupTime =
+        getProperties()
+            .getProperty(PROPERTY_NOTIFICATION_LOOKUP_TIME, DEFAULT_NOTIFICATION_LOOKUP_TIME);
     return Duration.parse(looukupTime);
   }
 
@@ -137,11 +133,11 @@ public class PropertiesMailConfiguration implements MailConfiguration {
   }
 
   protected String getPropertiesPath() {
-    return Optional
-        .ofNullable(path)
-        .orElseGet(() -> Optional
-            .ofNullable(System.getenv(ENV_PROPERTIES_PATH))
-            .orElse(DEFAULT_PROPERTIES_PATH));
+    return Optional.ofNullable(path)
+        .orElseGet(
+            () ->
+                Optional.ofNullable(System.getenv(ENV_PROPERTIES_PATH))
+                    .orElse(DEFAULT_PROPERTIES_PATH));
   }
 
   protected InputStream getProperiesAsStream(String path) throws FileNotFoundException {
@@ -166,5 +162,4 @@ public class PropertiesMailConfiguration implements MailConfiguration {
       }
     }
   }
-
 }

@@ -15,7 +15,5 @@ package org.camunda.bpm.extension.mail.example;
 import org.camunda.bpm.application.ProcessApplication;
 import org.camunda.bpm.application.impl.ServletProcessApplication;
 
-@ProcessApplication(name="Pizza App")
-public class PizzaProcessApplication extends ServletProcessApplication {
-
-}
+@ProcessApplication(name = "Pizza App")
+public class PizzaProcessApplication extends ServletProcessApplication {}

@@ -9,22 +9,17 @@
   </parent>
 
   <artifactId>camunda-bpm-mail-core</artifactId>
-  
-  <properties>
-    <version.slf4j>1.7.21</version.slf4j>
-  </properties>
 
   <dependencies>
     
     <dependency>
       <groupId>com.sun.mail</groupId>
-      <artifactId>javax.mail</artifactId>
+      <artifactId>jakarta.mail</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
     </dependency>
     
     <dependency>
@@ -84,7 +79,7 @@
     
     <dependency>
       <groupId>com.icegreen</groupId>
-      <artifactId>greenmail</artifactId>
+      <artifactId>greenmail-junit4</artifactId>
       <scope>test</scope>
     </dependency>
     

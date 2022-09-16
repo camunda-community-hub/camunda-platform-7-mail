@@ -13,10 +13,8 @@
 package org.camunda.bpm.extension.mail.poll;
 
 import java.util.List;
-
 import javax.mail.Folder;
 import javax.mail.Message;
-
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
@@ -29,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMailResponse> {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(PollMailConnector.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PollMailConnector.class);
 
   public static final String CONNECTOR_ID = "mail-poll";
 
@@ -52,14 +50,19 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
 
       Folder folder = mailService.ensureOpenFolder(request.getFolder());
 
-      PollMailInvocation invocation = new PollMailInvocation(folder, request, requestInterceptors, mailService);
+      PollMailInvocation invocation =
+          new PollMailInvocation(folder, request, requestInterceptors, mailService);
 
       @SuppressWarnings("unchecked")
       List<Message> messages = (List<Message>) invocation.proceed();
 
       LOGGER.debug("poll {} mails from folder '{}'", messages.size(), folder.getName());
 
-      return new PollMailResponse(messages, mailService, request.downloadAttachments(), getConfiguration().getAttachmentPath());
+      return new PollMailResponse(
+          messages,
+          mailService,
+          request.downloadAttachments(),
+          getConfiguration().getAttachmentPath());
 
     } catch (Exception e) {
       throw new MailConnectorException("Failed to poll mails: " + e.getMessage(), e);
@@ -76,5 +79,4 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
   public void setConfiguration(MailConfiguration configuration) {
     this.configuration = configuration;
   }
-
 }

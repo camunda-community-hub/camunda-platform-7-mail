@@ -15,7 +15,6 @@ package org.camunda.bpm.extension.mail.example;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.JobQuery;
@@ -27,8 +26,7 @@ import org.junit.Test;
 
 public class ProcessIntegrationTest {
 
-  @Rule
-  public ProcessEngineRule engineRule = new ProcessEngineRule();
+  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 
   @Deployment(resources = "processes/pizzaOrderProcess.bpmn")
   @Test
@@ -62,9 +60,8 @@ public class ProcessIntegrationTest {
   private void waitForAsyncJobs() throws InterruptedException {
     JobQuery jobQuery = engineRule.getManagementService().createJobQuery().executable();
 
-    while(jobQuery.count() > 0) {
+    while (jobQuery.count() > 0) {
       Thread.sleep(500);
     }
   }
-
 }

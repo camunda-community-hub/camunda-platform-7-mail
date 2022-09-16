@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
@@ -30,9 +29,6 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +102,7 @@ public class Mail implements Serializable {
     Mail mail = new Mail();
 
     mail.from = InternetAddress.toString(message.getFrom());
-    mail.to =  InternetAddress.toString(message.getRecipients(RecipientType.TO));
+    mail.to = InternetAddress.toString(message.getRecipients(RecipientType.TO));
     mail.cc = InternetAddress.toString(message.getRecipients(RecipientType.CC));
 
     mail.subject = message.getSubject();
@@ -126,7 +122,8 @@ public class Mail implements Serializable {
     return mail;
   }
 
-  protected static void processMessageContent(Message message, Mail mail) throws MessagingException, IOException {
+  protected static void processMessageContent(Message message, Mail mail)
+      throws MessagingException, IOException {
 
     if (isMultipartMessage(message)) {
       Multipart multipart = (Multipart) message.getContent();
@@ -143,12 +140,13 @@ public class Mail implements Serializable {
     }
   }
 
-  protected static boolean isMultipartMessage(Message message) throws MessagingException, IOException {
-    return message.isMimeType("multipart")
-        || message.getContent() instanceof Multipart;
+  protected static boolean isMultipartMessage(Message message)
+      throws MessagingException, IOException {
+    return message.isMimeType("multipart") || message.getContent() instanceof Multipart;
   }
 
-  protected static void processMessagePartContent(Part part, Mail mail) throws MessagingException, IOException {
+  protected static void processMessagePartContent(Part part, Mail mail)
+      throws MessagingException, IOException {
 
     if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
 
@@ -166,7 +164,8 @@ public class Mail implements Serializable {
     }
   }
 
-  public void downloadAttachments(final String attachmentPath) throws IOException, MessagingException {
+  public void downloadAttachments(final String attachmentPath)
+      throws IOException, MessagingException {
     if (!attachments.isEmpty()) {
 
       LOGGER.debug("download attachments of mail: {}", this);
@@ -187,8 +186,24 @@ public class Mail implements Serializable {
 
   @Override
   public String toString() {
-    return "Mail [from=" + from + ", to=" + to + ", cc=" + cc + ", subject=" + subject + ", sentDate=" + sentDate + ", receivedDate=" + receivedDate
-        + ", messageNumber=" + messageNumber + ", messageId=" + messageId + ", attachments=" + attachments + " ]";
+    return "Mail [from="
+        + from
+        + ", to="
+        + to
+        + ", cc="
+        + cc
+        + ", subject="
+        + subject
+        + ", sentDate="
+        + sentDate
+        + ", receivedDate="
+        + receivedDate
+        + ", messageNumber="
+        + messageNumber
+        + ", messageId="
+        + messageId
+        + ", attachments="
+        + attachments
+        + " ]";
   }
-
 }

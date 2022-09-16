@@ -12,45 +12,42 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit4.GreenMailRule;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import java.io.File;
-
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetupTest;
 
 public class SendMailConnectorTest {
 
   @Rule
-  public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
-
-  @Rule
-  public final ExpectedException thrown = ExpectedException.none();
+  public final GreenMailRule greenMail =
+      new GreenMailRule(ServerSetupTest.ALL)
+          .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
 
   @Test
   public void messageHeader() throws MessagingException {
 
     MailConnectors.sendMail()
-      .createRequest()
+        .createRequest()
         .from("test")
         .fromAlias("me")
         .to("test@camunda.com")
         .subject("subject")
-      .execute();
+        .execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
@@ -58,12 +55,14 @@ public class SendMailConnectorTest {
     MimeMessage mail = mails[0];
 
     assertThat(mail.getFrom())
-      .hasSize(1)
-      .extracting("address", "personal").contains(tuple("test", "me"));
+        .hasSize(1)
+        .extracting("address", "personal")
+        .contains(tuple("test", "me"));
 
     assertThat(mail.getRecipients(RecipientType.TO))
-      .hasSize(1)
-      .extracting("address").contains("test@camunda.com");
+        .hasSize(1)
+        .extracting("address")
+        .contains("test@camunda.com");
 
     assertThat(mail.getSubject()).isEqualTo("subject");
     assertThat(mail.getSentDate()).isNotNull();
@@ -72,53 +71,55 @@ public class SendMailConnectorTest {
   @Test
   public void messageWithCc() throws MessagingException {
 
-   MailConnectors.sendMail()
-      .createRequest()
+    MailConnectors.sendMail()
+        .createRequest()
         .from("test")
         .to("test@camunda.com")
         .cc("cc@camunda.com")
         .subject("subject")
-      .execute();
+        .execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
 
     assertThat(mails[0].getRecipients(RecipientType.CC))
-      .hasSize(1)
-      .extracting("address").contains("cc@camunda.com");
+        .hasSize(1)
+        .extracting("address")
+        .contains("cc@camunda.com");
   }
 
   @Test
   public void messageWithBcc() throws MessagingException {
 
-   MailConnectors.sendMail()
-      .createRequest()
+    MailConnectors.sendMail()
+        .createRequest()
         .from("test")
         .to("test@camunda.com")
         .bcc("bcc@camunda.com")
         .subject("subject")
-      .execute();
+        .execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(2);
 
     assertThat(mails[0].getRecipients(RecipientType.TO))
-      .hasSize(1)
-      .extracting("address").contains("test@camunda.com");
+        .hasSize(1)
+        .extracting("address")
+        .contains("test@camunda.com");
 
     assertThat(mails[0].getRecipients(RecipientType.BCC)).isNull();
   }
 
   @Test
-  public void textMessage() throws MessagingException {
+  public void textMessage() {
 
-   MailConnectors.sendMail()
-      .createRequest()
+    MailConnectors.sendMail()
+        .createRequest()
         .from("test")
         .to("test@camunda.com")
         .subject("subject")
         .text("body")
-      .execute();
+        .execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     MimeMessage mail = mails[0];
@@ -129,14 +130,14 @@ public class SendMailConnectorTest {
   @Test
   public void htmlMessage() throws Exception {
 
-   MailConnectors.sendMail()
-      .createRequest()
+    MailConnectors.sendMail()
+        .createRequest()
         .from("test")
         .to("test@camunda.com")
         .subject("subject")
         .text("test")
         .html("<b>test</b>")
-      .execute();
+        .execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     MimeMessage mail = mails[0];
@@ -152,16 +153,16 @@ public class SendMailConnectorTest {
   @Test
   public void messageWithFileName() throws Exception {
 
-   File attachment = new File(getClass().getResource("/attachment.txt").toURI());
-   assertThat(attachment.exists()).isTrue();
+    File attachment = new File(getClass().getResource("/attachment.txt").toURI());
+    assertThat(attachment.exists()).isTrue();
 
-   MailConnectors.sendMail()
-      .createRequest()
+    MailConnectors.sendMail()
+        .createRequest()
         .from("test")
         .to("test@camunda.com")
         .subject("subject")
         .fileNames(attachment.getPath())
-      .execute();
+        .execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     MimeMessage mail = mails[0];
@@ -176,11 +177,7 @@ public class SendMailConnectorTest {
   @Test
   public void senderFromConfiguration() throws MessagingException {
 
-   MailConnectors.sendMail()
-      .createRequest()
-        .to("test@camunda.com")
-        .subject("subject")
-      .execute();
+    MailConnectors.sendMail().createRequest().to("test@camunda.com").subject("subject").execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
@@ -188,38 +185,40 @@ public class SendMailConnectorTest {
     MimeMessage mail = mails[0];
 
     assertThat(mail.getFrom())
-      .hasSize(1)
-      .extracting("address", "personal").contains(tuple("from@camunda.com", "test"));
+        .hasSize(1)
+        .extracting("address", "personal")
+        .contains(tuple("from@camunda.com", "test"));
   }
 
   @Test
-  public void missingFrom() throws MessagingException {
+  public void missingFrom() {
     SendMailConnector connector = new SendMailConnector();
     connector.setConfiguration(mock(MailConfiguration.class));
-
-    thrown.expect(RuntimeException.class);
-    thrown.expectMessage("The request is invalid");
-
-   connector
-      .createRequest()
-        .to("test@camunda.com")
-        .subject("subject")
-        .text("body")
-      .execute();
+    RuntimeException exception =
+        catchThrowableOfType(
+            () ->
+                connector
+                    .createRequest()
+                    .to("test@camunda.com")
+                    .subject("subject")
+                    .text("body")
+                    .execute(),
+            RuntimeException.class);
+    assertEquals("The request is invalid", exception.getMessage());
   }
 
   @Test
-  public void missingTo() throws MessagingException {
-
-    thrown.expect(RuntimeException.class);
-    thrown.expectMessage("The request is invalid");
-
-    MailConnectors.sendMail()
-      .createRequest()
-        .from("test")
-        .subject("subject")
-        .text("body")
-      .execute();
+  public void missingTo() {
+    RuntimeException exception =
+        catchThrowableOfType(
+            () ->
+                MailConnectors.sendMail()
+                    .createRequest()
+                    .from("test")
+                    .subject("subject")
+                    .text("body")
+                    .execute(),
+            RuntimeException.class);
+    assertEquals("The request is invalid", exception.getMessage());
   }
-
 }

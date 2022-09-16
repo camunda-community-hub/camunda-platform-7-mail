@@ -15,10 +15,7 @@ package org.camunda.bpm.extension.mail.config;
 import java.time.Duration;
 import java.util.Properties;
 
-/**
- * Configuration of the mail extension.
- *
- */
+/** Configuration of the mail extension. */
 public interface MailConfiguration {
 
   /**
@@ -33,9 +30,12 @@ public interface MailConfiguration {
 
   /**
    * @return configuration of the mail protocols (e.g. smtp, imaps)
-   *
-   * @see <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">Package com.sun.mail.imap</a>
-   * @see <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html">Package com.sun.mail.smtp</a>
+   * @see <a
+   *     href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">Package
+   *     com.sun.mail.imap</a>
+   * @see <a
+   *     href="https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html">Package
+   *     com.sun.mail.smtp</a>
    */
   Properties getProperties();
 
@@ -68,5 +68,4 @@ public interface MailConfiguration {
    * @return default duration between two polling requests from notification service
    */
   Duration getNotificationLookupTime();
-
 }

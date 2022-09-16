@@ -14,7 +14,6 @@ package org.camunda.bpm.extension.mail;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.camunda.connect.spi.ConnectorResponse;
 
 public class EmptyResponse implements ConnectorResponse {
@@ -28,5 +27,4 @@ public class EmptyResponse implements ConnectorResponse {
   public <V> V getResponseParameter(String name) {
     return null;
   }
-
 }

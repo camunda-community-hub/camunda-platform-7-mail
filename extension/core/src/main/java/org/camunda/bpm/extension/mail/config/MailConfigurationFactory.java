@@ -26,5 +26,4 @@ public class MailConfigurationFactory {
   public static void setConfiguration(MailConfiguration configuration) {
     INSTANCE = configuration;
   }
-
 }

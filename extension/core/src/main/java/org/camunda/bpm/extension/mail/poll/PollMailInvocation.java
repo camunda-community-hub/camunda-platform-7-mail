@@ -27,8 +27,11 @@ public class PollMailInvocation extends AbstractRequestInvocation<Folder> {
 
   protected final MailService mailService;
 
-  public PollMailInvocation(Folder folder, PollMailRequest request,
-      List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
+  public PollMailInvocation(
+      Folder folder,
+      PollMailRequest request,
+      List<ConnectorRequestInterceptor> requestInterceptors,
+      MailService mailService) {
     super(folder, request, requestInterceptors);
 
     this.mailService = mailService;
@@ -41,5 +44,4 @@ public class PollMailInvocation extends AbstractRequestInvocation<Folder> {
 
     return Arrays.asList(messages);
   }
-
 }

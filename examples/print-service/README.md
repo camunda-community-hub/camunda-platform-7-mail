@@ -1,6 +1,6 @@
 # camunda-bpm-mail - example - print service
 
-This example demonstrate how to 
+This example demonstrate how to
 
 * use the `MailNotificationService` to get informed while receive a new mail,
 * send a mail with an attached file
@@ -15,7 +15,7 @@ This example demonstrate how to
 4. Copy the JAR `camunda-bpm-mail-core-${VERSION}.jar` into the application server lib folder  (and make sure that the required dependencies are available - like JavaMail 1.5.5) (e.g. tomcat folder: `server\apache-tomcat-8.0.24\lib`)
 5. Copy the mail configuration `src/main/resources/mail-configuration.properties` to application server config folder and adjust it (e.g. tomcat folder: `server\apache-tomcat-8.0.24\conf`)
 6. Set the environment variable `MAIL_CONFIG` to the path where you copied the mail configuration
-7. Start the application server 
+7. Start the application server
 8. Send a mail with the attached file which should be printed
 9. Check that a user task is created - complete it
 10. Now, check your mails
@@ -69,4 +69,3 @@ When the order is processed (i.e. complete user task 'print it') then the proces
   <!-- ... -->
 </bpmn:serviceTask>
 ```
-

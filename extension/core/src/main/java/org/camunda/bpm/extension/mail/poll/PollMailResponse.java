@@ -15,9 +15,7 @@ package org.camunda.bpm.extension.mail.poll;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.mail.Message;
-
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.connect.impl.AbstractConnectorResponse;
@@ -35,7 +33,11 @@ public class PollMailResponse extends AbstractConnectorResponse {
   protected final boolean downloadAttachments;
   protected final String attachmentPath;
 
-  public PollMailResponse(List<Message> messages, MailService mailService, boolean downloadAttachments, final String attachmentPath) {
+  public PollMailResponse(
+      List<Message> messages,
+      MailService mailService,
+      boolean downloadAttachments,
+      final String attachmentPath) {
     this.messages = messages;
     this.mailService = mailService;
     this.downloadAttachments = downloadAttachments;
@@ -74,5 +76,4 @@ public class PollMailResponse extends AbstractConnectorResponse {
   public String toString() {
     return "PollMailResponse [messages=" + messages + "]";
   }
-
 }

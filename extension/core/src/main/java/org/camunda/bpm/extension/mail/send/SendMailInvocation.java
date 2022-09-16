@@ -28,8 +28,11 @@ public class SendMailInvocation extends AbstractRequestInvocation<Message> {
 
   protected final MailService mailService;
 
-  public SendMailInvocation(Message message, SendMailRequest request,
-      List<ConnectorRequestInterceptor> requestInterceptors, MailService mailService) {
+  public SendMailInvocation(
+      Message message,
+      SendMailRequest request,
+      List<ConnectorRequestInterceptor> requestInterceptors,
+      MailService mailService) {
     super(message, request, requestInterceptors);
 
     this.mailService = mailService;
@@ -47,5 +50,4 @@ public class SendMailInvocation extends AbstractRequestInvocation<Message> {
 
     return null;
   }
-
 }
