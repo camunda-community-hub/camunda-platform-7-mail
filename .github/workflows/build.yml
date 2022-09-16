@@ -1,13 +1,21 @@
 name: Build project with Maven
 on:
   pull_request:
+    branches: [ main ]
   push:
-    branches-ignore: [master]
-  schedule:
-  - cron: '2 2 * * 1-5' # run nightly master builds on weekdays
+    branches-ignore: [ main ]
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      # Build for three operating systems, currently JVMs 11, 17 and latest four Camunda versions (last two years)
+      # We run Legacy support test on Ubuntu, JDK 1.8 until 7.10 (Release end of 2018).
+      matrix:
+        jdk:
+          - '8'
+          - '11'
+          - '17'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -15,7 +23,7 @@ jobs:
     - name: Java setup
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: ${{ matrix.jdk }}
     - name: Cache
       uses: actions/cache@99d99cd262b87f5f8671407a1e5c1ddfa36ad5ba # pin@v1
       with:
