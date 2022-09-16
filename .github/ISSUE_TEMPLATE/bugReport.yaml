@@ -56,3 +56,11 @@ body:
     options: ["Tomcat","Wildfly","Run","Spring Boot Starter","other"]
   validations:
     required: true
+- type: input
+  id: camunda-distro-other
+  attributes:
+    label: Other Camunda distribution
+    description: If you selected other, please describe your distribution briefly
+    placeholder: e.g. Quarkus, Micronaut, embedded in custom framework
+  validations:
+    required: true
