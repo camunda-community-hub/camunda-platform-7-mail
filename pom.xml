@@ -35,7 +35,7 @@
     <plugin.version.maven-resources-plugin>3.2.0</plugin.version.maven-resources-plugin>
     <plugin.version.maven-shade-plugin>3.3.0</plugin.version.maven-shade-plugin>
     <plugin.version.maven-surefire-plugin>3.0.0-M7</plugin.version.maven-surefire-plugin>
-    <plugin.version.spotless-maven-plugin>2.22.8</plugin.version.spotless-maven-plugin>
+    <plugin.version.spotless-maven-plugin>2.26.0</plugin.version.spotless-maven-plugin>
     <plugin.version.maven-war-plugin>3.2.0</plugin.version.maven-war-plugin>
   </properties>
 
