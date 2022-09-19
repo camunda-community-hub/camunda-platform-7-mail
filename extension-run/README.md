@@ -18,7 +18,7 @@ This plugin can be used with Camunda 7 Run.
 For instructions on how to use the connectors from a service task,
 see [the root project's readme](/README.md).
 
-To use the notification service, please register Beans of type `Consumer<Mail>` or `MessageHandler` which we automatically be picked up and registered to the notification service.
+To use the notification service, please register Beans of type `Consumer<Mail>` or `MessageHandler` which will automatically be picked up and registered to the notification service.
 
 ## How to Configure it?
 
