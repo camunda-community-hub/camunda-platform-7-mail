@@ -1,2 +1,30 @@
 camunda.bpm.plugin.mail:
-  foo: bar
+  smtp.host: localhost
+  smtp.port: 3025
+  smtp.auth: true
+  smtp.ssl.enable: false
+  smtp.socketFactory.port: 3025
+  smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+  transport.protocol: smtp
+
+  imap.host: localhost
+  imap.port: 3143
+  imap.timeout: 10000
+  store.protocol: imap
+
+  # disable partial fetching or increase the fetch size for large attachments
+  imap.partialfetch: false
+
+  poll.folder: INBOX
+
+  sender: from@camunda.com
+  sender.alias: test
+
+  attachment.download: true
+  attachment.path: target/attachments
+  # is used if IDLE is not supported
+  notification.lookup.time: PT1S
+
+  user: test@camunda.com
+  password: bpmn

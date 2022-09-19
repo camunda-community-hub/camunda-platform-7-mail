@@ -32,8 +32,9 @@ import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.SmartLifecycle;
 
-public class MailNotificationService {
+public class MailNotificationService implements SmartLifecycle {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MailNotificationService.class);
 
@@ -51,8 +52,13 @@ public class MailNotificationService {
     this.mailService = MailServiceFactory.getService(configuration);
   }
 
-  public void start() throws Exception {
-    start(configuration.getPollFolder());
+  @Override
+  public void start() {
+    try {
+      start(configuration.getPollFolder());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void start(String folderName) throws Exception {
@@ -83,6 +89,7 @@ public class MailNotificationService {
     executorService.submit(notificationWorker);
   }
 
+  @Override
   public void stop() {
     if (notificationWorker != null) {
       LOGGER.debug("stop notification service");
@@ -92,6 +99,11 @@ public class MailNotificationService {
       executorService.shutdown();
       executorService = null;
     }
+  }
+
+  @Override
+  public boolean isRunning() {
+    return executorService != null && !executorService.isTerminated();
   }
 
   protected boolean supportsIdle(Folder folder) throws MessagingException {

@@ -1,9 +1,14 @@
 package org.camunda.bpm.extension.mail.run;
 
 import java.util.Properties;
+import java.util.Set;
+import java.util.function.Consumer;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.config.PropertiesMailConfiguration;
+import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.notification.MailNotificationService;
+import org.camunda.bpm.extension.mail.notification.MessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,5 +55,16 @@ public class MailConfigurationProvider {
         };
     MailConfigurationFactory.setConfiguration(configuration);
     return configuration;
+  }
+
+  @Bean
+  public MailNotificationService mailNotificationService(
+      MailConfiguration mailConfiguration,
+      Set<Consumer<Mail>> mailConsumers,
+      Set<MessageHandler> messageHandlers) {
+    MailNotificationService notificationService = new MailNotificationService(mailConfiguration);
+    mailConsumers.forEach(notificationService::registerMailHandler);
+    messageHandlers.forEach(notificationService::registerMessageHandler);
+    return notificationService;
   }
 }
