@@ -50,7 +50,11 @@ public class Attachment implements Serializable {
 
   public Path download(Path downloadPath) throws MessagingException, IOException {
     Path newFile = downloadPath.resolve(fileName);
-
+    int prefixCounter = 0;
+    while (Files.exists(newFile)) {
+      newFile = downloadPath.resolve(prefixCounter + "-" + fileName);
+      prefixCounter++;
+    }
     DataHandler dataHandler = part.getDataHandler();
     Files.copy(dataHandler.getInputStream(), newFile);
 
