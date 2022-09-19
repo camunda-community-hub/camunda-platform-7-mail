@@ -14,7 +14,7 @@ package org.camunda.bpm.extension.mail.notification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import java.io.File;

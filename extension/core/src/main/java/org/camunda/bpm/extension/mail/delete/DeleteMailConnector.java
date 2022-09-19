@@ -104,10 +104,8 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
   protected Message[] getMessagesByIds(Folder folder, List<String> messageIds)
       throws MessagingException {
 
-    List<MessageIDTerm> idTerms =
-        messageIds.stream().map(MessageIDTerm::new).collect(Collectors.toList());
-
-    OrTerm searchTerm = new OrTerm(idTerms.toArray(new MessageIDTerm[idTerms.size()]));
+    OrTerm searchTerm =
+        new OrTerm(messageIds.stream().map(MessageIDTerm::new).toArray(MessageIDTerm[]::new));
 
     return folder.search(searchTerm);
   }

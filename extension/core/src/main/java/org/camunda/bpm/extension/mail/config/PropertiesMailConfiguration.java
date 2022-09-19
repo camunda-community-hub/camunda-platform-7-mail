@@ -99,10 +99,10 @@ public class PropertiesMailConfiguration implements MailConfiguration {
 
   @Override
   public Duration getNotificationLookupTime() {
-    String looukupTime =
+    String lookupTime =
         getProperties()
             .getProperty(PROPERTY_NOTIFICATION_LOOKUP_TIME, DEFAULT_NOTIFICATION_LOOKUP_TIME);
-    return Duration.parse(looukupTime);
+    return Duration.parse(lookupTime);
   }
 
   @Override
@@ -118,7 +118,7 @@ public class PropertiesMailConfiguration implements MailConfiguration {
     String path = getPropertiesPath();
 
     try {
-      InputStream inputStream = getProperiesAsStream(path);
+      InputStream inputStream = getPropertiesAsStream(path);
       if (inputStream != null) {
         properties.load(inputStream);
         return properties;
@@ -140,7 +140,7 @@ public class PropertiesMailConfiguration implements MailConfiguration {
                     .orElse(DEFAULT_PROPERTIES_PATH));
   }
 
-  protected InputStream getProperiesAsStream(String path) throws FileNotFoundException {
+  protected InputStream getPropertiesAsStream(String path) throws FileNotFoundException {
 
     if (path.startsWith(PROPERTIES_CLASSPATH_PREFIX)) {
       String pathWithoutPrefix = path.substring(PROPERTIES_CLASSPATH_PREFIX.length());
