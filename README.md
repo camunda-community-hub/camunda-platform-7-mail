@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Build project with Maven](https://github.com/camunda-community-hub/camunda-bpm-mail/workflows/Build%20project%20with%20Maven/badge.svg)
 
-A community extension for Camunda Platform 7 to integrate emails in a process and interact with them. It was previously known as `camunda-bpm-mail`.
+A community extension for Camunda Platform 7 to integrate emails into a process and interact with them. It was previously known as `camunda-bpm-mail`.
 
 ![Sample process](docs/sample-process.png)
 
@@ -25,7 +25,7 @@ A community extension for Camunda Platform 7 to integrate emails in a process an
 
 ### For Embedded Process Engine
 
-Add `camunda-bpm-mail-core` as dependency to your application. Using Maven, you have to add the following lines to your POM:
+Add `camunda-bpm-mail-core` as a dependency to your application. Using Maven, you have to add the following lines to your POM:
 
 ```xml
 <dependency>
@@ -39,7 +39,7 @@ Add `camunda-bpm-mail-core` as dependency to your application. Using Maven, you 
 
 Add `camunda-bpm-mail-core-1.2.0.jar` to your application server (e.g. `apache-tomcat-8.0.24\lib`).
 
-Also make sure that you included the following dependencies:
+Also, make sure that you included the following dependencies:
 
 * [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core/1.0.3) >= 1.0.3
 * [JavaMail](http://mvnrepository.com/artifact/com.sun.mail/javax.mail/1.5.5) >= 1.5.5
@@ -49,7 +49,7 @@ If you use Wildfly, follow the [special instructions](docs/shared-process-engine
 
 ## How to use it?
 
-The extension is build on top of the [Connectors API](http://docs.camunda.org/manual/latest/reference/connect/) and provide some connectors for interacting with emails. The connectors can be used inside a process as implementation of a service task and are referenced by id. Use the Camunda Modeler to configure it.
+The extension is built on top of the [Connectors API](http://docs.camunda.org/manual/latest/reference/connect/) and provides some connectors for interacting with emails. The connectors can be used inside a process as an implementation of a service task and are referenced by id. Use the Camunda Modeler to configure it.
 
 ```xml
 <serviceTask id="sendMail" name="Send Mail Task">
@@ -62,7 +62,7 @@ The extension is build on top of the [Connectors API](http://docs.camunda.org/ma
 </serviceTask>
 ```
 
-See the [connectors user guide](http://docs.camunda.org/manual/latest/user-guide/process-engine/connectors/) how to configure the process engine to use connectors.
+See the [connectors user guide](http://docs.camunda.org/manual/latest/user-guide/process-engine/connectors/) on how to configure the process engine to use connectors.
 
 ### Send Mails
 
@@ -82,7 +82,7 @@ Connector-Id: mail-send
 | html            | String                         | no                    |
 | fileNames       | List of String (path to files) | yes                   |
 
-The text or html body can also generated from a template (e.g. using FreeMarkeer). See the [example](examples/pizza#send-a-mail).
+The text or html body can also be generated from a template (e.g. using FreeMarkeer). See the [example](examples/pizza#send-a-mail).
 
 ### Poll Mails
 
@@ -93,13 +93,13 @@ Connector-Id: mail-poll
 | Input parameter       | Type                  | Required?             |
 |-----------------------|-----------------------|-----------------------|
 | folder                | String (e.g. 'INBOX') | no (read from config) |
-| download-attachements | Boolean               | no (read from config) |
+| download-attachments  | Boolean               | no (read from config) |
 
 | Output parameter | Type                                                                                      |
 |------------------|-------------------------------------------------------------------------------------------|
 | mails            | List of [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java) |
 
-If `download-attachements` is set to `true` then it stores the attachments of the mails in the folder which is provided by the configuration. The path of the stored attachments can be get from the [Attachment](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Attachment.java)s of the [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
+If `download-attachments` is set to `true` then it stores the attachments of the mails in the folder which is provided by the configuration. The path of the stored attachments can be get from the [Attachment](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Attachment.java)s of the [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
 
 By default, the polled mails are marked as read. If the property `mail.imaps.peek` is set to `true` then the mails are just polled and not marked as read.
 
@@ -118,11 +118,11 @@ Connector-Id: mail-delete
 
 <sup>1</sup> Either `mails`, `messageIds` or `messageNumbers` have to be set.
 
-### React on incoming Mails
+### React to incoming Mails
 
 ![icon](docs/mail-notification-icon.png)
 
-The extension provide the [MailNotificationService](extension/core/src/main/java/org/camunda/bpm/extension/mail/notification/MailNotificationService.java) to react on incoming mails (e.g. start a process instance or correlate a message). You can register handlers / consumers which are invoked when a new mail is received.
+The extension provides the [MailNotificationService](extension/core/src/main/java/org/camunda/bpm/extension/mail/notification/MailNotificationService.java) to react on incoming mails (e.g. start a process instance or correlate a message). You can register handlers/consumers, which are invoked when a new mail is received.
 
 ```java
 MailNotificationService notificationService = new MailNotificationService(configuration);
@@ -139,13 +139,13 @@ notificationService.start();
 notificationService.stop();
 ```
 
-If you use a mail handler and enabled `downloadAttachments` in the configuration then it stores the attachments of the mail before invoking the handler. Otherwise, you can also trigger the download manual by calling [Mail.downloadAttachments()](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java#L170).
+If you use a mail handler and enabled `downloadAttachments` in the configuration then it stores the attachments of the mail before invoking the handler. Otherwise, you can also trigger the download manually by calling [Mail.downloadAttachments()](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java#L170).
 
 ## How to configure it?
 
-By default, the extension loads the configuration from a properties file `mail-config.properties` on classpath. You can change the lookup path using the environment variable `MAIL_CONFIG`. If you want to lookup a file on the classpath, use the `classpath:` prefix (e.g. `classpath:/my-application.config`).
+By default, the extension loads the configuration from a properties file `mail-config.properties` on the classpath. You can change the lookup path using the environment variable `MAIL_CONFIG`. If you want to lookup a file on the classpath, use the `classpath:` prefix (e.g. `classpath:/my-application.config`).
 
-An example configuration can look like:
+An example configuration can look like this:
 
 ```
 # send mails via SMTP
@@ -185,7 +185,7 @@ You can find some sample configurations at [extension/core/configs](extension/co
 
 ## Examples
 
-The following examples shows how to use the connectors and services.
+The following examples show how to use the connectors and services.
 
 * [Pizza Order](examples/pizza)
   * poll mails
@@ -235,7 +235,7 @@ Depends on the input of the community. Some ideas:
 
 ## Contribution
 
-Found a bug? Please report it using [Github Issues](https://github.com/camunda/camunda-platform-7-mail/issues).
+Found a bug? Please report it using [GitHub Issues](https://github.com/camunda/camunda-platform-7-mail/issues).
 
 Want to extend, improve or fix a bug in the extension? [Pull Requests](https://github.com/camunda/camunda-platform-7-mail/pulls) are very welcome.
 
@@ -250,7 +250,7 @@ See also
 
 ### Can't send / receive mails from Gmail
 
-It can be that Google blocks the requests because it estimates your application as unsafe. You may also received an email from Google. To fix this go to https://www.google.com/settings/security/lesssecureapps and enable less secure apps.
+It can be that Google blocks the requests because it estimates your application as unsafe. You may also receive an email from Google. To fix this go to https://www.google.com/settings/security/lesssecureapps and enable less secure apps.
 
 ## License
 
