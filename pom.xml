@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.camunda.community</groupId>
     <artifactId>community-hub-release-parent</artifactId>
-    <version>1.2.2</version>
+    <version>1.3.1</version>
     <relativePath/>
   </parent>
 
@@ -27,7 +27,7 @@
     <version.camunda>7.13.0</version.camunda>
     <version.springBoot>2.2.5.RELEASE</version.springBoot>
     <!-- tests -->
-    <version.greenmail>1.6.10</version.greenmail>
+    <version.greenmail>1.6.11</version.greenmail>
     <!-- maven plugins (not managed by parent) -->
     <plugin.version.function-maven-plugin>0.10.1</plugin.version.function-maven-plugin>
     <plugin.version.maven-enforcer-plugin>3.1.0</plugin.version.maven-enforcer-plugin>
@@ -35,7 +35,7 @@
     <plugin.version.maven-resources-plugin>3.2.0</plugin.version.maven-resources-plugin>
     <plugin.version.maven-shade-plugin>3.4.0</plugin.version.maven-shade-plugin>
     <plugin.version.maven-surefire-plugin>3.0.0-M7</plugin.version.maven-surefire-plugin>
-    <plugin.version.spotless-maven-plugin>2.26.0</plugin.version.spotless-maven-plugin>
+    <plugin.version.spotless-maven-plugin>2.27.2</plugin.version.spotless-maven-plugin>
     <plugin.version.maven-war-plugin>3.3.2</plugin.version.maven-war-plugin>
   </properties>
 
