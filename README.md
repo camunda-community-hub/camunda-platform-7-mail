@@ -82,7 +82,7 @@ Connector-Id: mail-send
 | html            | String                         | no                    |
 | fileNames       | List of String (path to files) | yes                   |
 
-The text or html body can also generated from a template (e.g. using FreeMarkeer). See the [example](examples/pizza#send-a-mail).
+The text or html body can also be generated from a template (e.g. using FreeMarker). See the [example](examples/pizza#send-a-mail).
 
 ### Poll Mails
 
@@ -90,16 +90,16 @@ The text or html body can also generated from a template (e.g. using FreeMarkeer
 
 Connector-Id: mail-poll
 
-| Input parameter       | Type                  | Required?             |
-|-----------------------|-----------------------|-----------------------|
-| folder                | String (e.g. 'INBOX') | no (read from config) |
-| download-attachements | Boolean               | no (read from config) |
+| Input parameter      | Type                  | Required?             |
+|----------------------|-----------------------|-----------------------|
+| folder               | String (e.g. 'INBOX') | no (read from config) |
+| download-attachments | Boolean               | no (read from config) |
 
 | Output parameter | Type                                                                                      |
 |------------------|-------------------------------------------------------------------------------------------|
 | mails            | List of [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java) |
 
-If `download-attachements` is set to `true` then it stores the attachments of the mails in the folder which is provided by the configuration. The path of the stored attachments can be get from the [Attachment](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Attachment.java)s of the [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
+If `download-attachments` is set to `true` then it stores the attachments of the mails in the folder which is provided by the configuration. The path of the stored attachments can be gotten from the [Attachment](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Attachment.java)s of the [Mail](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
 
 By default, the polled mails are marked as read. If the property `mail.imaps.peek` is set to `true` then the mails are just polled and not marked as read.
 
@@ -137,13 +137,14 @@ notificationService.start();
 // ...
 
 notificationService.stop();
+
 ```
 
-If you use a mail handler and enabled `downloadAttachments` in the configuration then it stores the attachments of the mail before invoking the handler. Otherwise, you can also trigger the download manual by calling [Mail.downloadAttachments()](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java#L170).
+If you use a mail handler and enabled `downloadAttachments` in the configuration then it stores the attachments of the mail before invoking the handler. Otherwise, you can also trigger the download manual by calling [Mail.downloadAttachments()](extension/core/src/main/java/org/camunda/bpm/extension/mail/dto/Mail.java).
 
 ## How to configure it?
 
-By default, the extension loads the configuration from a properties file `mail-config.properties` on classpath. You can change the lookup path using the environment variable `MAIL_CONFIG`. If you want to lookup a file on the classpath, use the `classpath:` prefix (e.g. `classpath:/my-application.config`).
+By default, the extension loads the configuration from a properties file `mail-config.properties` on classpath. You can change the lookup path using the environment variable `MAIL_CONFIG`. If you want to look up a file on the classpath, use the `classpath:` prefix (e.g. `classpath:/my-application.config`).
 
 An example configuration can look like:
 
@@ -205,21 +206,21 @@ However, supporting Helm deployment is easily done by following:
 
 1) Accept the mail configuration in your Values.yaml, like this:
 
-~~~
-...
-mail:
-    smtp:
-        auth: true
-        port: 465
-...
-~~~
+    ~~~
+    ...
+    mail:
+        smtp:
+            auth: true
+            port: 465
+    ...
+    ~~~
 
 2) Render the mail.properties file with a Helm template
 
-~~~
-mail.smtp.auth={{ .Values.mail.smtp.auth }}
-mail.smtp.port={{ .Values.mail.smtp.port }}
-~~~
+    ~~~
+    mail.smtp.auth={{ .Values.mail.smtp.auth }}
+    mail.smtp.port={{ .Values.mail.smtp.port }}
+    ~~~
 
 3) Put the mail.properties file in a ConfigMap and mount it in your deployment on /config/mail.properties (or anywhere else you prefer)
 
@@ -235,7 +236,7 @@ Depends on the input of the community. Some ideas:
 
 ## Contribution
 
-Found a bug? Please report it using [Github Issues](https://github.com/camunda/camunda-platform-7-mail/issues).
+Found a bug? Please report it using [GitHub Issues](https://github.com/camunda/camunda-platform-7-mail/issues).
 
 Want to extend, improve or fix a bug in the extension? [Pull Requests](https://github.com/camunda/camunda-platform-7-mail/pulls) are very welcome.
 
@@ -250,7 +251,7 @@ See also
 
 ### Can't send / receive mails from Gmail
 
-It can be that Google blocks the requests because it estimates your application as unsafe. You may also received an email from Google. To fix this go to https://www.google.com/settings/security/lesssecureapps and enable less secure apps.
+It can be that Google blocks the requests because it estimates your application as unsafe. You may also receive an email from Google. To fix this go to https://www.google.com/settings/security/lesssecureapps and enable less secure apps.
 
 ## License
 

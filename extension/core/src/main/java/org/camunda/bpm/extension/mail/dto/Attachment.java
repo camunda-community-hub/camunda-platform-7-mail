@@ -30,6 +30,16 @@ public class Attachment implements Serializable {
   // transient object for download the attachment
   private transient Part part;
 
+  public static Attachment from(Part part) throws MessagingException {
+    Attachment attachment = new Attachment();
+
+    attachment.fileName = part.getFileName();
+
+    attachment.part = part;
+
+    return attachment;
+  }
+
   public String getFileName() {
     return fileName;
   }
@@ -40,7 +50,11 @@ public class Attachment implements Serializable {
 
   public Path download(Path downloadPath) throws MessagingException, IOException {
     Path newFile = downloadPath.resolve(fileName);
-
+    int prefixCounter = 0;
+    while (Files.exists(newFile)) {
+      newFile = downloadPath.resolve(prefixCounter + "-" + fileName);
+      prefixCounter++;
+    }
     DataHandler dataHandler = part.getDataHandler();
     Files.copy(dataHandler.getInputStream(), newFile);
 
@@ -52,15 +66,5 @@ public class Attachment implements Serializable {
   @Override
   public String toString() {
     return "Attachment [fileName=" + fileName + ", path=" + path + "]";
-  }
-
-  public static Attachment from(Part part) throws MessagingException {
-    Attachment attachment = new Attachment();
-
-    attachment.fileName = part.getFileName();
-
-    attachment.part = part;
-
-    return attachment;
   }
 }

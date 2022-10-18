@@ -19,7 +19,7 @@ import java.util.Properties;
 public interface MailConfiguration {
 
   /**
-   * @return user name for connecting to the mail provider
+   * @return username for connecting to the mail provider
    */
   String getUserName();
 

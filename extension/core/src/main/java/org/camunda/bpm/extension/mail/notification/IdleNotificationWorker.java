@@ -12,9 +12,7 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
-import com.sun.mail.iap.ProtocolException;
 import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.protocol.IMAPProtocol;
 import javax.mail.MessagingException;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
@@ -27,7 +25,7 @@ public class IdleNotificationWorker implements NotificationWorker {
   protected final MailService mailService;
   protected final IMAPFolder folder;
 
-  protected boolean runnning = true;
+  protected boolean running = true;
 
   public IdleNotificationWorker(MailService mailService, IMAPFolder folder) {
     this.mailService = mailService;
@@ -36,7 +34,7 @@ public class IdleNotificationWorker implements NotificationWorker {
 
   @Override
   public void run() {
-    while (runnning) {
+    while (running) {
 
       waitingForMails();
     }
@@ -57,16 +55,14 @@ public class IdleNotificationWorker implements NotificationWorker {
 
   @Override
   public void stop() {
-    runnning = false;
+    running = false;
 
     // perform a NOOP to interrupt IDLE
     try {
       folder.doCommand(
-          new IMAPFolder.ProtocolCommand() {
-            public Object doCommand(IMAPProtocol p) throws ProtocolException {
-              p.simpleCommand("NOOP", null);
-              return null;
-            }
+          p -> {
+            p.simpleCommand("NOOP", null);
+            return null;
           });
     } catch (MessagingException e) {
       // ignore
@@ -75,6 +71,6 @@ public class IdleNotificationWorker implements NotificationWorker {
 
   @Override
   public String toString() {
-    return "IdleNotificationWorker [folder=" + folder.getName() + ", runnning=" + runnning + "]";
+    return "IdleNotificationWorker [folder=" + folder.getName() + ", running=" + running + "]";
   }
 }

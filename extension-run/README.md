@@ -18,10 +18,12 @@ This plugin can be used with Camunda 7 Run.
 For instructions on how to use the connectors from a service task,
 see [the root project's readme](/README.md).
 
+To use the notification service, please register Beans of type `Consumer<Mail>` or `MessageHandler` which will automatically be picked up and registered to the notification service.
+
 ## How to Configure it?
 
 Configure the plugin via a YAML file (i.e., the `default.yml`).
-Preceed all properties with the prefix `camunda.bpm.plugin.mail`.
+Precede all properties with the prefix `camunda.bpm.plugin.mail`.
 
 The `mail.` prefix that comes with the old bootstrapping strategy will be appended to remain compatible.
 

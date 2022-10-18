@@ -87,6 +87,11 @@
         <artifactId>greenmail-junit4</artifactId>
         <version>${version.greenmail}</version>
       </dependency>
+      <dependency>
+        <groupId>com.icegreen</groupId>
+        <artifactId>greenmail-junit5</artifactId>
+        <version>${version.greenmail}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <build>

@@ -20,11 +20,10 @@ import org.slf4j.LoggerFactory;
 
 public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PollMailRequest.class);
-
   protected static final String PARAM_FOLDER = "folder";
-  protected static final String PARAM_DOWNLOAD_ATTACHMENTS = "download-attachements";
-
+  protected static final String[] PARAM_DOWNLOAD_ATTACHMENTS =
+      new String[] {"download-attachments", "download-attachements"};
+  private static final Logger LOGGER = LoggerFactory.getLogger(PollMailRequest.class);
   protected final MailConfiguration configuration;
 
   public PollMailRequest(Connector<?> connector, MailConfiguration configuration) {
@@ -46,7 +45,10 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
   }
 
   public boolean downloadAttachments() {
-    Boolean downloadAttachments = getRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS);
+    Boolean downloadAttachments = getRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS[0]);
+    if (downloadAttachments == null) {
+      downloadAttachments = getRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS[1]);
+    }
     if (downloadAttachments == null) {
       downloadAttachments = configuration.downloadAttachments();
     }
@@ -54,7 +56,7 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
   }
 
   public PollMailRequest downloadAttachments(boolean downloadAttachments) {
-    setRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS, downloadAttachments);
+    setRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS[0], downloadAttachments);
     return this;
   }
 

@@ -47,7 +47,7 @@ public class PollMailResponse extends AbstractConnectorResponse {
   @Override
   protected void collectResponseParameters(Map<String, Object> responseParameters) {
 
-    List<Mail> mails = new ArrayList<Mail>();
+    List<Mail> mails = new ArrayList<>();
     for (Message message : messages) {
 
       try {

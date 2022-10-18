@@ -52,7 +52,7 @@ public class Mail implements Serializable {
   private String text;
   private String html;
 
-  private List<Attachment> attachments = new ArrayList<Attachment>();
+  private final List<Attachment> attachments = new ArrayList<>();
 
   public String getFrom() {
     return from;
@@ -113,7 +113,7 @@ public class Mail implements Serializable {
 
     if (message instanceof MimeMessage) {
       MimeMessage mimeMessage = (MimeMessage) message;
-      // extract more informations
+      // extract more information
       mail.messageId = mimeMessage.getMessageID();
     }
 
