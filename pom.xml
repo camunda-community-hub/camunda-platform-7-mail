@@ -31,7 +31,7 @@
     <!-- maven plugins (not managed by parent) -->
     <plugin.version.function-maven-plugin>0.10.1</plugin.version.function-maven-plugin>
     <plugin.version.maven-enforcer-plugin>3.1.0</plugin.version.maven-enforcer-plugin>
-    <plugin.version.maven-install-plugin>3.0.1</plugin.version.maven-install-plugin>
+    <plugin.version.maven-install-plugin>3.1.0</plugin.version.maven-install-plugin>
     <plugin.version.maven-resources-plugin>3.2.0</plugin.version.maven-resources-plugin>
     <plugin.version.maven-shade-plugin>3.4.1</plugin.version.maven-shade-plugin>
     <plugin.version.maven-surefire-plugin>3.0.0-M7</plugin.version.maven-surefire-plugin>
