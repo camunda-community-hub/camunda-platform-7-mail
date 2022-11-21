@@ -12,7 +12,7 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit4.GreenMailRule;
@@ -25,17 +25,18 @@ import javax.mail.internet.MimeMultipart;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.engine.variable.value.FileValue;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class SendMailConnectorProcessTest {
 
-  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
-
   @Rule
   public final GreenMailRule greenMail =
       new GreenMailRule(ServerSetupTest.ALL)
           .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
+
+  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 
   @Test
   @Deployment(resources = "processes/mail-send-text.bpmn")
@@ -67,14 +68,18 @@ public class SendMailConnectorProcessTest {
 
   @Test
   @Deployment(resources = "processes/mail-send-file.bpmn")
-  public void sendMailWithFileName() throws Exception {
+  public void sendMailWithFileNameAndFiles() throws Exception {
     File attachment = new File(getClass().getResource("/attachment.txt").toURI());
     assertThat(attachment.exists()).isTrue();
+    FileValue fileValue = Variables.fileValue(attachment);
 
     engineRule
         .getRuntimeService()
         .startProcessInstanceByKey(
-            "send-mail", Variables.createVariables().putValue("file", attachment.getPath()));
+            "send-mail",
+            Variables.createVariables()
+                .putValue("file", attachment.getPath())
+                .putValueTyped("fileValue", fileValue));
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
     assertThat(mails).hasSize(1);
@@ -84,7 +89,8 @@ public class SendMailConnectorProcessTest {
     assertThat(mail.getContent()).isInstanceOf(MimeMultipart.class);
     MimeMultipart multiPart = (MimeMultipart) mail.getContent();
 
-    assertThat(multiPart.getCount()).isEqualTo(1);
+    assertThat(multiPart.getCount()).isEqualTo(2);
     assertThat(GreenMailUtil.getBody(multiPart.getBodyPart(0))).isEqualTo("plain text");
+    assertThat(GreenMailUtil.getBody(multiPart.getBodyPart(1))).isEqualTo("plain text");
   }
 }

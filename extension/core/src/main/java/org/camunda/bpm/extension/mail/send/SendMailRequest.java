@@ -12,8 +12,10 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.connect.impl.AbstractConnectorRequest;
@@ -23,22 +25,17 @@ import org.slf4j.LoggerFactory;
 
 public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SendMailRequest.class);
-
   protected static final String PARAM_FROM = "from";
   protected static final String PARAM_FROM_ALIAS = "fromAlias";
-
   protected static final String PARAM_TO = "to";
   protected static final String PARAM_CC = "cc";
   protected static final String PARAM_BCC = "bcc";
-
   protected static final String PARAM_SUBJECT = "subject";
-
   protected static final String PARAM_TEXT = "text";
   protected static final String PARAM_HTML = "html";
-
   protected static final String PARAM_FILE_NAMES = "fileNames";
-
+  protected static final String PARAM_FILES = "files";
+  private static final Logger LOGGER = LoggerFactory.getLogger(SendMailRequest.class);
   protected final MailConfiguration configuration;
 
   public SendMailRequest(Connector<?> connector, MailConfiguration configuration) {
@@ -132,6 +129,15 @@ public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
   public SendMailRequest fileNames(String... fileNames) {
     setRequestParameter(PARAM_FILE_NAMES, Arrays.asList(fileNames));
+    return this;
+  }
+
+  public Map<String, ByteArrayInputStream> getFiles() {
+    return getRequestParameter(PARAM_FILES);
+  }
+
+  public SendMailRequest files(Map<String, ByteArrayInputStream> files) {
+    setRequestParameter(PARAM_FILES, files);
     return this;
   }
 

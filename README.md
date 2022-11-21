@@ -70,17 +70,18 @@ See the [connectors user guide](http://docs.camunda.org/manual/latest/user-guide
 
 Connector-Id: mail-send
 
-| Input parameter | Type                           | Required?             |
-|-----------------|--------------------------------|-----------------------|
-| from            | String                         | no (read from config) |
-| fromAlias       | String                         | no (read from config) |
-| to              | String                         | yes                   |
-| cc              | String                         | no                    |
-| bcc             | String                         | no                    |
-| subject         | String                         | yes                   |
-| text            | String                         | no                    |
-| html            | String                         | no                    |
-| fileNames       | List of String (path to files) | yes                   |
+| Input parameter | Type                                   | Required?             |
+|-----------------|----------------------------------------|-----------------------|
+| from            | String                                 | no (read from config) |
+| fromAlias       | String                                 | no (read from config) |
+| to              | String                                 | yes                   |
+| cc              | String                                 | no                    |
+| bcc             | String                                 | no                    |
+| subject         | String                                 | yes                   |
+| text            | String                                 | no                    |
+| html            | String                                 | no                    |
+| fileNames       | List of String (path to files)         | no                    |
+| files           | Map of String to file process variable | no                    |
 
 The text or html body can also be generated from a template (e.g. using FreeMarker). See the [example](examples/pizza#send-a-mail).
 
