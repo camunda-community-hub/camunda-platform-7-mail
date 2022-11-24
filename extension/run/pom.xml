@@ -24,7 +24,7 @@
     </dependency>
     <dependency>
       <groupId>org.camunda.bpm.extension</groupId>
-      <artifactId>camunda-bpm-mail-spring-boot</artifactId>
+      <artifactId>camunda-bpm-mail-spring-boot-starter</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
