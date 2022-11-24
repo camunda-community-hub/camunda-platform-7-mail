@@ -42,7 +42,7 @@ Add `camunda-bpm-mail-core-1.4.3.jar` to your application server (e.g. `apache-t
 Also make sure that you included the following dependencies:
 
 * [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core/1.0.3) >= 1.0.3
-* [JakartaMail](http://mvnrepository.com/artifact/com.sun.mail/jakarta.mail/1.6.7) >= 1.5.5
+* [JakartaMail](http://mvnrepository.com/artifact/com.sun.mail/jakarta.mail/1.6.7) >= 1.6.7
 * [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api/1.7.21) >= 1.7.32
 
 If you use Wildfly, follow the [special instructions](docs/shared-process-engine-wildfly.md).
