@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -66,8 +67,8 @@ public class MailConnectorConfiguration {
       MailService mailService,
       Set<Consumer<Mail>> mailConsumers,
       Set<MessageHandler> messageHandlers) {
-    MailNotificationService notificationService =
-        new MailNotificationService(mailConfiguration, mailService);
+    SpringBootMailNotificationService notificationService =
+        new SpringBootMailNotificationService(mailConfiguration, mailService);
     mailConsumers.forEach(notificationService::registerMailHandler);
     messageHandlers.forEach(notificationService::registerMessageHandler);
     return notificationService;
@@ -77,5 +78,14 @@ public class MailConnectorConfiguration {
   @DependsOn("mailConfiguration")
   public MailService mailService() {
     return MailServiceFactory.getInstance().get();
+  }
+
+  public static class SpringBootMailNotificationService extends MailNotificationService
+      implements SmartLifecycle {
+
+    public SpringBootMailNotificationService(
+        MailConfiguration configuration, MailService mailService) {
+      super(configuration, mailService);
+    }
   }
 }

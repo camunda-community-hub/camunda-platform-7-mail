@@ -31,9 +31,8 @@ import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.SmartLifecycle;
 
-public class MailNotificationService implements SmartLifecycle {
+public class MailNotificationService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MailNotificationService.class);
 
@@ -51,7 +50,6 @@ public class MailNotificationService implements SmartLifecycle {
     this.mailService = mailService;
   }
 
-  @Override
   public void start() {
     try {
       start(configuration.getPollFolder());
@@ -88,7 +86,6 @@ public class MailNotificationService implements SmartLifecycle {
     executorService.submit(notificationWorker);
   }
 
-  @Override
   public void stop() {
     if (notificationWorker != null) {
       LOGGER.debug("stop notification service");
@@ -100,7 +97,6 @@ public class MailNotificationService implements SmartLifecycle {
     }
   }
 
-  @Override
   public boolean isRunning() {
     return executorService != null && !executorService.isTerminated();
   }
