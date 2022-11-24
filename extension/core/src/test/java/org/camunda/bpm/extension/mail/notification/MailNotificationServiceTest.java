@@ -12,7 +12,7 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
@@ -29,25 +29,27 @@ import org.camunda.bpm.extension.mail.MailTestUtil;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Attachment;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class MailNotificationServiceTest {
 
   @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
-
-  @Rule public final ExpectedException thrown = ExpectedException.none();
 
   private MailNotificationService notificationService;
 
   @Before
   public void init() {
     greenMail.setUser("test@camunda.com", "bpmn");
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
 
-    notificationService = new MailNotificationService(MailConfigurationFactory.getConfiguration());
+    notificationService =
+        new MailNotificationService(
+            MailConfigurationFactory.getInstance().get(), MailServiceFactory.getInstance().get());
   }
 
   @After

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.connect.impl.AbstractConnectorRequest;
 import org.camunda.connect.spi.Connector;
 import org.slf4j.Logger;
@@ -25,22 +26,27 @@ import org.slf4j.LoggerFactory;
 
 public class SendMailRequest extends AbstractConnectorRequest<EmptyResponse> {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(SendMailRequest.class);
+
   protected static final String PARAM_FROM = "from";
   protected static final String PARAM_FROM_ALIAS = "fromAlias";
+
   protected static final String PARAM_TO = "to";
   protected static final String PARAM_CC = "cc";
   protected static final String PARAM_BCC = "bcc";
+
   protected static final String PARAM_SUBJECT = "subject";
+
   protected static final String PARAM_TEXT = "text";
   protected static final String PARAM_HTML = "html";
+
   protected static final String PARAM_FILE_NAMES = "fileNames";
   protected static final String PARAM_FILES = "files";
-  private static final Logger LOGGER = LoggerFactory.getLogger(SendMailRequest.class);
   protected final MailConfiguration configuration;
 
-  public SendMailRequest(Connector<?> connector, MailConfiguration configuration) {
+  public SendMailRequest(Connector<?> connector) {
     super(connector);
-    this.configuration = configuration;
+    this.configuration = MailConfigurationFactory.getInstance().get();
   }
 
   public String getTo() {

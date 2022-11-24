@@ -9,10 +9,13 @@
   </parent>
 
   <artifactId>camunda-bpm-mail-extension-root</artifactId>
+  <name>Camunda Automation Platform Mail Extension</name>
   <packaging>pom</packaging>
   
   <modules>
     <module>core</module>
+    <module>spring-boot</module>
+    <module>run</module>
   </modules>
   
 </project>

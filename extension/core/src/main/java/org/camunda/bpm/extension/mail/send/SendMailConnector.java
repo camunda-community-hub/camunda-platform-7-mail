@@ -22,7 +22,6 @@ import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -31,9 +30,6 @@ import javax.mail.util.ByteArrayDataSource;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.MailContentType;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
-import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
 import org.camunda.connect.spi.ConnectorResponse;
@@ -42,26 +38,21 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
 
   public static final String CONNECTOR_ID = "mail-send";
 
-  protected MailConfiguration configuration;
-
   public SendMailConnector() {
     super(CONNECTOR_ID);
   }
 
   @Override
   public SendMailRequest createRequest() {
-    return new SendMailRequest(this, getConfiguration());
+    return new SendMailRequest(this);
   }
 
   @Override
   public ConnectorResponse execute(SendMailRequest request) {
 
-    MailService mailService = MailServiceFactory.getService(getConfiguration());
-
     try {
-      Message message = createMessage(request, mailService.getSession());
-      SendMailInvocation invocation =
-          new SendMailInvocation(message, request, requestInterceptors, mailService);
+      Message message = createMessage(request);
+      SendMailInvocation invocation = new SendMailInvocation(message, request, requestInterceptors);
 
       invocation.proceed();
 
@@ -72,9 +63,9 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
     return new EmptyResponse();
   }
 
-  protected Message createMessage(SendMailRequest request, Session session) throws Exception {
+  protected Message createMessage(SendMailRequest request) throws Exception {
 
-    Message message = new MimeMessage(session);
+    Message message = new MimeMessage(MailServiceFactory.getInstance().get().getSession());
     message.setFrom(new InternetAddress(request.getFrom(), request.getFromAlias()));
     message.setRecipients(RecipientType.TO, InternetAddress.parse(request.getTo()));
 
@@ -150,16 +141,5 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
     return request.getHtml() == null
         && request.getFileNames() == null
         && request.getFiles() == null;
-  }
-
-  protected MailConfiguration getConfiguration() {
-    if (configuration == null) {
-      configuration = MailConfigurationFactory.getConfiguration();
-    }
-    return configuration;
-  }
-
-  public void setConfiguration(MailConfiguration configuration) {
-    this.configuration = configuration;
   }
 }

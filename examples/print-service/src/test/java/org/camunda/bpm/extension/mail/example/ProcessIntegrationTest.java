@@ -13,74 +13,150 @@
 package org.camunda.bpm.extension.mail.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.runtime.JobQuery;
-import org.camunda.bpm.engine.task.Task;
-import org.camunda.bpm.engine.task.TaskQuery;
-import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Map;
+import javax.activation.DataHandler;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.extension.mail.MailContentType;
+import org.camunda.bpm.extension.mail.dto.Mail;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class ProcessIntegrationTest {
+  @RegisterExtension
+  static GreenMailExtension greenMailExtension =
+      new GreenMailExtension()
+          .withConfiguration(GreenMailConfiguration.aConfig().withUser("test@camunda.com", "bpmn"))
+          .withPerMethodLifecycle(false);
 
-  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
-
-  private PrintServiceProcessApplication processApplication;
-
-  private RuntimeService runtimeService;
-  private TaskService taskService;
-
-  @Before
-  public void init() throws IOException {
-    runtimeService = engineRule.getRuntimeService();
-    taskService = engineRule.getTaskService();
-
-    processApplication = new PrintServiceProcessApplication();
-  }
-
-  @Deployment(resources = "processes/printProcess.bpmn")
   @Test
-  public void processPrintMail() throws Exception {
-
-    processApplication.startService(engineRule.getProcessEngine());
-
-    TaskQuery taskQuery = taskService.createTaskQuery().taskName("print it");
-
-    // wait for first mail
-    while (taskQuery.count() == 0) {
-      Thread.sleep(500);
-    }
-
-    List<Task> tasks = taskQuery.list();
-    assertThat(tasks).isNotEmpty();
-
-    for (Task task : tasks) {
-      taskService.complete(task.getId());
-    }
-
-    waitForAsyncJobs();
-
-    assertThat(runtimeService.createProcessInstanceQuery().list()).isEmpty();
+  void shouldPrintInvoiceOnAttachmentExists()
+      throws MessagingException, InterruptedException, URISyntaxException, IOException {
+    sendMessage(true);
+    ProcessInstance processInstance = awaitProcessInstanceExists();
+    assertThat(processInstance).isWaitingAt(findId("Print the attachment"));
+    Map<String, Object> variables = runtimeService().getVariables(processInstance.getId());
+    assertThat(variables).containsKey("mail");
+    Object mailAsObject = variables.get("mail");
+    assertThat(mailAsObject).isNotNull().isInstanceOf(Mail.class);
+    Mail mail = (Mail) mailAsObject;
+    assertThat(mail.getAttachments()).hasSize(1);
+    String path = mail.getAttachments().get(0).getPath();
+    assertThat(path).isNotNull();
+    byte[] bytes = Files.readAllBytes(new File(path).toPath());
+    assertThat(bytes).isNotEmpty();
+    assertThat(variables).containsKey("invoice");
+    Object invoiceAsObject = variables.get("invoice");
+    assertThat(invoiceAsObject).isNotNull().isInstanceOf(String.class);
+    String invoice = (String) invoiceAsObject;
+    byte[] bytes1 = Files.readAllBytes(new File(invoice).toPath());
+    assertThat(bytes1).isNotEmpty();
+    complete(task());
+    awaitProcessInstanceComplete();
+    assertThat(processInstance).isEnded();
+    assertThat(
+            Arrays.stream(greenMailExtension.getReceivedMessages())
+                .filter(
+                    m -> {
+                      try {
+                        return m.getSubject().equals("invoice");
+                      } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                      }
+                    })
+                .findFirst())
+        .isNotEmpty();
   }
 
-  private void waitForAsyncJobs() throws InterruptedException {
-    JobQuery jobQuery = engineRule.getManagementService().createJobQuery().executable();
-
-    while (jobQuery.count() > 0) {
-      Thread.sleep(500);
-    }
+  @Test
+  void shouldInformCustomerOnAttachmentMissing()
+      throws MessagingException, URISyntaxException, IOException, InterruptedException {
+    sendMessage(false);
+    awaitProcessInstanceComplete();
+    assertThat(
+            Arrays.stream(greenMailExtension.getReceivedMessages())
+                .filter(
+                    m -> {
+                      try {
+                        return m.getSubject().startsWith("RE:");
+                      } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                      }
+                    })
+                .findFirst())
+        .isNotEmpty();
   }
 
-  @After
-  public void cleanup() throws Exception {
+  private void sendMessage(boolean withAttachment)
+      throws MessagingException, URISyntaxException, IOException {
+    Session smtpSession = greenMailExtension.getSmtp().createSession();
+    MimeMessage message = new MimeMessage(smtpSession);
+    if (withAttachment) {
+      Multipart content = new MimeMultipart();
+      MimeBodyPart attachment = new MimeBodyPart();
+      ByteArrayDataSource ds =
+          new ByteArrayDataSource(
+              Files.readAllBytes(
+                  new File(getClass().getClassLoader().getResource("printme.txt").toURI())
+                      .toPath()),
+              "text/plain");
+      attachment.setDataHandler(new DataHandler(ds));
+      attachment.setFileName("printme.txt");
+      content.addBodyPart(attachment);
+      message.setContent(content);
+      message.setDisposition(Part.ATTACHMENT);
+    } else {
+      message.setContent("text body", MailContentType.TEXT_PLAIN.getType());
+      message.setDisposition(Part.INLINE);
+    }
+    message.setRecipient(RecipientType.TO, new InternetAddress("test@camunda.com"));
+    message.setSender(new InternetAddress("from@camunda.com"));
+    message.setSubject("Test");
+    GreenMailUtil.sendMimeMessage(message);
+  }
 
-    processApplication.stopService();
+  private ProcessInstance awaitProcessInstanceExists() throws InterruptedException {
+    Thread.sleep(1000L);
+    HistoricProcessInstanceQuery query =
+        historyService().createHistoricProcessInstanceQuery().active();
+    while (query.singleResult() == null) {
+      Thread.sleep(1000L);
+    }
+    return runtimeService()
+        .createProcessInstanceQuery()
+        .processInstanceId(query.singleResult().getId())
+        .singleResult();
+  }
+
+  private void awaitProcessInstanceComplete() throws InterruptedException {
+    Thread.sleep(1000L);
+    HistoricProcessInstanceQuery query =
+        historyService().createHistoricProcessInstanceQuery().active();
+    while (query.count() > 0) {
+      Thread.sleep(1000L);
+    }
   }
 }

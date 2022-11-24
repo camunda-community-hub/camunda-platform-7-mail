@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -8,81 +9,81 @@
     <version>1.4.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-mail.example.print-service</artifactId>
-  <packaging>war</packaging>
+  <artifactId>camunda-bpm-mail-example-print-service</artifactId>
+  <name>Camunda Automation Platform Mail Example Print Service</name>
 
-  <properties>
-    <version.servlet>4.0.1</version.servlet>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-  </properties>
-
+  <packaging>jar</packaging>
 
   <dependencies>
 
     <dependency>
       <groupId>org.camunda.bpm.extension</groupId>
-      <artifactId>camunda-bpm-mail-core</artifactId>
-      <scope>provided</scope>
+      <artifactId>camunda-bpm-mail-spring-boot</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.camunda.bpm</groupId>
-      <artifactId>camunda-engine</artifactId>
-      <scope>provided</scope>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${version.servlet}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- test -->
-  
     <dependency>
       <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-engine-plugin-connect</artifactId>
-      <scope>test</scope>
     </dependency>
-    
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
     </dependency>
 
+    <!-- test -->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.icegreen</groupId>
+      <artifactId>greenmail-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
+      <groupId>org.camunda.bpm.assert</groupId>
+      <artifactId>camunda-bpm-assert</artifactId>
+      <version>15.0.0</version>
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-       
+
   </dependencies>
-  
-  <build>  
+
+  <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>*IntegrationTest</exclude>
-          </excludes>
+          <layout>ZIP</layout>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

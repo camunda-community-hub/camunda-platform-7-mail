@@ -29,7 +29,6 @@ import javax.mail.event.MessageCountEvent;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailService;
-import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.SmartLifecycle;
@@ -47,9 +46,9 @@ public class MailNotificationService implements SmartLifecycle {
 
   protected NotificationWorker notificationWorker;
 
-  public MailNotificationService(MailConfiguration configuration) {
+  public MailNotificationService(MailConfiguration configuration, MailService mailService) {
     this.configuration = configuration;
-    this.mailService = MailServiceFactory.getService(configuration);
+    this.mailService = mailService;
   }
 
   @Override

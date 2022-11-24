@@ -12,16 +12,22 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.AbstractFactory;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 
-public class MailServiceFactory {
+public class MailServiceFactory extends AbstractFactory<MailService> {
+  private static final MailServiceFactory INSTANCE = new MailServiceFactory();
+  private final MailConfigurationFactory mailConfigurationFactory =
+      MailConfigurationFactory.getInstance();
 
-  private static MailService INSTANCE = null;
+  private MailServiceFactory() {}
 
-  public static MailService getService(MailConfiguration configuration) {
-    if (INSTANCE == null) {
-      INSTANCE = new MailService(configuration);
-    }
+  public static MailServiceFactory getInstance() {
     return INSTANCE;
+  }
+
+  @Override
+  protected MailService createInstance() {
+    return new MailService(mailConfigurationFactory.get());
   }
 }

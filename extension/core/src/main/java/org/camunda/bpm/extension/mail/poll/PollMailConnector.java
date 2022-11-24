@@ -16,9 +16,6 @@ import java.util.List;
 import javax.mail.Folder;
 import javax.mail.Message;
 import org.camunda.bpm.extension.mail.MailConnectorException;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
-import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
 import org.camunda.connect.spi.ConnectorResponse;
@@ -27,11 +24,8 @@ import org.slf4j.LoggerFactory;
 
 public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMailResponse> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PollMailConnector.class);
-
   public static final String CONNECTOR_ID = "mail-poll";
-
-  protected MailConfiguration configuration;
+  private static final Logger LOGGER = LoggerFactory.getLogger(PollMailConnector.class);
 
   public PollMailConnector() {
     super(CONNECTOR_ID);
@@ -39,44 +33,29 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
 
   @Override
   public PollMailRequest createRequest() {
-    return new PollMailRequest(this, getConfiguration());
+    return new PollMailRequest(this);
   }
 
   @Override
   public ConnectorResponse execute(PollMailRequest request) {
-    MailService mailService = MailServiceFactory.getService(getConfiguration());
 
     try {
 
-      Folder folder = mailService.ensureOpenFolder(request.getFolder());
+      Folder folder = MailServiceFactory.getInstance().get().ensureOpenFolder(request.getFolder());
 
       PollMailInvocation invocation =
-          new PollMailInvocation(folder, request, requestInterceptors, mailService);
+          new PollMailInvocation(
+              folder, request, requestInterceptors, MailServiceFactory.getInstance().get());
 
       @SuppressWarnings("unchecked")
       List<Message> messages = (List<Message>) invocation.proceed();
 
       LOGGER.debug("poll {} mails from folder '{}'", messages.size(), folder.getName());
 
-      return new PollMailResponse(
-          messages,
-          mailService,
-          request.downloadAttachments(),
-          getConfiguration().getAttachmentPath());
+      return new PollMailResponse(messages, request.downloadAttachments());
 
     } catch (Exception e) {
       throw new MailConnectorException("Failed to poll mails: " + e.getMessage(), e);
     }
-  }
-
-  protected MailConfiguration getConfiguration() {
-    if (configuration == null) {
-      configuration = MailConfigurationFactory.getConfiguration();
-    }
-    return configuration;
-  }
-
-  public void setConfiguration(MailConfiguration configuration) {
-    this.configuration = configuration;
   }
 }

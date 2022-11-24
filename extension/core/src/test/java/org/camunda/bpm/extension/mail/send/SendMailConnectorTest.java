@@ -28,6 +28,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -37,6 +40,12 @@ public class SendMailConnectorTest {
   public final GreenMailRule greenMail =
       new GreenMailRule(ServerSetupTest.ALL)
           .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
+
+  @Before
+  public void setup() {
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
+  }
 
   @Test
   public void messageHeader() throws MessagingException {
@@ -192,8 +201,8 @@ public class SendMailConnectorTest {
 
   @Test
   public void missingFrom() {
+    MailConfigurationFactory.getInstance().set(mock(MailConfiguration.class));
     SendMailConnector connector = new SendMailConnector();
-    connector.setConfiguration(mock(MailConfiguration.class));
     RuntimeException exception =
         catchThrowableOfType(
             () ->

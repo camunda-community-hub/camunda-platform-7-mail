@@ -12,7 +12,7 @@
  */
 package org.camunda.bpm.extension.mail.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.config.PropertiesMailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.notification.MailNotificationService;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class MailProviderIntegrationTest {
   @Before
   public void initConfig() {
     PropertiesMailConfiguration configuration = new PropertiesMailConfiguration(CONFIG_PATH);
-    MailConfigurationFactory.setConfiguration(configuration);
+    MailConfigurationFactory.getInstance().set(configuration);
   }
 
   @Test
@@ -75,7 +76,8 @@ public class MailProviderIntegrationTest {
   @Test
   public void notificationService() throws Exception {
     MailNotificationService notificationService =
-        new MailNotificationService(MailConfigurationFactory.getConfiguration());
+        new MailNotificationService(
+            MailConfigurationFactory.getInstance().get(), MailServiceFactory.getInstance().get());
 
     // register the handler
     final List<Mail> receivedMails = new ArrayList<>();

@@ -13,9 +13,10 @@
 package org.camunda.bpm.extension.mail.poll;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import java.io.File;
@@ -30,17 +31,23 @@ import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.MailContentType;
 import org.camunda.bpm.extension.mail.MailTestUtil;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Attachment;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class PollMailConnectorTest {
 
   @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
 
-  @Rule public final ExpectedException thrown = ExpectedException.none();
+  @Before
+  public void setup() {
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
+  }
 
   @Test
   public void messageHeaders() throws Exception {
@@ -119,14 +126,13 @@ public class PollMailConnectorTest {
 
   @Test
   public void missingFolder() throws MessagingException {
-
+    MailConfigurationFactory.getInstance().set(mock(MailConfiguration.class));
     PollMailConnector connector = new PollMailConnector();
-    connector.setConfiguration(mock(MailConfiguration.class));
 
-    thrown.expect(RuntimeException.class);
-    thrown.expectMessage("The request is invalid");
-
-    connector.createRequest().execute();
+    assertThrows(
+        "The request is invalid",
+        RuntimeException.class,
+        () -> connector.createRequest().execute());
   }
 
   @Test

@@ -23,10 +23,7 @@ import javax.mail.search.MessageIDTerm;
 import javax.mail.search.OrTerm;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
-import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
 import org.camunda.connect.spi.ConnectorResponse;
@@ -35,11 +32,8 @@ import org.slf4j.LoggerFactory;
 
 public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, EmptyResponse> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DeleteMailConnector.class);
-
   public static final String CONNECTOR_ID = "mail-delete";
-
-  protected MailConfiguration configuration;
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeleteMailConnector.class);
 
   public DeleteMailConnector() {
     super(CONNECTOR_ID);
@@ -47,20 +41,20 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
 
   @Override
   public DeleteMailRequest createRequest() {
-    return new DeleteMailRequest(this, getConfiguration());
+    return new DeleteMailRequest(this);
   }
 
   @Override
   public ConnectorResponse execute(DeleteMailRequest request) {
-    MailService mailService = MailServiceFactory.getService(getConfiguration());
 
     try {
 
-      Folder folder = mailService.ensureOpenFolder(request.getFolder());
+      Folder folder = MailServiceFactory.getInstance().get().ensureOpenFolder(request.getFolder());
       List<Message> messages = Arrays.asList(getMessages(folder, request));
 
       DeleteMailInvocation invocation =
-          new DeleteMailInvocation(messages, request, requestInterceptors, mailService);
+          new DeleteMailInvocation(
+              messages, request, requestInterceptors, MailServiceFactory.getInstance().get());
 
       invocation.proceed();
 
@@ -108,16 +102,5 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
         new OrTerm(messageIds.stream().map(MessageIDTerm::new).toArray(MessageIDTerm[]::new));
 
     return folder.search(searchTerm);
-  }
-
-  protected MailConfiguration getConfiguration() {
-    if (configuration == null) {
-      configuration = MailConfigurationFactory.getConfiguration();
-    }
-    return configuration;
-  }
-
-  public void setConfiguration(MailConfiguration configuration) {
-    this.configuration = configuration;
   }
 }

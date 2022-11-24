@@ -25,7 +25,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,6 +42,9 @@ public class DeleteMailConnectorTest {
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-1", "body");
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-2", "body");
+
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
   }
 
   @Test
@@ -100,8 +105,8 @@ public class DeleteMailConnectorTest {
 
   @Test
   public void missingFolder() {
+    MailConfigurationFactory.getInstance().set(mock(MailConfiguration.class));
     DeleteMailConnector connector = new DeleteMailConnector();
-    connector.setConfiguration(mock(MailConfiguration.class));
     RuntimeException exception =
         catchThrowableOfType(
             () -> connector.createRequest().messageNumbers(0).execute(), RuntimeException.class);

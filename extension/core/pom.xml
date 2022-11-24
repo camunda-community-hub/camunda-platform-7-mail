@@ -9,6 +9,8 @@
   </parent>
 
   <artifactId>camunda-bpm-mail-core</artifactId>
+  <name>Camunda Automation Platform Mail Extension Core</name>
+
 
   <dependencies>
     

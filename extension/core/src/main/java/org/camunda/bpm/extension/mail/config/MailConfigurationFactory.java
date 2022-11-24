@@ -12,18 +12,17 @@
  */
 package org.camunda.bpm.extension.mail.config;
 
-public class MailConfigurationFactory {
+import org.camunda.bpm.extension.mail.AbstractFactory;
 
-  private static MailConfiguration INSTANCE;
+public class MailConfigurationFactory extends AbstractFactory<MailConfiguration> {
+  private static final MailConfigurationFactory INSTANCE = new MailConfigurationFactory();
 
-  public static MailConfiguration getConfiguration() {
-    if (INSTANCE == null) {
-      INSTANCE = new PropertiesMailConfiguration();
-    }
+  public static MailConfigurationFactory getInstance() {
     return INSTANCE;
   }
 
-  public static void setConfiguration(MailConfiguration configuration) {
-    INSTANCE = configuration;
+  @Override
+  protected MailConfiguration createInstance() {
+    return new PropertiesMailConfiguration();
   }
 }

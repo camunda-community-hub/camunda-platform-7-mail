@@ -16,7 +16,7 @@ import java.util.List;
 import javax.mail.Message;
 import javax.mail.Transport;
 import org.camunda.bpm.extension.mail.dto.Mail;
-import org.camunda.bpm.extension.mail.service.MailService;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractRequestInvocation;
 import org.camunda.connect.spi.ConnectorRequestInterceptor;
 import org.slf4j.Logger;
@@ -26,27 +26,23 @@ public class SendMailInvocation extends AbstractRequestInvocation<Message> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SendMailInvocation.class);
 
-  protected final MailService mailService;
-
   public SendMailInvocation(
       Message message,
       SendMailRequest request,
-      List<ConnectorRequestInterceptor> requestInterceptors,
-      MailService mailService) {
+      List<ConnectorRequestInterceptor> requestInterceptors) {
     super(message, request, requestInterceptors);
-
-    this.mailService = mailService;
   }
 
   @Override
   public Object invokeTarget() throws Exception {
+
     Message message = target;
 
     LOGGER.debug("send '{}'", Mail.from(message));
 
-    Transport transport = mailService.getTransport();
+    Transport transport = MailServiceFactory.getInstance().get().getTransport();
     transport.sendMessage(message, message.getAllRecipients());
-    mailService.flush();
+    MailServiceFactory.getInstance().get().flush();
 
     return null;
   }

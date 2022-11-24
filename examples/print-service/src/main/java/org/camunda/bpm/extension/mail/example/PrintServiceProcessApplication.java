@@ -14,67 +14,48 @@ package org.camunda.bpm.extension.mail.example;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.net.URL;
-import org.camunda.bpm.application.PostDeploy;
-import org.camunda.bpm.application.PreUndeploy;
-import org.camunda.bpm.application.ProcessApplication;
-import org.camunda.bpm.application.impl.ServletProcessApplication;
-import org.camunda.bpm.engine.ProcessEngine;
+import java.util.function.Consumer;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.variable.Variables;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
-import org.camunda.bpm.extension.mail.notification.MailNotificationService;
-import org.camunda.bpm.extension.mail.service.MailService;
-import org.camunda.bpm.extension.mail.service.MailServiceFactory;
+import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
-@ProcessApplication(name = "Print Service App")
-public class PrintServiceProcessApplication extends ServletProcessApplication {
+@EnableProcessApplication("Print Service App")
+@SpringBootApplication
+public class PrintServiceProcessApplication {
+  private static final String INVOICE_PATH;
+  private static final Logger LOG = LoggerFactory.getLogger(PrintServiceProcessApplication.class);
 
-  private MailConfiguration configuration;
-  private MailNotificationService notificationService;
-
-  @PostDeploy
-  public void startService(ProcessEngine processEngine) throws Exception {
-    RuntimeService runtimeService = processEngine.getRuntimeService();
-
-    configuration = MailConfigurationFactory.getConfiguration();
-    notificationService = new MailNotificationService(configuration);
-
-    notificationService.registerMailHandler(
-        mail -> {
-          runtimeService.startProcessInstanceByKey(
-              "printProcess",
-              Variables.createVariables()
-                  .putValue("mail", mail)
-                  .putValue("invoice", getInvoicePath()));
-        });
-
-    notificationService.start();
-  }
-
-  protected String getInvoicePath() {
-
-    URL resource = getClass().getResource("/invoice.pdf");
-    if (resource == null) {
-      throw new IllegalStateException("Cannot found invoice file: invoice.pdf");
-    }
-
+  static {
     try {
-      File file = new File(resource.toURI());
-      return file.getPath();
-
+      INVOICE_PATH =
+          new File(
+                  PrintServiceProcessApplication.class
+                      .getClassLoader()
+                      .getResource("invoice.pdf")
+                      .toURI())
+              .getPath();
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
   }
 
-  @PreUndeploy
-  public void stopService() throws Exception {
+  public static void main(String[] args) {
+    SpringApplication.run(PrintServiceProcessApplication.class, args);
+  }
 
-    notificationService.stop();
-
-    MailService mailService = MailServiceFactory.getService(configuration);
-    mailService.close();
+  @Bean
+  public Consumer<Mail> mailHandler(RuntimeService runtimeService) {
+    return mail -> {
+      LOG.info("Received mail: {}", mail);
+      runtimeService.startProcessInstanceByKey(
+          "printProcess",
+          Variables.createVariables().putValue("mail", mail).putValue("invoice", INVOICE_PATH));
+    };
   }
 }

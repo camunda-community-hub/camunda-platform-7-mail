@@ -14,7 +14,7 @@
   <artifactId>camunda-bpm-mail-root</artifactId>
   <version>1.4.4-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>camunda BPM - Mail</name>
+  <name>Camunda Automation Platform Mail</name>
 
   <properties>
     <version.java>1.8</version.java>
@@ -56,7 +56,6 @@
   <modules>
     <module>extension</module>
     <module>examples</module>
-    <module>extension-run</module>
   </modules>
 
   <dependencyManagement>
@@ -79,6 +78,11 @@
       <dependency>
         <groupId>org.camunda.bpm.extension</groupId>
         <artifactId>camunda-bpm-mail-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm.extension</groupId>
+        <artifactId>camunda-bpm-mail-spring-boot</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- test -->
