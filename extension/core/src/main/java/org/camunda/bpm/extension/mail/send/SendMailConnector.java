@@ -147,7 +147,9 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
   }
 
   protected boolean isTextOnlyMessage(SendMailRequest request) {
-    return request.getHtml() == null && request.getFileNames() == null;
+    return request.getHtml() == null
+        && request.getFileNames() == null
+        && request.getFiles() == null;
   }
 
   protected MailConfiguration getConfiguration() {
