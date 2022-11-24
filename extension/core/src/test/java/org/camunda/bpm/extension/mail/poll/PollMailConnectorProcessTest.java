@@ -22,7 +22,10 @@ import java.util.List;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -34,6 +37,12 @@ public class PollMailConnectorProcessTest {
           .withConfiguration(GreenMailConfiguration.aConfig().withUser("test@camunda.com", "bpmn"));
 
   @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
+
+  @Before
+  public void setup() {
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
+  }
 
   @Test
   @Deployment(resources = "processes/mail-poll.bpmn")

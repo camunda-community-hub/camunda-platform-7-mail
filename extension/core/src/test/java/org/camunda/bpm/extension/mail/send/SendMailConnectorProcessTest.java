@@ -12,7 +12,7 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit4.GreenMailRule;
@@ -25,6 +25,9 @@ import javax.mail.internet.MimeMultipart;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
+import org.junit.Before;
 import org.camunda.bpm.engine.variable.value.FileValue;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +40,12 @@ public class SendMailConnectorProcessTest {
           .withConfiguration(GreenMailConfiguration.aConfig().withUser("test@camunda.com", "bpmn"));
 
   @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
+
+  @Before
+  public void setup() {
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
+  }
 
   @Test
   @Deployment(resources = "processes/mail-send-text.bpmn")
