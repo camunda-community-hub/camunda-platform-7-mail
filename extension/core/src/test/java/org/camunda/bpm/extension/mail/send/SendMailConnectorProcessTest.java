@@ -34,7 +34,7 @@ public class SendMailConnectorProcessTest {
   @Rule
   public final GreenMailRule greenMail =
       new GreenMailRule(ServerSetupTest.ALL)
-          .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
+          .withConfiguration(GreenMailConfiguration.aConfig().withUser("test@camunda.com", "bpmn"));
 
   @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 

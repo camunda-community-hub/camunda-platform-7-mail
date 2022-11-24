@@ -12,13 +12,13 @@
  */
 package org.camunda.bpm.extension.mail.poll;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import java.util.List;
-import javax.mail.MessagingException;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -28,14 +28,16 @@ import org.junit.Test;
 
 public class PollMailConnectorProcessTest {
 
-  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
+  @Rule
+  public final GreenMailRule greenMail =
+      new GreenMailRule(ServerSetupTest.ALL)
+          .withConfiguration(GreenMailConfiguration.aConfig().withUser("test@camunda.com", "bpmn"));
 
-  @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 
   @Test
   @Deployment(resources = "processes/mail-poll.bpmn")
-  public void pollMailWithTextBody() throws MessagingException {
-    greenMail.setUser("test@camunda.com", "bpmn");
+  public void pollMailWithTextBody() {
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "subject", "text body");
 
