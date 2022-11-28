@@ -11,7 +11,7 @@ This plugin can be used with Camunda 7 Spring Boot Starter.
    ```xml
    <dependency>
      <groupId>org.camunda.bpm.extension</groupId>
-     <artifactId>camunda-bpm-mail-spring-boot</artifactId>
+     <artifactId>camunda-bpm-mail-spring-boot-starter</artifactId>
      <version>${version.camunda-bpm-mail}</version>
    </dependency>
    ```
