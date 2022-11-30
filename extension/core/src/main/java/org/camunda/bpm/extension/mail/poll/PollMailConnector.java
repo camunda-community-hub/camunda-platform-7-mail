@@ -12,10 +12,17 @@
  */
 package org.camunda.bpm.extension.mail.poll;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Store;
 import org.camunda.bpm.extension.mail.MailConnectorException;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
+import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
 import org.camunda.connect.spi.ConnectorResponse;
@@ -38,23 +45,47 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
 
   @Override
   public ConnectorResponse execute(PollMailRequest request) {
+    MailService mailService = MailServiceFactory.getInstance().get();
+    try (Store store = mailService.getStore();
+        Folder folder = mailService.getFolder(store, request.getFolder())) {
 
-    try {
+      try {
+        PollMailInvocation invocation =
+            new PollMailInvocation(
+                folder, request, requestInterceptors, MailServiceFactory.getInstance().get());
 
-      Folder folder = MailServiceFactory.getInstance().get().ensureOpenFolder(request.getFolder());
-
-      PollMailInvocation invocation =
-          new PollMailInvocation(
-              folder, request, requestInterceptors, MailServiceFactory.getInstance().get());
-
-      @SuppressWarnings("unchecked")
-      List<Message> messages = (List<Message>) invocation.proceed();
-
-      LOGGER.debug("poll {} mails from folder '{}'", messages.size(), folder.getName());
-
-      return new PollMailResponse(messages, request.downloadAttachments());
-
-    } catch (Exception e) {
+        @SuppressWarnings("unchecked")
+        List<Mail> messages =
+            ((List<Message>) invocation.proceed())
+                .stream()
+                    .map(
+                        message -> {
+                          try {
+                            return Mail.from(message);
+                          } catch (MessagingException | IOException e) {
+                            throw new RuntimeException(
+                                "Exception while transforming message to dto: " + e.getMessage(),
+                                e);
+                          }
+                        })
+                    .peek(
+                        message -> {
+                          if (request.downloadAttachments()) {
+                            try {
+                              message.downloadAttachments(
+                                  MailConfigurationFactory.getInstance().get().getAttachmentPath());
+                            } catch (Exception e) {
+                              LOGGER.error("exception while downloading attachments", e);
+                            }
+                          }
+                        })
+                    .collect(Collectors.toList());
+        LOGGER.debug("poll {} mails from folder '{}'", messages.size(), folder.getName());
+        return new PollMailResponse(messages);
+      } catch (Exception e) {
+        throw new MailConnectorException("Failed to poll mails: " + e.getMessage(), e);
+      }
+    } catch (MessagingException e) {
       throw new MailConnectorException("Failed to poll mails: " + e.getMessage(), e);
     }
   }

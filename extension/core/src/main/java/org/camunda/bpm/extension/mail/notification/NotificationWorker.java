@@ -12,7 +12,10 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
-public interface NotificationWorker extends Runnable {
+import java.util.function.Consumer;
+import javax.mail.Folder;
+
+public interface NotificationWorker extends Consumer<Folder> {
 
   void stop();
 }

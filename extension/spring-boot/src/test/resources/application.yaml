@@ -28,3 +28,7 @@ camunda.bpm.plugin.mail:
 
   user: test@camunda.com
   password: bpmn
+
+logging:
+  level:
+    root: DEBUG

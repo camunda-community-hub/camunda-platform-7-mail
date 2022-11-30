@@ -25,10 +25,10 @@ import javax.mail.internet.MimeMultipart;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.engine.variable.value.FileValue;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.junit.Before;
-import org.camunda.bpm.engine.variable.value.FileValue;
 import org.junit.Rule;
 import org.junit.Test;
 

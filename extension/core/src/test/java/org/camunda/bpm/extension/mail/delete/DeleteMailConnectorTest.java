@@ -53,9 +53,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().folder("INBOX").messageNumbers(1).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
@@ -67,9 +66,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().folder("INBOX").messageIds(messageId).execute();
 
     mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
@@ -87,9 +85,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().folder("INBOX").mails(mail).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
@@ -98,9 +95,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().messageNumbers(1).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test

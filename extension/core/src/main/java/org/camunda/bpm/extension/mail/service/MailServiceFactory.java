@@ -12,13 +12,15 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
+import java.util.Properties;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import org.camunda.bpm.extension.mail.AbstractFactory;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
+import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
 
 public class MailServiceFactory extends AbstractFactory<MailService> {
   private static final MailServiceFactory INSTANCE = new MailServiceFactory();
-  private final MailConfigurationFactory mailConfigurationFactory =
-      MailConfigurationFactory.getInstance();
 
   private MailServiceFactory() {}
 
@@ -28,6 +30,17 @@ public class MailServiceFactory extends AbstractFactory<MailService> {
 
   @Override
   protected MailService createInstance() {
-    return new MailService(mailConfigurationFactory.get());
+    Properties jakartaMailProperties = JakartaMailProperties.get();
+    return new JakartaMailService(
+        Session.getInstance(
+            jakartaMailProperties,
+            new Authenticator() {
+              @Override
+              protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                    jakartaMailProperties.getProperty("mail.user"),
+                    jakartaMailProperties.getProperty("mail.password"));
+              }
+            }));
   }
 }

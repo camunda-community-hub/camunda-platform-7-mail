@@ -12,52 +12,24 @@
  */
 package org.camunda.bpm.extension.mail.poll;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.mail.Message;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
-import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnectorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PollMailResponse extends AbstractConnectorResponse {
 
   public static final String PARAM_MAILS = "mails";
-  private static final Logger LOGGER = LoggerFactory.getLogger(PollMailResponse.class);
-  protected final List<Message> messages;
-  protected final boolean downloadAttachments;
+  protected final List<Mail> messages;
 
-  public PollMailResponse(List<Message> messages, boolean downloadAttachments) {
+  public PollMailResponse(List<Mail> messages) {
     this.messages = messages;
-    this.downloadAttachments = downloadAttachments;
   }
 
   @Override
   protected void collectResponseParameters(Map<String, Object> responseParameters) {
 
-    List<Mail> mails = new ArrayList<>();
-    for (Message message : messages) {
-
-      try {
-        Mail mail = Mail.from(message);
-        if (downloadAttachments) {
-          mail.downloadAttachments(
-              MailConfigurationFactory.getInstance().get().getAttachmentPath());
-        }
-
-        mails.add(mail);
-
-      } catch (Exception e) {
-        LOGGER.error("exception while transforming message to dto", e);
-      }
-    }
-
-    responseParameters.put(PARAM_MAILS, mails);
-
-    MailServiceFactory.getInstance().get().flush();
+    responseParameters.put(PARAM_MAILS, messages);
   }
 
   public List<Mail> getMails() {

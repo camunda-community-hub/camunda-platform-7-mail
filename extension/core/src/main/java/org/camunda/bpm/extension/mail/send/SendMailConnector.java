@@ -24,7 +24,6 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import org.camunda.bpm.extension.mail.EmptyResponse;
@@ -65,7 +64,7 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
 
   protected Message createMessage(SendMailRequest request) throws Exception {
 
-    Message message = new MimeMessage(MailServiceFactory.getInstance().get().getSession());
+    Message message = MailServiceFactory.getInstance().get().createMessage();
     message.setFrom(new InternetAddress(request.getFrom(), request.getFromAlias()));
     message.setRecipients(RecipientType.TO, InternetAddress.parse(request.getTo()));
 

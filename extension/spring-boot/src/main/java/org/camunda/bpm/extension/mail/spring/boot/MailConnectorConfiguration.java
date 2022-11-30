@@ -3,9 +3,9 @@ package org.camunda.bpm.extension.mail.spring.boot;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Consumer;
+import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
-import org.camunda.bpm.extension.mail.config.PropertiesMailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.notification.MailNotificationService;
 import org.camunda.bpm.extension.mail.notification.MessageHandler;
@@ -49,16 +49,8 @@ public class MailConnectorConfiguration {
                 fixedProperties.put(fixedKey, properties.getProperty(key));
               }
             });
-    MailConfiguration configuration =
-        new PropertiesMailConfiguration(fixedProperties) {
-          @Override
-          protected Properties loadProperties() {
-            // never search for properties on the classpath, only use application.yaml
-            return new Properties();
-          }
-        };
-    MailConfigurationFactory.getInstance().set(configuration);
-    return configuration;
+    JakartaMailProperties.set(fixedProperties);
+    return MailConfigurationFactory.getInstance().get();
   }
 
   @Bean

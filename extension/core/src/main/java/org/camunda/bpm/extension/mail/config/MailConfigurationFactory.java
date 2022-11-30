@@ -12,9 +12,18 @@
  */
 package org.camunda.bpm.extension.mail.config;
 
+import java.time.Duration;
+import java.util.Properties;
 import org.camunda.bpm.extension.mail.AbstractFactory;
 
 public class MailConfigurationFactory extends AbstractFactory<MailConfiguration> {
+  public static final String PROPERTY_POLL_FOLDER = "mail.poll.folder";
+  public static final String PROPERTY_SENDER = "mail.sender";
+  public static final String PROPERTY_SENDER_ALIAS = "mail.sender.alias";
+  public static final String PROPERTY_ATTACHMENT_DOWNLOAD = "mail.attachment.download";
+  public static final String PROPERTY_ATTACHMENT_PATH = "mail.attachment.path";
+  public static final String DEFAULT_ATTACHMENT_PATH = "attachments";
+  public static final String PROPERTY_NOTIFICATION_LOOKUP_TIME = "mail.notification.lookup.time";
   private static final MailConfigurationFactory INSTANCE = new MailConfigurationFactory();
 
   public static MailConfigurationFactory getInstance() {
@@ -23,6 +32,20 @@ public class MailConfigurationFactory extends AbstractFactory<MailConfiguration>
 
   @Override
   protected MailConfiguration createInstance() {
-    return new PropertiesMailConfiguration();
+    Properties properties = JakartaMailProperties.get();
+    PropertiesMailConfiguration configuration = new PropertiesMailConfiguration();
+    configuration.setAttachmentPath(
+        properties.getProperty(PROPERTY_ATTACHMENT_PATH, DEFAULT_ATTACHMENT_PATH));
+    configuration.setDownloadAttachments(
+        Boolean.parseBoolean(
+            properties.getProperty(PROPERTY_ATTACHMENT_DOWNLOAD, Boolean.TRUE.toString())));
+    configuration.setNotificationLookupTime(
+        Duration.parse(
+            properties.getProperty(
+                PROPERTY_NOTIFICATION_LOOKUP_TIME, Duration.ofSeconds(60).toString())));
+    configuration.setPollFolder(properties.getProperty(PROPERTY_POLL_FOLDER));
+    configuration.setSender(properties.getProperty(PROPERTY_SENDER));
+    configuration.setSenderAlias(properties.getProperty(PROPERTY_SENDER_ALIAS));
+    return configuration;
   }
 }

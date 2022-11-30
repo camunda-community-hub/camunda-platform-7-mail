@@ -14,40 +14,24 @@ package org.camunda.bpm.extension.mail.notification;
 
 import java.time.Duration;
 import javax.mail.Folder;
-import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PollNotificationWorker implements NotificationWorker {
+public class PollNotificationWorker extends AbstractNotificationWorker<Folder> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PollNotificationWorker.class);
 
-  protected final MailService mailService;
-  protected final Folder folder;
   protected final Duration lookupTime;
 
-  protected boolean running = true;
+  public PollNotificationWorker(Duration lookupTime) {
 
-  public PollNotificationWorker(MailService mailService, Folder folder, Duration lookupTime) {
-    this.mailService = mailService;
-    this.folder = folder;
     this.lookupTime = lookupTime;
-  }
-
-  @Override
-  public void run() {
-    while (running) {
-
-      triggerMailServer();
-      waitTillNextLookup();
-    }
   }
 
   protected void triggerMailServer() {
     try {
       LOGGER.debug("trigger the mail server");
 
-      mailService.ensureOpenFolder(folder);
       // This is to force the server to send us EXISTS notifications.
       folder.getMessageCount();
 
@@ -65,12 +49,16 @@ public class PollNotificationWorker implements NotificationWorker {
   }
 
   @Override
-  public void stop() {
-    running = false;
-
+  protected void interrupt() {
     synchronized (this) {
       this.notifyAll();
     }
+  }
+
+  @Override
+  protected void idle() {
+    triggerMailServer();
+    waitTillNextLookup();
   }
 
   @Override
@@ -80,7 +68,7 @@ public class PollNotificationWorker implements NotificationWorker {
         + ", lookupTime="
         + lookupTime
         + ", running="
-        + running
+        + isRunning()
         + "]";
   }
 }

@@ -50,6 +50,7 @@ public class MailNotificationServiceTest {
     notificationService =
         new MailNotificationService(
             MailConfigurationFactory.getInstance().get(), MailServiceFactory.getInstance().get());
+    notificationService.start();
   }
 
   @After
@@ -61,8 +62,6 @@ public class MailNotificationServiceTest {
   public void messageHandler() throws Exception {
     GreenMailUtil.sendTextEmailTest(
         "test@camunda.com", "from@camunda.com", "existing mail", "body");
-
-    notificationService.start();
 
     final List<Message> receivedMessages = new ArrayList<>();
     final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -84,8 +83,6 @@ public class MailNotificationServiceTest {
   public void mailHandler() throws Exception {
     File attachment = new File(getClass().getResource("/attachment.txt").toURI());
     assertThat(attachment.exists()).isTrue();
-
-    notificationService.start();
 
     final List<Mail> receivedMails = new ArrayList<>();
     final CountDownLatch countDownLatch = new CountDownLatch(1);

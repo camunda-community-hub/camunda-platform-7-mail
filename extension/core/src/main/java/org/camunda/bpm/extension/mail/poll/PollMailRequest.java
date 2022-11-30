@@ -48,7 +48,7 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
       downloadAttachments = getRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS[1]);
     }
     if (downloadAttachments == null) {
-      downloadAttachments = MailConfigurationFactory.getInstance().get().downloadAttachments();
+      downloadAttachments = MailConfigurationFactory.getInstance().get().isDownloadAttachments();
     }
     return downloadAttachments;
   }

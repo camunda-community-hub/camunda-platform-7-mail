@@ -14,7 +14,6 @@ package org.camunda.bpm.extension.mail.send;
 
 import java.util.List;
 import javax.mail.Message;
-import javax.mail.Transport;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractRequestInvocation;
@@ -35,15 +34,9 @@ public class SendMailInvocation extends AbstractRequestInvocation<Message> {
 
   @Override
   public Object invokeTarget() throws Exception {
-
     Message message = target;
-
     LOGGER.debug("send '{}'", Mail.from(message));
-
-    Transport transport = MailServiceFactory.getInstance().get().getTransport();
-    transport.sendMessage(message, message.getAllRecipients());
-    MailServiceFactory.getInstance().get().flush();
-
+    MailServiceFactory.getInstance().get().sendMessage(message);
     return null;
   }
 }

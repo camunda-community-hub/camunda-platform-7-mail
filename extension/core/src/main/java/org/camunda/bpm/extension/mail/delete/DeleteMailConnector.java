@@ -19,11 +19,13 @@ import java.util.stream.Collectors;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Store;
 import javax.mail.search.MessageIDTerm;
 import javax.mail.search.OrTerm;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
 import org.camunda.connect.spi.ConnectorResponse;
@@ -46,15 +48,13 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
 
   @Override
   public ConnectorResponse execute(DeleteMailRequest request) {
-
-    try {
-
-      Folder folder = MailServiceFactory.getInstance().get().ensureOpenFolder(request.getFolder());
-      List<Message> messages = Arrays.asList(getMessages(folder, request));
+    MailService mailService = MailServiceFactory.getInstance().get();
+    try (Store store = mailService.getStore();
+        Folder folder = mailService.getFolder(store, request.getFolder())) {
+      List<Message> messages = getMessages(folder, request);
 
       DeleteMailInvocation invocation =
-          new DeleteMailInvocation(
-              messages, request, requestInterceptors, MailServiceFactory.getInstance().get());
+          new DeleteMailInvocation(messages, request, requestInterceptors, mailService);
 
       invocation.proceed();
 
@@ -65,25 +65,28 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
     }
   }
 
-  protected Message[] getMessages(Folder folder, DeleteMailRequest request)
-      throws MessagingException {
+  protected List<Message> getMessages(Folder folder, DeleteMailRequest request) {
 
     if (request.getMails() != null) {
       LOGGER.debug("delete mails: {}", request.getMails());
 
       List<String> messageIds = collectMessageIds(request.getMails());
-      return getMessagesByIds(folder, messageIds);
+      return Arrays.asList(getMessagesByIds(folder, messageIds));
 
     } else if (request.getMessageIds() != null) {
       LOGGER.debug("delete mails with message ids: {}", request.getMessageIds());
 
-      return getMessagesByIds(folder, request.getMessageIds());
+      return Arrays.asList(getMessagesByIds(folder, request.getMessageIds()));
 
     } else {
       LOGGER.debug("delete mails with message numbers: {}", request.getMessageNumbers());
 
       int[] numbers = request.getMessageNumbers().stream().mapToInt(i -> i).toArray();
-      return folder.getMessages(numbers);
+      try {
+        return Arrays.asList(folder.getMessages(numbers));
+      } catch (MessagingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
@@ -95,12 +98,15 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
         .collect(Collectors.toList());
   }
 
-  protected Message[] getMessagesByIds(Folder folder, List<String> messageIds)
-      throws MessagingException {
+  protected Message[] getMessagesByIds(Folder folder, List<String> messageIds) {
 
     OrTerm searchTerm =
         new OrTerm(messageIds.stream().map(MessageIDTerm::new).toArray(MessageIDTerm[]::new));
 
-    return folder.search(searchTerm);
+    try {
+      return folder.search(searchTerm);
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
