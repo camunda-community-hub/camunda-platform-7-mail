@@ -23,7 +23,7 @@ Tested with Camunda Version 7.17 running on WildFly Full 26.0.1.Final
 
 2. Create a module for slf4j.api:
 
-    Add a a `module.xml` with the following content into `\server\wildfly-26.0.1.Final\modules\org\slf4j\slf4j-api\main`:
+    Add a `module.xml` with the following content into `\server\wildfly-26.0.1.Final\modules\org\slf4j\slf4j-api\main`:
   
     ```
     <module xmlns="urn:jboss:module:1.0" name="org.slf4j.slf4j-api">
@@ -48,4 +48,4 @@ Tested with Camunda Version 7.17 running on WildFly Full 26.0.1.Final
     <module name="org.camunda.bpm.extension.camunda-bpm-mail-core" services="import" />
     ```
   
-4. An easy way to configure the connection is to copy the `mail-config.properties` into the `\server\wildfly26.0.1.Final\standalone\config` folder and add an environment variable `MAIL_CONFIG` that points to the file. Have a look at the configuration section for further details.
+5. An easy way to configure the connection is to copy the `mail-config.properties` into the `\server\wildfly26.0.1.Final\standalone\config` folder and add an environment variable `MAIL_CONFIG` that points to the file. Have a look at the configuration section for further details.

@@ -12,8 +12,12 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.Date;
+import java.util.Map.Entry;
+import javax.activation.DataHandler;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -23,6 +27,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.MailContentType;
@@ -125,13 +130,26 @@ public class SendMailConnector extends AbstractConnector<SendMailRequest, EmptyR
           multiPart.addBodyPart(part);
         }
       }
+      if (request.getFiles() != null) {
+        for (Entry<String, ByteArrayInputStream> file : request.getFiles().entrySet()) {
+          ByteArrayDataSource ds =
+              new ByteArrayDataSource(
+                  file.getValue(), URLConnection.guessContentTypeFromName(file.getKey()));
+          MimeBodyPart part = new MimeBodyPart();
+          part.setFileName(file.getKey());
+          part.setDataHandler(new DataHandler(ds));
+          multiPart.addBodyPart(part);
+        }
+      }
 
       message.setContent(multiPart);
     }
   }
 
   protected boolean isTextOnlyMessage(SendMailRequest request) {
-    return request.getHtml() == null && request.getFileNames() == null;
+    return request.getHtml() == null
+        && request.getFileNames() == null
+        && request.getFiles() == null;
   }
 
   protected MailConfiguration getConfiguration() {

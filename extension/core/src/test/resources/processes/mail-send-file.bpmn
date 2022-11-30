@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="0.7.0-nightly">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.5.0">
   <bpmn:process id="send-mail" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_11cgg2j</bpmn:outgoing>
@@ -21,6 +21,11 @@
                 <camunda:value>${file}</camunda:value>
               </camunda:list>
             </camunda:inputParameter>
+            <camunda:inputParameter name="files">
+              <camunda:map>
+                <camunda:entry key="attachment2.txt">${fileValue}</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
           </camunda:inputOutput>
           <camunda:connectorId>mail-send</camunda:connectorId>
         </camunda:connector>
@@ -34,29 +39,29 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="173" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_11cgg2j_di" bpmnElement="SequenceFlow_11cgg2j">
-        <di:waypoint xsi:type="dc:Point" x="209" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="297" y="120" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="208" y="95" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1nuk1mt_di" bpmnElement="EndEvent_1nuk1mt">
         <dc:Bounds x="454" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="427" y="138" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_13thl7w_di" bpmnElement="ServiceTask_13thl7w">
+        <dc:Bounds x="297" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11cgg2j_di" bpmnElement="SequenceFlow_11cgg2j">
+        <di:waypoint x="209" y="120" />
+        <di:waypoint x="297" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="208" y="95" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_01xeo0u_di" bpmnElement="SequenceFlow_01xeo0u">
-        <di:waypoint xsi:type="dc:Point" x="397" y="120" />
-        <di:waypoint xsi:type="dc:Point" x="454" y="120" />
+        <di:waypoint x="397" y="120" />
+        <di:waypoint x="454" y="120" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="380.5" y="95" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_13thl7w_di" bpmnElement="ServiceTask_13thl7w">
-        <dc:Bounds x="297" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
