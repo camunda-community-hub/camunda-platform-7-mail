@@ -12,7 +12,7 @@
  */
 package org.camunda.bpm.extension.mail.poll;
 
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.connect.impl.AbstractConnectorRequest;
 import org.camunda.connect.spi.Connector;
 import org.slf4j.Logger;
@@ -24,17 +24,15 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
   protected static final String[] PARAM_DOWNLOAD_ATTACHMENTS =
       new String[] {"download-attachments", "download-attachements"};
   private static final Logger LOGGER = LoggerFactory.getLogger(PollMailRequest.class);
-  protected final MailConfiguration configuration;
 
-  public PollMailRequest(Connector<?> connector, MailConfiguration configuration) {
+  public PollMailRequest(Connector<?> connector) {
     super(connector);
-    this.configuration = configuration;
   }
 
   public String getFolder() {
     String folder = getRequestParameter(PARAM_FOLDER);
     if (folder == null) {
-      folder = configuration.getPollFolder();
+      folder = MailConfigurationFactory.getInstance().get().getPollFolder();
     }
     return folder;
   }
@@ -50,7 +48,7 @@ public class PollMailRequest extends AbstractConnectorRequest<PollMailResponse> 
       downloadAttachments = getRequestParameter(PARAM_DOWNLOAD_ATTACHMENTS[1]);
     }
     if (downloadAttachments == null) {
-      downloadAttachments = configuration.downloadAttachments();
+      downloadAttachments = MailConfigurationFactory.getInstance().get().isDownloadAttachments();
     }
     return downloadAttachments;
   }

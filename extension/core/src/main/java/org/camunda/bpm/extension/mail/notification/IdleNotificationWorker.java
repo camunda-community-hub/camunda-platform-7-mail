@@ -14,50 +14,15 @@ package org.camunda.bpm.extension.mail.notification;
 
 import com.sun.mail.imap.IMAPFolder;
 import javax.mail.MessagingException;
-import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IdleNotificationWorker implements NotificationWorker {
+public class IdleNotificationWorker extends AbstractNotificationWorker<IMAPFolder> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(IdleNotificationWorker.class);
 
-  protected final MailService mailService;
-  protected final IMAPFolder folder;
-
-  protected boolean running = true;
-
-  public IdleNotificationWorker(MailService mailService, IMAPFolder folder) {
-    this.mailService = mailService;
-    this.folder = folder;
-  }
-
   @Override
-  public void run() {
-    while (running) {
-
-      waitingForMails();
-    }
-  }
-
-  protected void waitingForMails() {
-    try {
-      mailService.ensureOpenFolder(folder);
-
-      LOGGER.debug("waiting for mails");
-
-      folder.idle();
-
-    } catch (Exception e) {
-      LOGGER.debug("exception while waiting for mails", e);
-    }
-  }
-
-  @Override
-  public void stop() {
-    running = false;
-
-    // perform a NOOP to interrupt IDLE
+  protected void interrupt() {
     try {
       folder.doCommand(
           p -> {
@@ -70,7 +35,14 @@ public class IdleNotificationWorker implements NotificationWorker {
   }
 
   @Override
-  public String toString() {
-    return "IdleNotificationWorker [folder=" + folder.getName() + ", running=" + running + "]";
+  protected void idle() {
+    try {
+      LOGGER.debug("waiting for mails");
+
+      folder.idle();
+
+    } catch (Exception e) {
+      LOGGER.debug("exception while waiting for mails", e);
+    }
   }
 }

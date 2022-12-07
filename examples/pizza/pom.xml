@@ -9,6 +9,8 @@
   </parent>
 
   <artifactId>camunda-bpm-mail.example.pizza</artifactId>
+  <name>Camunda Automation Platform Mail Example Pizza</name>
+
   <packaging>war</packaging>
 
   <properties>

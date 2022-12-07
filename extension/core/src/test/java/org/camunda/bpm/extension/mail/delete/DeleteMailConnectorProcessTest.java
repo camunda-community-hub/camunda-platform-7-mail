@@ -54,8 +54,7 @@ public class DeleteMailConnectorProcessTest {
             "delete-mail", Variables.createVariables().putValue("messageId", messageId));
 
     mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 }

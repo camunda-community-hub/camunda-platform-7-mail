@@ -13,31 +13,9 @@
 package org.camunda.bpm.extension.mail.config;
 
 import java.time.Duration;
-import java.util.Properties;
 
 /** Configuration of the mail extension. */
 public interface MailConfiguration {
-
-  /**
-   * @return username for connecting to the mail provider
-   */
-  String getUserName();
-
-  /**
-   * @return password for connecting to the mail provider
-   */
-  String getPassword();
-
-  /**
-   * @return configuration of the mail protocols (e.g. smtp, imaps)
-   * @see <a
-   *     href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">Package
-   *     com.sun.mail.imap</a>
-   * @see <a
-   *     href="https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html">Package
-   *     com.sun.mail.smtp</a>
-   */
-  Properties getProperties();
 
   /**
    * @return default folder for polling mails from (e.g. INBOX), can be <code>null</code>
@@ -57,7 +35,7 @@ public interface MailConfiguration {
   /**
    * @return <code>true</code> if attachments of mails should always be stored locally
    */
-  boolean downloadAttachments();
+  boolean isDownloadAttachments();
 
   /**
    * @return path to directory where the attachments should be stored in

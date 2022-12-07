@@ -15,7 +15,7 @@ package org.camunda.bpm.extension.mail.delete;
 import java.util.Arrays;
 import java.util.List;
 import org.camunda.bpm.extension.mail.EmptyResponse;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.connect.impl.AbstractConnectorRequest;
 import org.camunda.connect.spi.Connector;
@@ -32,17 +32,14 @@ public class DeleteMailRequest extends AbstractConnectorRequest<EmptyResponse> {
   protected static final String PARAM_MESSAGE_IDS = "messageIds";
   protected static final String PARAM_MESSAGE_NUMBERS = "messageNumbers";
 
-  protected final MailConfiguration configuration;
-
-  public DeleteMailRequest(Connector<?> connector, MailConfiguration configuration) {
+  public DeleteMailRequest(Connector<?> connector) {
     super(connector);
-    this.configuration = configuration;
   }
 
   public String getFolder() {
     String folder = getRequestParameter(PARAM_FOLDER);
     if (folder == null) {
-      folder = configuration.getPollFolder();
+      folder = MailConfigurationFactory.getInstance().get().getPollFolder();
     }
     return folder;
   }

@@ -13,7 +13,10 @@
   
   
   <groupId>org.camunda.bpm.extension.examples</groupId>
-  
+
+  <name>Camunda Automation Platform Mail Examples</name>
+
+
   <modules>
     <module>pizza</module>
     <module>print-service</module>

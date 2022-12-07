@@ -25,7 +25,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,6 +42,9 @@ public class DeleteMailConnectorTest {
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-1", "body");
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-2", "body");
+
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
   }
 
   @Test
@@ -48,9 +53,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().folder("INBOX").messageNumbers(1).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
@@ -62,9 +66,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().folder("INBOX").messageIds(messageId).execute();
 
     mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
@@ -82,9 +85,8 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().folder("INBOX").mails(mail).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
@@ -93,15 +95,14 @@ public class DeleteMailConnectorTest {
     MailConnectors.deleteMails().createRequest().messageNumbers(1).execute();
 
     MimeMessage[] mails = greenMail.getReceivedMessages();
-    assertThat(mails).hasSize(2);
-    assertThat(mails[0].isSet(Flag.DELETED)).isTrue();
-    assertThat(mails[1].isSet(Flag.DELETED)).isFalse();
+    assertThat(mails).hasSize(1);
+    assertThat(mails[0].isSet(Flag.DELETED)).isFalse();
   }
 
   @Test
   public void missingFolder() {
+    MailConfigurationFactory.getInstance().set(mock(MailConfiguration.class));
     DeleteMailConnector connector = new DeleteMailConnector();
-    connector.setConfiguration(mock(MailConfiguration.class));
     RuntimeException exception =
         catchThrowableOfType(
             () -> connector.createRequest().messageNumbers(0).execute(), RuntimeException.class);

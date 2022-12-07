@@ -12,154 +12,67 @@
  */
 package org.camunda.bpm.extension.mail.config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.Optional;
-import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PropertiesMailConfiguration implements MailConfiguration {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesMailConfiguration.class);
-
-  public static final String ENV_PROPERTIES_PATH = "MAIL_CONFIG";
-  public static final String PROPERTIES_CLASSPATH_PREFIX = "classpath:";
-  public static final String DEFAULT_PROPERTIES_PATH =
-      PROPERTIES_CLASSPATH_PREFIX + "/mail-config.properties";
-
-  public static final String PROPERTY_USER = "mail.user";
-  public static final String PROPERTY_PASSWORD = "mail.password";
-
-  public static final String PROPERTY_POLL_FOLDER = "mail.poll.folder";
-  public static final String PROPERTY_SENDER = "mail.sender";
-  public static final String PROPERTY_SENDER_ALIAS = "mail.sender.alias";
-
-  public static final String PROPERTY_ATTACHMENT_DOWNLOAD = "mail.attachment.download";
-  public static final String PROPERTY_ATTACHMENT_PATH = "mail.attachment.path";
-  public static final String DEFAULT_ATTACHMENT_PATH = "attachments";
-
-  public static final String PROPERTY_NOTIFICATION_LOOKUP_TIME = "mail.notification.lookup.time";
-  public static final String DEFAULT_NOTIFICATION_LOOKUP_TIME = Duration.ofSeconds(60).toString();
-
-  protected Properties properties = null;
-  protected String path = null;
-
-  public PropertiesMailConfiguration() {}
-
-  public PropertiesMailConfiguration(String path) {
-    this.path = path;
-  }
-
-  public PropertiesMailConfiguration(Properties properties) {
-    this.properties = properties;
-  }
-
-  @Override
-  public String getUserName() {
-    return getProperties().getProperty(PROPERTY_USER);
-  }
-
-  @Override
-  public String getPassword() {
-    return getProperties().getProperty(PROPERTY_PASSWORD);
-  }
+  private String pollFolder;
+  private String sender;
+  private String senderAlias;
+  private boolean downloadAttachments;
+  private String attachmentPath;
+  private Duration notificationLookupTime;
 
   @Override
   public String getPollFolder() {
-    return getProperties().getProperty(PROPERTY_POLL_FOLDER);
+    return pollFolder;
+  }
+
+  public void setPollFolder(String pollFolder) {
+    this.pollFolder = pollFolder;
   }
 
   @Override
   public String getSender() {
-    return getProperties().getProperty(PROPERTY_SENDER);
+    return sender;
+  }
+
+  public void setSender(String sender) {
+    this.sender = sender;
   }
 
   @Override
   public String getSenderAlias() {
-    return getProperties().getProperty(PROPERTY_SENDER_ALIAS);
+    return senderAlias;
+  }
+
+  public void setSenderAlias(String senderAlias) {
+    this.senderAlias = senderAlias;
   }
 
   @Override
-  public boolean downloadAttachments() {
-    String downloadAttachments = getProperties().getProperty(PROPERTY_ATTACHMENT_DOWNLOAD);
-    return Boolean.parseBoolean(downloadAttachments);
+  public boolean isDownloadAttachments() {
+    return downloadAttachments;
+  }
+
+  public void setDownloadAttachments(boolean downloadAttachments) {
+    this.downloadAttachments = downloadAttachments;
   }
 
   @Override
   public String getAttachmentPath() {
-    return getProperties().getProperty(PROPERTY_ATTACHMENT_PATH, DEFAULT_ATTACHMENT_PATH);
+    return attachmentPath;
+  }
+
+  public void setAttachmentPath(String attachmentPath) {
+    this.attachmentPath = attachmentPath;
   }
 
   @Override
   public Duration getNotificationLookupTime() {
-    String lookupTime =
-        getProperties()
-            .getProperty(PROPERTY_NOTIFICATION_LOOKUP_TIME, DEFAULT_NOTIFICATION_LOOKUP_TIME);
-    return Duration.parse(lookupTime);
+    return notificationLookupTime;
   }
 
-  @Override
-  public Properties getProperties() {
-    if (properties == null) {
-      properties = loadProperties();
-    }
-    return properties;
-  }
-
-  protected Properties loadProperties() {
-    Properties properties = new Properties();
-    String path = getPropertiesPath();
-
-    try {
-      InputStream inputStream = getPropertiesAsStream(path);
-      if (inputStream != null) {
-        properties.load(inputStream);
-        return properties;
-
-      } else {
-        throw new IllegalStateException("Cannot find mail configuration at: " + path);
-      }
-
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to load mail configuration from: " + path, e);
-    }
-  }
-
-  protected String getPropertiesPath() {
-    return Optional.ofNullable(path)
-        .orElseGet(
-            () ->
-                Optional.ofNullable(System.getenv(ENV_PROPERTIES_PATH))
-                    .orElse(DEFAULT_PROPERTIES_PATH));
-  }
-
-  protected InputStream getPropertiesAsStream(String path) throws FileNotFoundException {
-
-    if (path.startsWith(PROPERTIES_CLASSPATH_PREFIX)) {
-      String pathWithoutPrefix = path.substring(PROPERTIES_CLASSPATH_PREFIX.length());
-
-      LOGGER.debug("load mail properties from classpath '{}'", pathWithoutPrefix);
-
-      return getClass().getResourceAsStream(pathWithoutPrefix);
-
-    } else {
-      Path config = Paths.get(path);
-
-      LOGGER.debug("load mail properties from path '{}'", config.toAbsolutePath());
-
-      File file = config.toFile();
-      if (file.exists()) {
-        return new FileInputStream(file);
-      } else {
-        return null;
-      }
-    }
+  public void setNotificationLookupTime(Duration notificationLookupTime) {
+    this.notificationLookupTime = notificationLookupTime;
   }
 }

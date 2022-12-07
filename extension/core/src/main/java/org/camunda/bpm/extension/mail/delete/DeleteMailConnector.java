@@ -23,9 +23,8 @@ import javax.mail.search.MessageIDTerm;
 import javax.mail.search.OrTerm;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
-import org.camunda.bpm.extension.mail.config.MailConfiguration;
-import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.FolderWrapper;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
@@ -35,11 +34,8 @@ import org.slf4j.LoggerFactory;
 
 public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, EmptyResponse> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DeleteMailConnector.class);
-
   public static final String CONNECTOR_ID = "mail-delete";
-
-  protected MailConfiguration configuration;
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeleteMailConnector.class);
 
   public DeleteMailConnector() {
     super(CONNECTOR_ID);
@@ -47,17 +43,14 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
 
   @Override
   public DeleteMailRequest createRequest() {
-    return new DeleteMailRequest(this, getConfiguration());
+    return new DeleteMailRequest(this);
   }
 
   @Override
   public ConnectorResponse execute(DeleteMailRequest request) {
-    MailService mailService = MailServiceFactory.getService(getConfiguration());
-
-    try {
-
-      Folder folder = mailService.ensureOpenFolder(request.getFolder());
-      List<Message> messages = Arrays.asList(getMessages(folder, request));
+    MailService mailService = MailServiceFactory.getInstance().get();
+    try (FolderWrapper folder = mailService.getFolder(request.getFolder())) {
+      List<Message> messages = getMessages(folder.getFolder(), request);
 
       DeleteMailInvocation invocation =
           new DeleteMailInvocation(messages, request, requestInterceptors, mailService);
@@ -71,25 +64,28 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
     }
   }
 
-  protected Message[] getMessages(Folder folder, DeleteMailRequest request)
-      throws MessagingException {
+  protected List<Message> getMessages(Folder folder, DeleteMailRequest request) {
 
     if (request.getMails() != null) {
       LOGGER.debug("delete mails: {}", request.getMails());
 
       List<String> messageIds = collectMessageIds(request.getMails());
-      return getMessagesByIds(folder, messageIds);
+      return Arrays.asList(getMessagesByIds(folder, messageIds));
 
     } else if (request.getMessageIds() != null) {
       LOGGER.debug("delete mails with message ids: {}", request.getMessageIds());
 
-      return getMessagesByIds(folder, request.getMessageIds());
+      return Arrays.asList(getMessagesByIds(folder, request.getMessageIds()));
 
     } else {
       LOGGER.debug("delete mails with message numbers: {}", request.getMessageNumbers());
 
       int[] numbers = request.getMessageNumbers().stream().mapToInt(i -> i).toArray();
-      return folder.getMessages(numbers);
+      try {
+        return Arrays.asList(folder.getMessages(numbers));
+      } catch (MessagingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
@@ -101,23 +97,15 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
         .collect(Collectors.toList());
   }
 
-  protected Message[] getMessagesByIds(Folder folder, List<String> messageIds)
-      throws MessagingException {
+  protected Message[] getMessagesByIds(Folder folder, List<String> messageIds) {
 
     OrTerm searchTerm =
         new OrTerm(messageIds.stream().map(MessageIDTerm::new).toArray(MessageIDTerm[]::new));
 
-    return folder.search(searchTerm);
-  }
-
-  protected MailConfiguration getConfiguration() {
-    if (configuration == null) {
-      configuration = MailConfigurationFactory.getConfiguration();
+    try {
+      return folder.search(searchTerm);
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
     }
-    return configuration;
-  }
-
-  public void setConfiguration(MailConfiguration configuration) {
-    this.configuration = configuration;
   }
 }
