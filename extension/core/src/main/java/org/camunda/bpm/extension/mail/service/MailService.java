@@ -12,10 +12,8 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Store;
 
 public interface MailService {
 
@@ -23,7 +21,5 @@ public interface MailService {
 
   void sendMessage(Message message) throws MessagingException;
 
-  Store getStore() throws MessagingException;
-
-  Folder getFolder(Store store, String folderName) throws MessagingException;
+  FolderWrapper getFolder(String folderName) throws MessagingException;
 }

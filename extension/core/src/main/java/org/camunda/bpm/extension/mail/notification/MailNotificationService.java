@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Store;
@@ -32,6 +31,7 @@ import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.FolderWrapper;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,18 +73,19 @@ public class MailNotificationService {
         executorService.submit(
             () -> {
               while (running.get()) {
-                try (Store store = mailService.getStore();
-                    Folder folder = mailService.getFolder(store, configuration.getPollFolder())) {
-                  folder.addMessageCountListener(
-                      new MessageCountAdapter() {
-                        @Override
-                        public void messagesAdded(MessageCountEvent event) {
-                          List<Message> messages = Arrays.asList(event.getMessages());
-                          messageHandlers.forEach(handler -> handler.accept(messages));
-                        }
-                      });
+                try (FolderWrapper folder = mailService.getFolder(configuration.getPollFolder())) {
+                  folder
+                      .getFolder()
+                      .addMessageCountListener(
+                          new MessageCountAdapter() {
+                            @Override
+                            public void messagesAdded(MessageCountEvent event) {
+                              List<Message> messages = Arrays.asList(event.getMessages());
+                              messageHandlers.forEach(handler -> handler.accept(messages));
+                            }
+                          });
                   LOGGER.debug("start notification service: {}", notificationWorker);
-                  notificationWorker.accept(folder);
+                  notificationWorker.accept(folder.getFolder());
                 } catch (Exception e) {
                   LOGGER.error("Error while waiting for notifications", e);
                   // never leave the loop
@@ -113,16 +114,16 @@ public class MailNotificationService {
   }
 
   public boolean isRunning() {
-    return completion != null && !completion.isDone();
+    return running.get();
   }
 
   protected boolean supportsIdle() {
-    try (Store store = mailService.getStore();
-        Folder folder = mailService.getFolder(store, configuration.getPollFolder())) {
+    try (FolderWrapper folder = mailService.getFolder(configuration.getPollFolder())) {
+      Store store = folder.getFolder().getStore();
       if (store instanceof IMAPStore) {
         IMAPStore imapStore = (IMAPStore) store;
         try {
-          return imapStore.hasCapability("IDLE") && folder instanceof IMAPFolder;
+          return imapStore.hasCapability("IDLE") && folder.getFolder() instanceof IMAPFolder;
         } catch (MessagingException e) {
           throw new RuntimeException(e);
         }

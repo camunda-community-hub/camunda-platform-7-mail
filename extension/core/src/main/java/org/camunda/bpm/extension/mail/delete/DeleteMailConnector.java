@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Store;
 import javax.mail.search.MessageIDTerm;
 import javax.mail.search.OrTerm;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.FolderWrapper;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
@@ -49,9 +49,8 @@ public class DeleteMailConnector extends AbstractConnector<DeleteMailRequest, Em
   @Override
   public ConnectorResponse execute(DeleteMailRequest request) {
     MailService mailService = MailServiceFactory.getInstance().get();
-    try (Store store = mailService.getStore();
-        Folder folder = mailService.getFolder(store, request.getFolder())) {
-      List<Message> messages = getMessages(folder, request);
+    try (FolderWrapper folder = mailService.getFolder(request.getFolder())) {
+      List<Message> messages = getMessages(folder.getFolder(), request);
 
       DeleteMailInvocation invocation =
           new DeleteMailInvocation(messages, request, requestInterceptors, mailService);

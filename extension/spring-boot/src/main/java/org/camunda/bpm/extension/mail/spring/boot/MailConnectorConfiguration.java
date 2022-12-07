@@ -1,8 +1,5 @@
 package org.camunda.bpm.extension.mail.spring.boot;
 
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.Consumer;
 import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
@@ -19,6 +16,10 @@ import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+
+import java.util.Properties;
+import java.util.Set;
+import java.util.function.Consumer;
 
 @Configuration
 public class MailConnectorConfiguration {

@@ -15,13 +15,12 @@ package org.camunda.bpm.extension.mail.poll;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Store;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.FolderWrapper;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractConnector;
@@ -46,13 +45,15 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
   @Override
   public ConnectorResponse execute(PollMailRequest request) {
     MailService mailService = MailServiceFactory.getInstance().get();
-    try (Store store = mailService.getStore();
-        Folder folder = mailService.getFolder(store, request.getFolder())) {
+    try (FolderWrapper folder = mailService.getFolder(request.getFolder())) {
 
       try {
         PollMailInvocation invocation =
             new PollMailInvocation(
-                folder, request, requestInterceptors, MailServiceFactory.getInstance().get());
+                folder.getFolder(),
+                request,
+                requestInterceptors,
+                MailServiceFactory.getInstance().get());
 
         @SuppressWarnings("unchecked")
         List<Mail> messages =
@@ -80,7 +81,8 @@ public class PollMailConnector extends AbstractConnector<PollMailRequest, PollMa
                           }
                         })
                     .collect(Collectors.toList());
-        LOGGER.debug("poll {} mails from folder '{}'", messages.size(), folder.getName());
+        LOGGER.debug(
+            "poll {} mails from folder '{}'", messages.size(), folder.getFolder().getName());
         return new PollMailResponse(messages);
       } catch (Exception e) {
         throw new MailConnectorException("Failed to poll mails: " + e.getMessage(), e);
