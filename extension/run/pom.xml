@@ -3,7 +3,7 @@
   <parent>
     <artifactId>camunda-bpm-mail-extension-root</artifactId>
     <groupId>org.camunda.bpm.extension</groupId>
-    <version>1.4.4-SNAPSHOT</version>
+    <version>1.5.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 

@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.camunda.bpm.extension.examples</groupId>
     <artifactId>camunda-bpm-mail-examples</artifactId>
-    <version>1.4.4-SNAPSHOT</version>
+    <version>1.5.0</version>
   </parent>
 
   <artifactId>camunda-bpm-mail-example-print-service</artifactId>
