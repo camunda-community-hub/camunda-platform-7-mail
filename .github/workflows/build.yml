@@ -19,4 +19,4 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
-      run: mvn verify -PcheckFormat
+      run: mvn verify -PcheckFormat -B
