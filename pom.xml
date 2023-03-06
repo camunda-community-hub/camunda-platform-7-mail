@@ -36,6 +36,7 @@
     <plugin.version.maven-surefire-plugin>3.0.0-M7</plugin.version.maven-surefire-plugin>
     <plugin.version.spotless-maven-plugin>2.28.0</plugin.version.spotless-maven-plugin>
     <plugin.version.maven-war-plugin>3.3.2</plugin.version.maven-war-plugin>
+    <plugin.version.maven-site-plugin>3.12.1</plugin.version.maven-site-plugin>
   </properties>
 
   <licenses>
@@ -101,6 +102,16 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${plugin.version.maven-resources-plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${plugin.version.maven-site-plugin}</version>
+        </plugin>
+        <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${version.springBoot}</version>
@@ -137,7 +148,7 @@
               <!--
                 <dependencyConvergence />
               -->
-              <requirePluginVersion />
+              <requirePluginVersions />
             </rules>
           </configuration>
           <executions>
