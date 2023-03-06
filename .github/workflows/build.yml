@@ -2,14 +2,7 @@ name: CI
 on: [ pull_request ]
 jobs:
   Build:
-
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        java-version: [ 17 ]
-
-    runs-on: ${{ matrix.os }}
-
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -17,7 +10,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: ${{ matrix.java-version }}
+        java-version: '17'
         cache: 'maven'
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
