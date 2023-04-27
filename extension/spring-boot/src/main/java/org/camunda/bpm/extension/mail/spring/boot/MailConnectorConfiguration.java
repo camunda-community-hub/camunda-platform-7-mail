@@ -14,6 +14,7 @@ import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +55,13 @@ public class MailConnectorConfiguration {
   }
 
   @Bean
+  @ConditionalOnProperty(
+      value = {
+        "camunda.bpm.plugin.mail.notification.enabled",
+        "camunda.bpm.plugin.mail.mail.notification.enabled"
+      },
+      matchIfMissing = true,
+      havingValue = "true")
   public MailNotificationService mailNotificationService(
       MailConfiguration mailConfiguration,
       MailService mailService,

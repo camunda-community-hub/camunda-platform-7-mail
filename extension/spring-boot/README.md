@@ -27,10 +27,18 @@ To use the notification service, please register Beans of type `Consumer<Mail>` 
 
 ## How to Configure it?
 
+### General Configuration
+
 Configure the plugin via a YAML/Properties file (i.e., the `application.yml`).
 Precede all properties with the prefix `camunda.bpm.plugin.mail`.
 
-The `mail.` prefix that comes with the old bootstrapping strategy will be appended to remain compatible.
+The `mail.` prefix that comes with the old bootstrapping strategy will be appended to remain compatible with Jakarta Mail.
+
+### Special configuration properties
+
+To not use the notification service, please set `camunda.bpm.plugin.mail.notification.enabled=false`. By default, the notification service will be active.
+
+### Example
 
 An Example configuration can look like this
 
