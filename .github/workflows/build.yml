@@ -1,6 +1,23 @@
 name: CI
 on: [ pull_request ]
 jobs:
+  Test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: ["8","11","17"]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java-version }}
+        cache: 'maven'
+    - name: Build
+      run: mvn test -B      
+      
   Build:
     runs-on: ubuntu-latest
     steps:
