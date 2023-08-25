@@ -16,7 +16,7 @@ jobs:
         java-version: ${{ matrix.java-version }}
         cache: 'maven'
     - name: Build
-      run: mvn test -B      
+      run: mvn test -Dspotless.apply.skip -B      
       
   Build:
     runs-on: ubuntu-latest
