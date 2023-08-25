@@ -53,7 +53,9 @@ public class JakartaMailProperties {
 
     if (path.startsWith(PROPERTIES_CLASSPATH_PREFIX)) {
       String pathWithoutPrefix = path.substring(PROPERTIES_CLASSPATH_PREFIX.length());
-
+      if (pathWithoutPrefix.startsWith("/")) {
+        pathWithoutPrefix = pathWithoutPrefix.substring(1);
+      }
       LOG.debug("load mail properties from classpath '{}'", pathWithoutPrefix);
 
       return JakartaMailProperties.class.getClassLoader().getResourceAsStream(pathWithoutPrefix);
