@@ -33,8 +33,8 @@ jobs:
     - name: Deploy SNAPSHOT / Release
       uses: camunda-community-hub/community-action-maven-release@v1
       with:
-        maven-release-options: -Dspotless.apply.skip
-        maven-additional-options: -Dspotless.apply.skip
+        maven-release-options: -P!autoFormat
+        maven-additional-options: -P!autoFormat
         release-version: ${{ github.event.release.tag_name }}
         release-profile: community-action-maven-release
         nexus-usr: ${{ secrets.NEXUS_USR }}
@@ -44,6 +44,7 @@ jobs:
         maven-url: oss.sonatype.org
         maven-gpg-passphrase: ${{ secrets.MAVEN_CENTRAL_GPG_SIGNING_KEY_PASSPHRASE }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        maven-auto-release-after-close: true
       id: release
     - if: github.event.release
       name: Attach artifacts to GitHub Release (Release only)
