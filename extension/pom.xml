@@ -16,6 +16,7 @@
     <module>core</module>
     <module>spring-boot</module>
     <module>run</module>
+    <module>core-jakarta</module>
   </modules>
   
 </project>

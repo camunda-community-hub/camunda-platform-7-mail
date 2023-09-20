@@ -37,6 +37,8 @@
     <plugin.version.spotless-maven-plugin>2.39.0</plugin.version.spotless-maven-plugin>
     <plugin.version.maven-war-plugin>3.4.0</plugin.version.maven-war-plugin>
     <plugin.version.maven-site-plugin>3.12.1</plugin.version.maven-site-plugin>
+    <plugin.version.transformer-maven-plugin>0.5.0</plugin.version.transformer-maven-plugin>
+    <plugin.version.maven-dependency-plugin>3.6.0</plugin.version.maven-dependency-plugin>
   </properties>
 
   <licenses>
@@ -101,6 +103,16 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>${plugin.version.maven-dependency-plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.transformer</groupId>
+          <artifactId>transformer-maven-plugin</artifactId>
+          <version>${plugin.version.transformer-maven-plugin}</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
