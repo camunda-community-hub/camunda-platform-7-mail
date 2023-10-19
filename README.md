@@ -190,16 +190,16 @@ mail.password=PASSWORD
 You can find some sample configurations at [extension/core/configs](extension/core/configs). If you use a mail provider which has no configuration yet, feel free to add one. You can verify your configuration with the [integration tests](extension/core/src/test/java/org/camunda/bpm/extension/mail/integration/MailProviderIntegrationTest.java).
 
 ### Alternative Configuration
-if you are running camunda in the environment that supports Mail Service and [Java Naming and Directory Interface (JNDI)](https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface), you can configure mail session
-in the container and make it available through jndi. Provide the jndi-name of your bound mail session within properties file `mail-config.properties` like this:
+
+if you are running camunda in the environment that supports Mail Service and [Java Naming and Directory Interface (JNDI)](https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface), you can configure mail session in the container and make it available through jndi. Provide the jndi-name of your bound mail session within properties file `mail-config.properties` like this:
+
 ```
 mail.session.jndi.name=java:jboss/mail/MyMailSessionName
 ```
+
 Please refer you container documentation to configure mail service.
 
-If you do not need other properties then session configuration, you can even skip property file `mail-config.properties`
-and specify your mail session jndi-name directly via `MAIL_CONFIG` environment variable like this:`jndi:java:jboss/mail/MyMailSessionName`.
-_Ensure it starts with `jndi:`_
+If you do not need other properties then session configuration, you can even skip property file `mail-config.properties` and specify your mail session jndi-name directly via `MAIL_CONFIG` environment variable like this:`jndi:java:jboss/mail/MyMailSessionName`. _Ensure it starts with `jndi:`_
 
 ## Examples
 

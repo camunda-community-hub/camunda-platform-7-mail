@@ -18,7 +18,9 @@ public class FolderWrapper implements AutoCloseable {
 
   @Override
   public void close() throws MessagingException {
-    folder.close();
+    if (folder.isOpen()) {
+      folder.close();
+    }
     onClose.run();
   }
 }

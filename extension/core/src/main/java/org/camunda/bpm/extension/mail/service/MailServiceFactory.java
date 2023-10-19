@@ -12,19 +12,18 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
-import org.camunda.bpm.extension.mail.AbstractFactory;
-import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.Properties;
+import java.util.function.Function;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Properties;
-import java.util.function.Function;
+import org.camunda.bpm.extension.mail.AbstractFactory;
+import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MailServiceFactory extends AbstractFactory<MailService> {
   private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceFactory.class);
@@ -44,11 +43,19 @@ public class MailServiceFactory extends AbstractFactory<MailService> {
   private Session getSession() {
     Session session;
     Properties jakartaMailProperties = JakartaMailProperties.get();
-    final String jndiName =
-        jakartaMailProperties.getProperty(
-            JakartaMailProperties
-                .PROPNAME_MAIL_SESSION_JNDI_NAME); // like java:jboss/mail/MySession
-    if (null == jndiName || jndiName.isEmpty()) {
+    if (isJndiSession(jakartaMailProperties)) {
+      String jndiName = extractJndiName(jakartaMailProperties);
+      try {
+        LOGGER.debug("Lookup mail session with jndi-name: {}", jndiName);
+        Context ictx = new InitialContext();
+        session = (Session) ictx.lookup(jndiName);
+      } catch (NamingException e) {
+        String msg =
+            String.format("Cannot connect to mail session under jndi-name '%s' :", jndiName);
+        LOGGER.error(msg, e);
+        throw new IllegalArgumentException(msg, e);
+      }
+    } else {
       session =
           Session.getInstance(
               jakartaMailProperties,
@@ -60,20 +67,17 @@ public class MailServiceFactory extends AbstractFactory<MailService> {
                       jakartaMailProperties.getProperty("mail.password"));
                 }
               });
-    } else {
-      try {
-        LOGGER.debug("Lookup mail session with jndi-name: {}", jndiName);
-
-        Context ictx = new InitialContext();
-        session = (Session) ictx.lookup(jndiName);
-      } catch (NamingException e) {
-        String msg =
-            String.format("Cannot connect to mail session under jndi-name '%s' :", jndiName);
-        LOGGER.error(msg, e);
-        throw new IllegalArgumentException(msg, e);
-      }
     }
     return session;
+  }
+
+  private boolean isJndiSession(Properties properties) {
+    String jndiName = extractJndiName(properties);
+    return jndiName != null && !jndiName.trim().isEmpty();
+  }
+
+  private String extractJndiName(Properties properties) {
+    return properties.getProperty(JakartaMailProperties.PROP_NAME_MAIL_SESSION_JNDI_NAME);
   }
 
   public void setWith(Function<Session, MailService> setter) {
