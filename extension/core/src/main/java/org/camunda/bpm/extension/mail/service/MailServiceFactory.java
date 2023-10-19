@@ -12,15 +12,22 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
-import java.util.Properties;
-import java.util.function.Function;
+import org.camunda.bpm.extension.mail.AbstractFactory;
+import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import org.camunda.bpm.extension.mail.AbstractFactory;
-import org.camunda.bpm.extension.mail.config.JakartaMailProperties;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.Properties;
+import java.util.function.Function;
 
 public class MailServiceFactory extends AbstractFactory<MailService> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceFactory.class);
   private static final MailServiceFactory INSTANCE = new MailServiceFactory();
 
   private MailServiceFactory() {}
@@ -35,17 +42,38 @@ public class MailServiceFactory extends AbstractFactory<MailService> {
   }
 
   private Session getSession() {
+    Session session;
     Properties jakartaMailProperties = JakartaMailProperties.get();
-    return Session.getInstance(
-        jakartaMailProperties,
-        new Authenticator() {
-          @Override
-          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(
-                jakartaMailProperties.getProperty("mail.user"),
-                jakartaMailProperties.getProperty("mail.password"));
-          }
-        });
+    final String jndiName =
+        jakartaMailProperties.getProperty(
+            JakartaMailProperties
+                .PROPNAME_MAIL_SESSION_JNDI_NAME); // like java:jboss/mail/MySession
+    if (null == jndiName || jndiName.isEmpty()) {
+      session =
+          Session.getInstance(
+              jakartaMailProperties,
+              new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                  return new PasswordAuthentication(
+                      jakartaMailProperties.getProperty("mail.user"),
+                      jakartaMailProperties.getProperty("mail.password"));
+                }
+              });
+    } else {
+      try {
+        LOGGER.debug("Lookup mail session with jndi-name: {}", jndiName);
+
+        Context ictx = new InitialContext();
+        session = (Session) ictx.lookup(jndiName);
+      } catch (NamingException e) {
+        String msg =
+            String.format("Cannot connect to mail session under jndi-name '%s' :", jndiName);
+        LOGGER.error(msg, e);
+        throw new IllegalArgumentException(msg, e);
+      }
+    }
+    return session;
   }
 
   public void setWith(Function<Session, MailService> setter) {

@@ -1,21 +1,39 @@
 package org.camunda.bpm.extension.mail.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JakartaMailProperties {
   private static final String ENV_PROPERTIES_PATH = "MAIL_CONFIG";
   private static final String PROPERTIES_CLASSPATH_PREFIX = "classpath:";
+
+  /**
+   * Prefix to recognize that mail session should be loaded from jndi tree like {@code
+   * jndi:java:jboss/mail/Default}
+   */
+  private static final String PROPERTIES_JNDI_PREFIX = "jndi:";
+
   private static final String DEFAULT_PROPERTIES_PATH =
       PROPERTIES_CLASSPATH_PREFIX + "mail-config.properties";
+
+  /**
+   * Optional property. Value is jndi-name for preconfigure container Mail Session. If defined then
+   * container Mail Session will be accessed. example: {@code
+   * mail.session.jndi.name="java:jboss/mail/Default"}
+   */
+  public static final String PROPNAME_MAIL_SESSION_JNDI_NAME = "mail.session.jndi.name";
+
   private static final Logger LOG = LoggerFactory.getLogger(JakartaMailProperties.class);
   private static Properties properties;
 
@@ -59,7 +77,13 @@ public class JakartaMailProperties {
       LOG.debug("load mail properties from classpath '{}'", pathWithoutPrefix);
 
       return JakartaMailProperties.class.getClassLoader().getResourceAsStream(pathWithoutPrefix);
-
+    } else if (path.startsWith(PROPERTIES_JNDI_PREFIX)) {
+      final String jndiName = path.substring(PROPERTIES_JNDI_PREFIX.length());
+      LOG.debug("use jndi-name '{}' to load preconfigured mail session", jndiName);
+      // create property file to be compatible with the rest of configuration properties
+      return new ByteArrayInputStream(
+          String.format("%s=%s%n", PROPNAME_MAIL_SESSION_JNDI_NAME, jndiName)
+              .getBytes(StandardCharsets.UTF_8));
     } else {
       Path config = Paths.get(path);
 

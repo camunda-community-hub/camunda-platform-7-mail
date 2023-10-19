@@ -48,4 +48,5 @@ Tested with Camunda Version 7.17 running on WildFly Full 26.0.1.Final
     <module name="org.camunda.bpm.extension.camunda-bpm-mail-core" services="import" />
     ```
   
-5. An easy way to configure the connection is to copy the `mail-config.properties` into the `\server\wildfly26.0.1.Final\standalone\config` folder and add an environment variable `MAIL_CONFIG` that points to the file. Have a look at the configuration section for further details.
+5. An easy way to configure the connection is to copy the `mail-config.properties` into the `\server\wildfly26.0.1.Final\standalone\config` folder and add an environment variable `MAIL_CONFIG` that points to the file. 
+Alternative you can configure the Wildfly `Mail Subsystem` and mail session and acquire it over jndi.  Have a look at the configuration section for further details.
