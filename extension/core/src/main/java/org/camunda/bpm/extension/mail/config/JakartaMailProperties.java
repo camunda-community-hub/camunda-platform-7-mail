@@ -1,20 +1,23 @@
 package org.camunda.bpm.extension.mail.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JakartaMailProperties {
+  /**
+   * Optional property. Value is jndi-name for preconfigure container Mail Session. If defined then
+   * container Mail Session will be accessed. example: {@code
+   * mail.session.jndi.name="java:jboss/mail/Default"}
+   */
+  public static final String PROP_NAME_MAIL_SESSION_JNDI_NAME = "mail.session.jndi.name";
+
   private static final String ENV_PROPERTIES_PATH = "MAIL_CONFIG";
   private static final String PROPERTIES_CLASSPATH_PREFIX = "classpath:";
 
@@ -22,19 +25,12 @@ public class JakartaMailProperties {
    * Prefix to recognize that mail session should be loaded from jndi tree like {@code
    * jndi:java:jboss/mail/Default}
    */
-  private static final String PROPERTIES_JNDI_PREFIX = "jndi:";
+  static final String PROPERTIES_JNDI_PREFIX = "jndi:";
 
   private static final String DEFAULT_PROPERTIES_PATH =
       PROPERTIES_CLASSPATH_PREFIX + "mail-config.properties";
-
-  /**
-   * Optional property. Value is jndi-name for preconfigure container Mail Session. If defined then
-   * container Mail Session will be accessed. example: {@code
-   * mail.session.jndi.name="java:jboss/mail/Default"}
-   */
-  public static final String PROPNAME_MAIL_SESSION_JNDI_NAME = "mail.session.jndi.name";
-
   private static final Logger LOG = LoggerFactory.getLogger(JakartaMailProperties.class);
+  private static String propertiesPath;
   private static Properties properties;
 
   private JakartaMailProperties() {}
@@ -43,13 +39,20 @@ public class JakartaMailProperties {
     JakartaMailProperties.properties = properties;
   }
 
+  public static void setPropertiesPath(String path) {
+    propertiesPath = path;
+  }
+
   public static Properties get() {
     if (properties != null) {
       return properties;
     }
     Properties properties = new Properties();
     String path = getPropertiesPath();
-
+    if (isJndiPath(path)) {
+      properties.setProperty(PROP_NAME_MAIL_SESSION_JNDI_NAME, extractJndiName(path));
+      return properties;
+    }
     try (InputStream inputStream = getPropertiesAsStream(path)) {
       if (inputStream != null) {
         properties.load(inputStream);
@@ -64,34 +67,42 @@ public class JakartaMailProperties {
   }
 
   private static String getPropertiesPath() {
-    return Optional.ofNullable(System.getenv(ENV_PROPERTIES_PATH)).orElse(DEFAULT_PROPERTIES_PATH);
+    return Optional.ofNullable(propertiesPath)
+        .orElse(
+            Optional.ofNullable(System.getenv(ENV_PROPERTIES_PATH))
+                .orElse(DEFAULT_PROPERTIES_PATH));
+  }
+
+  private static boolean isJndiPath(String path) {
+    return path.startsWith(PROPERTIES_JNDI_PREFIX);
+  }
+
+  private static boolean isClasspathPath(String path) {
+    return path.startsWith(PROPERTIES_CLASSPATH_PREFIX);
+  }
+
+  private static String extractJndiName(String path) {
+    return path.substring(PROPERTIES_JNDI_PREFIX.length());
+  }
+
+  private static String extractClasspath(String path) {
+    String classpath = path.substring(PROPERTIES_CLASSPATH_PREFIX.length());
+    if (classpath.startsWith("/")) {
+      classpath = classpath.substring(1);
+    }
+    return classpath;
   }
 
   protected static InputStream getPropertiesAsStream(String path) throws IOException {
-
-    if (path.startsWith(PROPERTIES_CLASSPATH_PREFIX)) {
-      String pathWithoutPrefix = path.substring(PROPERTIES_CLASSPATH_PREFIX.length());
-      if (pathWithoutPrefix.startsWith("/")) {
-        pathWithoutPrefix = pathWithoutPrefix.substring(1);
-      }
-      LOG.debug("load mail properties from classpath '{}'", pathWithoutPrefix);
-
-      return JakartaMailProperties.class.getClassLoader().getResourceAsStream(pathWithoutPrefix);
-    } else if (path.startsWith(PROPERTIES_JNDI_PREFIX)) {
-      final String jndiName = path.substring(PROPERTIES_JNDI_PREFIX.length());
-      LOG.debug("use jndi-name '{}' to load preconfigured mail session", jndiName);
-      // create property file to be compatible with the rest of configuration properties
-      return new ByteArrayInputStream(
-          String.format("%s=%s%n", PROPNAME_MAIL_SESSION_JNDI_NAME, jndiName)
-              .getBytes(StandardCharsets.UTF_8));
+    if (isClasspathPath(path)) {
+      String classpath = extractClasspath(path);
+      LOG.debug("load mail properties from classpath '{}'", classpath);
+      return JakartaMailProperties.class.getClassLoader().getResourceAsStream(classpath);
     } else {
       Path config = Paths.get(path);
-
       LOG.debug("load mail properties from path '{}'", config.toAbsolutePath());
-
-      File file = config.toFile();
-      if (file.exists()) {
-        return Files.newInputStream(file.toPath());
+      if (config.toFile().exists()) {
+        return Files.newInputStream(config);
       } else {
         return null;
       }
