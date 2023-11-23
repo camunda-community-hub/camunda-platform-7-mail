@@ -26,7 +26,7 @@
     <version.camunda>7.17.0</version.camunda>
     <version.springBoot>2.6.4</version.springBoot>
     <!-- tests -->
-    <version.greenmail>1.6.14</version.greenmail>
+    <version.greenmail>2.0.1</version.greenmail>
     <!-- maven plugins (not managed by parent) -->
     <plugin.version.function-maven-plugin>0.11.0</plugin.version.function-maven-plugin>
     <plugin.version.maven-enforcer-plugin>3.4.1</plugin.version.maven-enforcer-plugin>
