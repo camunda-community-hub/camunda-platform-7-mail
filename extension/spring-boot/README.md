@@ -36,7 +36,14 @@ The `mail.` prefix that comes with the old bootstrapping strategy will be append
 
 ### Special configuration properties
 
-To not use the notification service, please set `camunda.bpm.plugin.mail.notification.enabled=false`. By default, the notification service will be active.
+By default, the notification service will be Inactive.
+To enable set following properties as true.
+
+```yml
+camunda.bpm.plugin.mail:
+  mail.notification.enabled: true
+  notification.enabled: true
+```
 
 ### Example
 
@@ -44,6 +51,8 @@ An Example configuration can look like this
 
 ```yml
 camunda.bpm.plugin.mail:
+  mail.notification.enabled: true
+  notification.enabled: true   
   # send mails via SMTP
   transport.protocol: smtp
 
