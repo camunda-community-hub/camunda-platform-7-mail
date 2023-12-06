@@ -1,4 +1,6 @@
 camunda.bpm.plugin.mail:
+  mail.notification.enabled: true
+  notification.enabled: true
   smtp.host: localhost
   smtp.port: 3025
   smtp.auth: true

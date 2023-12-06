@@ -60,7 +60,7 @@ public class MailConnectorConfiguration {
         "camunda.bpm.plugin.mail.notification.enabled",
         "camunda.bpm.plugin.mail.mail.notification.enabled"
       },
-      matchIfMissing = true,
+      matchIfMissing = false,
       havingValue = "true")
   public MailNotificationService mailNotificationService(
       MailConfiguration mailConfiguration,
