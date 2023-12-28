@@ -16,15 +16,15 @@
   <name>Camunda Automation Platform Mail</name>
 
   <properties>
-    <version.java>1.8</version.java>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <version.java>17</version.java>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
     <!-- versions -->
-    <version.camunda>7.17.0</version.camunda>
-    <version.springBoot>2.7.18</version.springBoot>
+    <version.camunda>7.20.0</version.camunda>
+    <version.springBoot>3.1.7</version.springBoot>
     <!-- tests -->
     <version.greenmail>1.6.15</version.greenmail>
     <!-- maven plugins (not managed by parent) -->
