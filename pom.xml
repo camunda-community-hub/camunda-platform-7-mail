@@ -25,6 +25,7 @@
     <!-- versions -->
     <version.camunda>7.20.0</version.camunda>
     <version.springBoot>3.1.7</version.springBoot>
+    <version.jakarta.mail>1.6.7</version.jakarta.mail>
     <!-- tests -->
     <version.greenmail>1.6.15</version.greenmail>
     <!-- maven plugins (not managed by parent) -->
