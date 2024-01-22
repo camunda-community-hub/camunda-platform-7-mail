@@ -56,10 +56,7 @@ public class MailConnectorConfiguration {
 
   @Bean
   @ConditionalOnProperty(
-      value = {
-        "camunda.bpm.plugin.mail.notification.enabled",
-        "camunda.bpm.plugin.mail.mail.notification.enabled"
-      },
+      value = "camunda.bpm.plugin.mail.notification.enabled",
       matchIfMissing = true,
       havingValue = "true")
   public MailNotificationService mailNotificationService(

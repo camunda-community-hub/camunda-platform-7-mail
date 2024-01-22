@@ -19,14 +19,4 @@ public class ConditionalNotificationServiceTest {
               assertThat(context).doesNotHaveBean(MailNotificationService.class);
             });
   }
-
-  @Test
-  void shouldNotInstantiateNotificationService2() {
-    contextRunner
-        .withPropertyValues("camunda.bpm.plugin.mail.mail.notification.enabled=false")
-        .run(
-            context -> {
-              assertThat(context).doesNotHaveBean(MailNotificationService.class);
-            });
-  }
 }
