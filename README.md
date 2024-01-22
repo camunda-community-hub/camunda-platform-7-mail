@@ -48,7 +48,7 @@ Also make sure that you included the following dependencies:
 * [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core) >= 1.6.0
 * [JakartaMail](https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api) >= 2.1.2
 * [Eclipse Angus Mail](https://mvnrepository.com/artifact/org.eclipse.angus/angus-mail) >= 2.0.2
-* [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api) >= 1.7.36
+* [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api) >= 2.0.11
 
 If you use Wildfly, follow the [special instructions](docs/shared-process-engine-wildfly.md).
 
