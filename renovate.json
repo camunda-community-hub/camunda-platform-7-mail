@@ -4,6 +4,5 @@
     "config:recommended",
     ":automergeMinor",
     ":automergePatch"
-  ],
-  "baseBranches": ["main", "/^release\\/.*/"]
+  ]
 }
