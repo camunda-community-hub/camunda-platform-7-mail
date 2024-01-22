@@ -39,6 +39,16 @@ Add `camunda-bpm-mail-core` as dependency to your application. Using Maven, you 
 </dependency>
 ```
 
+>If you need to use the Jakarta 9+ API, please add another dependency:
+
+```xml
+<dependency>
+  <groupId>org.camunda.bpm.extension</groupId>
+  <artifactId>camunda-bpm-mail-core-jakarta</artifactId>
+  <version>1.5.1</version>
+</dependency>
+```
+
 ### For Shared Process Engine
 
 Add `camunda-bpm-mail-core-1.5.1.jar` to your application server (e.g. `apache-tomcat-8.0.24\lib`).
@@ -48,6 +58,14 @@ Also make sure that you included the following dependencies:
 * [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core/1.5.2) >= 1.5.6
 * [JakartaMail](http://mvnrepository.com/artifact/com.sun.mail/jakarta.mail/1.6.7) >= 1.6.7
 * [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api/1.7.21) >= 1.7.36
+
+>If you need to use the Jakarta 9+ API, please use `camunda-bpm-mail-core-jakarta-1.5.1.jar`. The dependencies will look different:
+
+* [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core) >= 1.5.6
+* [JakartaMail](https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api) >= 2.1.2
+* [Eclipse Angus Mail](https://mvnrepository.com/artifact/org.eclipse.angus/angus-mail) >= 2.0.2
+* [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api) >= 2.0.11
+
 
 If you use Wildfly, follow the [special instructions](docs/shared-process-engine-wildfly.md).
 
