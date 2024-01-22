@@ -45,6 +45,7 @@ jobs:
         maven-gpg-passphrase: ${{ secrets.MAVEN_CENTRAL_GPG_SIGNING_KEY_PASSPHRASE }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         maven-auto-release-after-close: true
+        branch: ${{ github.event.release.target_commitish }}
       id: release
     - if: github.event.release
       name: Attach artifacts to GitHub Release (Release only)
