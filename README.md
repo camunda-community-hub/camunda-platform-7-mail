@@ -20,8 +20,8 @@ A community extension for Camunda Platform 7 to integrate emails in a process an
 ## Install
 
 > Requirements:
-* Camunda Platform 7 >= 7.18.0
-* Java 8, 11, 17
+* Camunda Platform 7 >= 7.20.0
+* Java 17
 
 ### For Spring Boot
 
@@ -45,9 +45,10 @@ Add `camunda-bpm-mail-core-1.5.1.jar` to your application server (e.g. `apache-t
 
 Also make sure that you included the following dependencies:
 
-* [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core/1.5.2) >= 1.5.6
-* [JakartaMail](http://mvnrepository.com/artifact/com.sun.mail/jakarta.mail/1.6.7) >= 1.6.7
-* [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api/1.7.21) >= 1.7.36
+* [camunda-connect-core](http://mvnrepository.com/artifact/org.camunda.connect/camunda-connect-core) >= 1.6.0
+* [JakartaMail](https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api) >= 2.1.2
+* [Eclipse Angus Mail](https://mvnrepository.com/artifact/org.eclipse.angus/angus-mail) >= 2.0.2
+* [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api) >= 1.7.36
 
 If you use Wildfly, follow the [special instructions](docs/shared-process-engine-wildfly.md).
 
