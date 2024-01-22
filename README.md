@@ -20,7 +20,7 @@ A community extension for Camunda Platform 7 to integrate emails in a process an
 ## Install
 
 > Requirements:
-* Camunda Platform 7 >= 7.18.0
+* Camunda Platform 7 >= 7.19.0
 * Java 8, 11, 17
 
 ### For Spring Boot
