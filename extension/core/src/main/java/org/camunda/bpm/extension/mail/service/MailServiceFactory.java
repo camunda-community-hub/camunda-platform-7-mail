@@ -12,11 +12,11 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
 import java.util.Properties;
 import java.util.function.Function;
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

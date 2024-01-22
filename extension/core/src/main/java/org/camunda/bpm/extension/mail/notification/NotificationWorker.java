@@ -12,8 +12,8 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
+import jakarta.mail.Folder;
 import java.util.function.Consumer;
-import javax.mail.Folder;
 
 public interface NotificationWorker extends Consumer<Folder> {
 

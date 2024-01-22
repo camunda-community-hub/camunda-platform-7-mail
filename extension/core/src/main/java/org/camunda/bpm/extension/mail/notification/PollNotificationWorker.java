@@ -12,8 +12,8 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
+import jakarta.mail.Folder;
 import java.time.Duration;
-import javax.mail.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

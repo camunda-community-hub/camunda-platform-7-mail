@@ -1,7 +1,7 @@
 package org.camunda.bpm.extension.mail.notification;
 
+import jakarta.mail.Folder;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.mail.Folder;
 
 public abstract class AbstractNotificationWorker<T extends Folder> implements NotificationWorker {
   private final AtomicBoolean running = new AtomicBoolean(false);

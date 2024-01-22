@@ -12,8 +12,8 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
-import com.sun.mail.imap.IMAPFolder;
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
+import org.eclipse.angus.mail.imap.IMAPFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

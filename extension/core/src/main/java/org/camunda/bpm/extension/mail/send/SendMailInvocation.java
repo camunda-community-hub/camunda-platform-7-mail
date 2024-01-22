@@ -12,8 +12,8 @@
  */
 package org.camunda.bpm.extension.mail.send;
 
+import jakarta.mail.Message;
 import java.util.List;
-import javax.mail.Message;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.camunda.connect.impl.AbstractRequestInvocation;

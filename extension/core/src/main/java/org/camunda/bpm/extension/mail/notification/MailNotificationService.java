@@ -12,8 +12,11 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPStore;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Store;
+import jakarta.mail.event.MessageCountAdapter;
+import jakarta.mail.event.MessageCountEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -24,15 +27,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Store;
-import javax.mail.event.MessageCountAdapter;
-import javax.mail.event.MessageCountEvent;
 import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.camunda.bpm.extension.mail.service.FolderWrapper;
 import org.camunda.bpm.extension.mail.service.MailService;
+import org.eclipse.angus.mail.imap.IMAPFolder;
+import org.eclipse.angus.mail.imap.IMAPStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

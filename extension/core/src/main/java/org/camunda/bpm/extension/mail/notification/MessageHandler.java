@@ -12,9 +12,9 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
+import jakarta.mail.Message;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.mail.Message;
 
 /** Consumes received messages. */
 public interface MessageHandler extends Consumer<List<Message>> {}

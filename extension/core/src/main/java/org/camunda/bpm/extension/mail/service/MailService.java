@@ -12,8 +12,8 @@
  */
 package org.camunda.bpm.extension.mail.service;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 
 public interface MailService {
 

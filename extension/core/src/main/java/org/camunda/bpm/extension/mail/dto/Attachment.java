@@ -12,13 +12,13 @@
  */
 package org.camunda.bpm.extension.mail.dto;
 
+import jakarta.activation.DataHandler;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Part;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javax.activation.DataHandler;
-import javax.mail.MessagingException;
-import javax.mail.Part;
 
 public class Attachment implements Serializable {
 

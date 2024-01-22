@@ -1,7 +1,7 @@
 package org.camunda.bpm.extension.mail.service;
 
-import javax.mail.Folder;
-import javax.mail.MessagingException;
+import jakarta.mail.Folder;
+import jakarta.mail.MessagingException;
 
 public class FolderWrapper implements AutoCloseable {
   private final Folder folder;

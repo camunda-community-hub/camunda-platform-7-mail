@@ -12,11 +12,11 @@
  */
 package org.camunda.bpm.extension.mail.poll;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.mail.Message;
-import javax.mail.MessagingException;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Mail;

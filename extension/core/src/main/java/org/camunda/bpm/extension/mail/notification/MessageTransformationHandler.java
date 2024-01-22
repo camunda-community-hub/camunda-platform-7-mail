@@ -12,10 +12,10 @@
  */
 package org.camunda.bpm.extension.mail.notification;
 
+import jakarta.mail.Message;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.mail.Message;
 import org.camunda.bpm.extension.mail.dto.Mail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

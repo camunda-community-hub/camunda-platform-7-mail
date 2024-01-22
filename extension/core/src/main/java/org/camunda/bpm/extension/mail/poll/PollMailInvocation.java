@@ -12,13 +12,13 @@
  */
 package org.camunda.bpm.extension.mail.poll;
 
+import jakarta.mail.Flags;
+import jakarta.mail.Flags.Flag;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.search.FlagTerm;
 import java.util.Arrays;
 import java.util.List;
-import javax.mail.Flags;
-import javax.mail.Flags.Flag;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.search.FlagTerm;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.connect.impl.AbstractRequestInvocation;
 import org.camunda.connect.spi.ConnectorRequestInterceptor;

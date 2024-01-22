@@ -12,9 +12,9 @@
  */
 package org.camunda.bpm.extension.mail.delete;
 
+import jakarta.mail.Flags.Flag;
+import jakarta.mail.Message;
 import java.util.List;
-import javax.mail.Flags.Flag;
-import javax.mail.Message;
 import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.connect.impl.AbstractRequestInvocation;
 import org.camunda.connect.spi.ConnectorRequestInterceptor;

@@ -12,15 +12,15 @@
  */
 package org.camunda.bpm.extension.mail.delete;
 
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.search.MessageIDTerm;
+import jakarta.mail.search.OrTerm;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.search.MessageIDTerm;
-import javax.mail.search.OrTerm;
 import org.camunda.bpm.extension.mail.EmptyResponse;
 import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.dto.Mail;

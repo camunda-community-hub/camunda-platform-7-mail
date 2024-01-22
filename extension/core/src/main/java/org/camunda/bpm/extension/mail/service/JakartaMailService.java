@@ -1,14 +1,14 @@
 package org.camunda.bpm.extension.mail.service;
 
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Store;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeMessage;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.Transport;
-import javax.mail.internet.MimeMessage;
 
 public class JakartaMailService implements MailService {
   private final Session session;
