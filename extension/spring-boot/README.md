@@ -15,7 +15,7 @@ This plugin can be used with Camunda 7 Spring Boot Starter.
      <version>${version.camunda-bpm-mail}</version>
    </dependency>
    ```
-   
+
    If you want to use the connector with Spring Boot 3, please exclude the original core dependency and use core-jakarta instead:
 
    ```xml
