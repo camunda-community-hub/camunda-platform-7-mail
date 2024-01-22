@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.camunda.bpm.extension</groupId>
     <artifactId>camunda-bpm-mail-extension-root</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>7.19.1</version>
   </parent>
 
   <artifactId>camunda-bpm-mail-core</artifactId>
