@@ -1,8 +1,36 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    ":automergeMinor",
-    ":automergePatch"
-  ]
+    "config:base"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchPackagePrefixes": ["org.camunda.bpm.extension.mail"],
+      "enabled": false
+    },
+    {
+      "matchBaseBranches": ["main"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["maven"],
+      "matchBaseBranches": ["/^release/.*/"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": ["patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
+        "maven"
+      ],
+      "description" : "Exclude SNAPSHOT versions, renovate may suggest them for pre-release values.",
+      "matchPackagePatterns": [".*"],
+      "allowedVersions": "!/-SNAPSHOT$/"
+    }
+  ],
+  "baseBranches": ["main", "/^release/.*/"]
 }
