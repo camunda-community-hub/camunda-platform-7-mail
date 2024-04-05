@@ -23,7 +23,7 @@
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
     <!-- versions -->
-    <version.camunda>7.20.0</version.camunda>
+    <version.camunda>7.21.0</version.camunda>
     <version.springBoot>3.2.4</version.springBoot>
     <!-- tests -->
     <version.greenmail>2.0.1</version.greenmail>
