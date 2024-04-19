@@ -24,7 +24,7 @@
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
     <!-- versions -->
     <version.camunda>7.20.0</version.camunda>
-    <version.springBoot>3.2.4</version.springBoot>
+    <version.springBoot>3.2.5</version.springBoot>
     <!-- tests -->
     <version.greenmail>2.0.1</version.greenmail>
     <!-- maven plugins (not managed by parent) -->
