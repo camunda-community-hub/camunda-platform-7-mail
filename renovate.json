@@ -5,7 +5,7 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
-      "matchPackagePrefixes": ["org.camunda.bpm.extension.mail"],
+      "matchPackagePrefixes": ["org.camunda.bpm.extension"],
       "enabled": false
     },
     {
