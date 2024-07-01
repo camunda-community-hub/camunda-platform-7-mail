@@ -11,7 +11,7 @@
 
   <groupId>org.camunda.bpm.extension</groupId>
   <artifactId>camunda-bpm-mail-root</artifactId>
-  <version>7.18.3-SNAPSHOT</version>
+  <version>7.18.3</version>
   <packaging>pom</packaging>
   <name>Camunda Automation Platform Mail</name>
 
