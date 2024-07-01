@@ -23,19 +23,22 @@ import javax.mail.internet.MimeMessage;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
+import org.camunda.bpm.extension.mail.service.MailServiceFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class DeleteMailConnectorProcessTest {
 
-  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
-
   @Rule public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.ALL);
+  @Rule public ProcessEngineRule engineRule = new ProcessEngineRule();
 
   @Before
   public void createMails() {
     greenMail.setUser("test@camunda.com", "bpmn");
+    MailConfigurationFactory.getInstance().set(null);
+    MailServiceFactory.getInstance().set(null);
 
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-1", "body");
     GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-2", "body");
