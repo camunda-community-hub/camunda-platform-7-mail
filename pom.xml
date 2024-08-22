@@ -38,7 +38,7 @@
     <plugin.version.maven-war-plugin>3.4.0</plugin.version.maven-war-plugin>
     <plugin.version.maven-site-plugin>3.20.0</plugin.version.maven-site-plugin>
     <plugin.version.transformer-maven-plugin>0.5.0</plugin.version.transformer-maven-plugin>
-    <plugin.version.maven-dependency-plugin>3.7.1</plugin.version.maven-dependency-plugin>
+    <plugin.version.maven-dependency-plugin>3.8.0</plugin.version.maven-dependency-plugin>
   </properties>
 
   <licenses>
