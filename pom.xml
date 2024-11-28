@@ -28,7 +28,7 @@
     <!-- tests -->
     <version.greenmail>2.1.1</version.greenmail>
     <!-- maven plugins (not managed by parent) -->
-    <plugin.version.function-maven-plugin>0.11.0</plugin.version.function-maven-plugin>
+    <plugin.version.function-maven-plugin>0.11.1</plugin.version.function-maven-plugin>
     <plugin.version.maven-enforcer-plugin>3.5.0</plugin.version.maven-enforcer-plugin>
     <plugin.version.maven-install-plugin>3.1.3</plugin.version.maven-install-plugin>
     <plugin.version.maven-resources-plugin>3.3.1</plugin.version.maven-resources-plugin>
