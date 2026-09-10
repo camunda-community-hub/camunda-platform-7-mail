@@ -16,6 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
@@ -27,6 +31,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.List;
+import org.camunda.bpm.extension.mail.MailConnectorException;
 import org.camunda.bpm.extension.mail.MailConnectors;
 import org.camunda.bpm.extension.mail.MailContentType;
 import org.camunda.bpm.extension.mail.MailTestUtil;
@@ -34,10 +39,13 @@ import org.camunda.bpm.extension.mail.config.MailConfiguration;
 import org.camunda.bpm.extension.mail.config.MailConfigurationFactory;
 import org.camunda.bpm.extension.mail.dto.Attachment;
 import org.camunda.bpm.extension.mail.dto.Mail;
+import org.camunda.bpm.extension.mail.service.MailService;
 import org.camunda.bpm.extension.mail.service.MailServiceFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 public class PollMailConnectorTest {
 
@@ -250,5 +258,108 @@ public class PollMailConnectorTest {
 
     List<Mail> mails = response.getMails();
     assertThat(mails).hasSize(1);
+  }
+
+  // --- Additional tests to improve mutation coverage ---
+
+  private ListAppender<ILoggingEvent> listAppender;
+  private Logger pollMailLogger;
+
+  @Before
+  public void setupLogCapture() {
+    pollMailLogger = (Logger) LoggerFactory.getLogger(PollMailConnector.class);
+    listAppender = new ListAppender<>();
+    listAppender.start();
+    pollMailLogger.addAppender(listAppender);
+    pollMailLogger.setLevel(Level.DEBUG);
+  }
+
+  @After
+  public void teardownLogCapture() {
+    if (pollMailLogger != null && listAppender != null) {
+      pollMailLogger.detachAppender(listAppender);
+    }
+  }
+
+  @Test
+  public void debugLogContainsMessageCountAndFolderName() throws Exception {
+    greenMail.setUser("test@camunda.com", "bpmn");
+
+    GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-1", "body");
+    GreenMailUtil.sendTextEmailTest("test@camunda.com", "from@camunda.com", "mail-2", "body");
+
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
+
+    assertThat(response.getMails()).hasSize(2);
+
+    ILoggingEvent event =
+        listAppender.list.stream()
+            .filter(e -> e.getLoggerName().equals(PollMailConnector.class.getName()))
+            .filter(e -> e.getLevel() == Level.DEBUG)
+            .findFirst()
+            .orElse(null);
+
+    assertThat(event).isNotNull();
+    assertThat(event.getFormattedMessage()).contains("2");
+    assertThat(event.getFormattedMessage()).contains("INBOX");
+  }
+
+  @Test
+  public void debugLogWithZeroMessages() throws Exception {
+    greenMail.setUser("test@camunda.com", "bpmn");
+
+    PollMailResponse response =
+        MailConnectors.pollMails().createRequest().folder("INBOX").execute();
+
+    assertThat(response.getMails()).isEmpty();
+
+    ILoggingEvent event =
+        listAppender.list.stream()
+            .filter(e -> e.getLoggerName().equals(PollMailConnector.class.getName()))
+            .filter(e -> e.getLevel() == Level.DEBUG)
+            .findFirst()
+            .orElse(null);
+
+    assertThat(event).isNotNull();
+    assertThat(event.getFormattedMessage()).contains("0");
+    assertThat(event.getFormattedMessage()).contains("INBOX");
+  }
+
+  @Test
+  public void messagingExceptionFromGetFolderThrowsMailConnectorException() throws Exception {
+    MailService mockService = mock(MailService.class);
+    when(mockService.getFolder("INBOX")).thenThrow(new MessagingException("connection refused"));
+    MailServiceFactory.getInstance().set(mockService);
+
+    PollMailConnector connector = new PollMailConnector();
+
+    try {
+      MailConnectorException ex =
+          assertThrows(
+              MailConnectorException.class,
+              () -> connector.createRequest().folder("INBOX").execute());
+      assertThat(ex.getMessage()).contains("connection refused");
+      assertThat(ex.getCause()).isInstanceOf(MessagingException.class);
+    } finally {
+      MailServiceFactory.getInstance().set(null);
+    }
+  }
+
+  @Test
+  public void messagingExceptionFromGetFolderPreservesExceptionChain() throws Exception {
+    MessagingException cause = new MessagingException("folder access denied");
+    MailService mockService = mock(MailService.class);
+    when(mockService.getFolder("INBOX")).thenThrow(cause);
+    MailServiceFactory.getInstance().set(mockService);
+
+    PollMailConnector connector = new PollMailConnector();
+
+    try {
+      assertThrows(
+          MailConnectorException.class, () -> connector.createRequest().folder("INBOX").execute());
+    } finally {
+      MailServiceFactory.getInstance().set(null);
+    }
   }
 }
