@@ -76,6 +76,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- transitive pin for advisory remediation -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.20.0</version>
+      </dependency>
       <!-- modules -->
       <dependency>
         <groupId>org.camunda.bpm.extension</groupId>
